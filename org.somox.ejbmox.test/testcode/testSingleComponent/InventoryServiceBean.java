@@ -1,20 +1,60 @@
 package de.hpi.sam.rubis.inventorymgmt.impl;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
-import de.hpi.sam.rubis.entity.InventoryItem;
+import de.hpi.sam.rubis.entity.Bid;
 import de.hpi.sam.rubis.entity.Item;
 import de.hpi.sam.rubis.inventorymgmt.InventoryService;
 import de.hpi.sam.rubis.inventorymgmt.InventoryServiceException;
-import de.hpi.sam.rubis.persistenceservice.BusinessObjectsPersistenceService;
-import de.hpi.sam.rubis.persistenceservice.BusinessObjectsPersistenceServiceException;
 import de.hpi.sam.rubis.queryservice.QueryService;
-import de.hpi.sam.rubis.queryservice.QueryServiceException;
 
-
+/**
+ * Implementation of the {@link InventoryService}.
+ *
+ * @author thomas
+ *
+ */
 @Stateless(mappedName = InventoryService.MAPPED_NAME)
-public class InventoryServiceBean {
+public class InventoryServiceBean implements InventoryService {
 
+    InputStream inStream = new FileInputStream("test");
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int checkAvailabilityOfItem(final Item item) throws InventoryServiceException {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean reserveItem(final Item item, final int numberOfItems) throws InventoryServiceException {
+        // internal call
+        this.internalCall();
+        // libary call
+        this.inStream.available();
+        // libary call
+        this.inStream.close();
+        // internal call containing external call
+        internalCall();
+        // end of method calls
+    }
+
+
+    private void internalCall() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cancelReservedItem(final Item item, final int numberOfItems) throws InventoryServiceException {
+
+    }
 
 }

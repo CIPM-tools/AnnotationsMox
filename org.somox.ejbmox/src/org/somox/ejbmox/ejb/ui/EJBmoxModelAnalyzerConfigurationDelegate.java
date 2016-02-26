@@ -9,6 +9,7 @@ import org.somox.analyzer.simplemodelanalyzer.jobs.SaveSoMoXModelsJob;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SimpleModelAnalyzerJob;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.configuration.SoMoXConfiguration;
+import org.somox.ejbmox.ejb.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
 import org.somox.gast2seff.jobs.GAST2SEFFJob;
 import org.somox.ui.runconfig.ModelAnalyzerConfiguration;
 
@@ -34,8 +35,10 @@ public class EJBmoxModelAnalyzerConfigurationDelegate
         ejbMoxJob.setBlackboard(soMoXBlackboard);
 
         ejbMoxJob.add(new SimpleModelAnalyzerJob(modelAnalyzerConfig));
-        ejbMoxJob.add(new GAST2SEFFJob(modelAnalyzerConfig.getSomoxConfiguration()
-                .isReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour()));
+        final boolean reverseEngineerResourceDemandingInternalBehaviour = modelAnalyzerConfig.getSomoxConfiguration()
+                .isReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour();
+        ejbMoxJob.add(new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
+                new EJBmoxFunctionClassificationStrategyFactory()));
         ejbMoxJob.add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getSomoxConfiguration()));
 
         return ejbMoxJob;

@@ -10,9 +10,6 @@ import org.junit.Test;
 
 public abstract class EJBmoxAbstractTest<T> {
 
-    protected static String TEST_CODE_FOLDER_NAME = "testcode";
-    protected static String TEST_OUTPUT_FOLDER_NAME = "testmodel";
-
     protected static final String NAME_OF_SINGLE_COMPONENT = "InventoryServiceBean";
     protected static final String NAME_OF_SINGLE_INTERFACE = "InventoryService";
     protected static final String NAME_OF_PROV_INTERFACE = NAME_OF_SINGLE_INTERFACE;
@@ -34,7 +31,7 @@ public abstract class EJBmoxAbstractTest<T> {
         EJBmoxTestUtil.registerMetamodels();
         EJBmoxTestUtil.initializeLogger();
         EJBmoxTestUtil.setupURIPathmaps();
-        final File outputFolder = new File(TEST_OUTPUT_FOLDER_NAME + "/");
+        final File outputFolder = new File(EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/");
         final File[] listFiles = outputFolder.listFiles();
         if (null != listFiles) {
             final List<File> files = Arrays.asList(listFiles);

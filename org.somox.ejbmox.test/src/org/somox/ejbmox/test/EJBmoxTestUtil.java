@@ -17,6 +17,9 @@ import org.palladiosimulator.pcm.PcmPackage;
 import org.palladiosimulator.pcm.util.PcmResourceFactoryImpl;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
+import org.somox.ejbmox.analyzer.EJBmoxPCMRepositoryModelCreator;
+import org.somox.kdmhelper.KDMReader;
+import org.somox.kdmhelper.metamodeladdition.Root;
 import org.somox.sourcecodedecorator.SourcecodedecoratorPackage;
 import org.somox.sourcecodedecorator.util.SourcecodedecoratorResourceFactoryImpl;
 
@@ -29,6 +32,8 @@ public class EJBmoxTestUtil {
     private static final String DEFAULT_MODEL_PATH = "defaultModels/";
     private static final String PRIMITIVE_TYPE_REPOSITORY_PATH = DEFAULT_MODEL_PATH + "PrimitiveTypes.repository";
     private static final String RESOURCE_TYPES_PATH = DEFAULT_MODEL_PATH + "ResourceTypes.resourcetype";
+    public static String TEST_CODE_FOLDER_NAME = "testcode";
+    public static String TEST_OUTPUT_FOLDER_NAME = "testmodel";
 
     /**
      * disable constructor
@@ -78,7 +83,7 @@ public class EJBmoxTestUtil {
     public static void saveModel(final EObject eObject, final String name, final String fileExtension) {
         final ResourceSet resourceSet = new ResourceSetImpl();
         final URI fileURI = URI
-                .createFileURI(EJBmoxAbstractTest.TEST_OUTPUT_FOLDER_NAME + "/" + name + "." + fileExtension);
+                .createFileURI(EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/" + name + "." + fileExtension);
         final Resource resource = resourceSet.createResource(fileURI);
         resource.getContents().add(eObject);
         try {
@@ -99,5 +104,21 @@ public class EJBmoxTestUtil {
             final String testMethodName) {
         saveModel(analysisResult.getInternalArchitectureModel(), testMethodName, REPOSITORY_FILE_ENDING);
         saveModel(analysisResult.getSourceCodeDecoratorRepository(), testMethodName, SOURCECODEDECORATOR_FILE_ENDING);
+    }
+
+    public static void executeEJBmoxPCMRepositoryModelCreator(final String testMethodName,
+            final AnalysisResult analysisResult) {
+        final String path = TEST_CODE_FOLDER_NAME + "/" + testMethodName;
+        final KDMReader kdmReader = new KDMReader();
+        try {
+            kdmReader.loadProject(path);
+        } catch (final IOException e) {
+            throw new RuntimeException("Could not load path: " + path, e);
+        }
+        final Root root = kdmReader.getRoot();
+        analysisResult.setRoot(root);
+        final EJBmoxPCMRepositoryModelCreator ejb = new EJBmoxPCMRepositoryModelCreator(root.getCompilationUnits(),
+                analysisResult);
+        ejb.createStaticArchitectureModel();
     }
 }

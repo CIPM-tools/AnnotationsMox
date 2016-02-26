@@ -1,10 +1,5 @@
 package org.somox.ejbmox.test;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Assert;
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.palladiosimulator.pcm.repository.OperationInterface;
@@ -12,11 +7,7 @@ import org.palladiosimulator.pcm.repository.OperationProvidedRole;
 import org.palladiosimulator.pcm.repository.OperationRequiredRole;
 import org.palladiosimulator.pcm.repository.Repository;
 import org.somox.analyzer.AnalysisResult;
-import org.somox.ejbmox.analyzer.EJBmoxPCMRepositoryModelCreator;
 import org.somox.ejbmox.test.mock.DummyModelAnalyzer;
-import org.somox.kdmhelper.KDMReader;
-import org.somox.kdmhelper.metamodeladdition.Root;
-import org.splevo.jamopp.extraction.JaMoPPSoftwareModelExtractor;
 
 public class EJBmoxPCMRepositoryModelCreatorTest extends EJBmoxAbstractTest<Repository> {
 
@@ -56,17 +47,7 @@ public class EJBmoxPCMRepositoryModelCreatorTest extends EJBmoxAbstractTest<Repo
 
     @Override
     protected Repository executeTest(final String testMethodName) {
-        final String path = TEST_CODE_FOLDER_NAME + "/" + testMethodName;
-        final JaMoPPSoftwareModelExtractor jaMoPPSoftwareModelExtractor = new JaMoPPSoftwareModelExtractor();
-        jaMoPPSoftwareModelExtractor.extractSoftwareModel(Arrays.asList(path), new NullProgressMonitor());
-        final List<Resource> resources = jaMoPPSoftwareModelExtractor.getSourceResources();
-        final KDMReader kdmReader = new KDMReader();
-        kdmReader.addModelsToRoot(resources);
-        final Root root = kdmReader.getRoot();
-        this.analysisResult.setRoot(root);
-        final EJBmoxPCMRepositoryModelCreator ejb = new EJBmoxPCMRepositoryModelCreator(root.getCompilationUnits(),
-                this.analysisResult);
-        ejb.createStaticArchitectureModel();
+        EJBmoxTestUtil.executeEJBmoxPCMRepositoryModelCreator(testMethodName, this.analysisResult);
 
         EJBmoxTestUtil.saveReposiotryAndSourceCodeDecorator(this.analysisResult, testMethodName);
 

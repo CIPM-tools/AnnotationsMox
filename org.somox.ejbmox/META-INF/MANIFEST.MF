@@ -17,4 +17,5 @@ Require-Bundle: org.somox.core,
  org.somox.sourcecodedecorator,
  org.somox.gast2seff,
  org.somox.util
-Export-Package: org.somox.ejbmox.analyzer
+Export-Package: org.somox.ejbmox.analyzer,
+ org.somox.ejbmox.ejb.functionclassification

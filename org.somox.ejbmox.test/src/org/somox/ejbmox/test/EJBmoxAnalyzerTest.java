@@ -26,7 +26,7 @@ public class EJBmoxAnalyzerTest extends EJBmoxAbstractTest<System> {
     @Override
     protected System executeTest(final String testMethodName) {
         final SoMoXConfiguration somoxConfiguration = new SoMoXConfiguration();
-        somoxConfiguration.getFileLocations().setProjectName(TEST_CODE_FOLDER_NAME + "/" + testMethodName);
+        somoxConfiguration.getFileLocations().setProjectName(EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName);
         try {
             final AnalysisResult analysisResult = this.ejbMoxAnalyzer.analyze(somoxConfiguration, null,
                     new NullProgressMonitor());
