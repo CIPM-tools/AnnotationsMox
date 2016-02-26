@@ -8,6 +8,8 @@ import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.ModelAnalyzer;
 import org.somox.analyzer.ModelAnalyzerException;
 import org.somox.analyzer.SimpleAnalysisResult;
+import org.somox.analyzer.simplemodelanalyzer.builder.ComponentBuilder;
+import org.somox.analyzer.simplemodelanalyzer.builder.PCMSystemBuilder;
 import org.somox.configuration.SoMoXConfiguration;
 import org.somox.extractor.ExtractionResult;
 import org.somox.kdmhelper.KDMReader;
@@ -32,14 +34,23 @@ public class EJBmoxAnalyzer implements ModelAnalyzer {
 
         this.analyzeProjectWithJaMoPP(somoxConfiguration, analysisResult);
 
-        final EJB2StaticPCMModelCreator ejb2StaticPCMModelCreator = new EJB2StaticPCMModelCreator(
+        final EJBmoxPCMRepositoryModelCreator eJBmoxPCMRepositoryModelCreator = new EJBmoxPCMRepositoryModelCreator(
                 analysisResult.getRoot().getCompilationUnits(), analysisResult);
-        ejb2StaticPCMModelCreator.createStaticArchitectureModel();
+        eJBmoxPCMRepositoryModelCreator.createStaticArchitectureModel();
 
-        // TODO: create System
+        this.createPCMSystem(somoxConfiguration, analysisResult);
 
         this.status = Status.FINISHED;
-        return null;
+        return analysisResult;
+    }
+
+    private void createPCMSystem(final SoMoXConfiguration somoxConfiguration,
+            final SimpleAnalysisResult analysisResult) {
+        final ComponentBuilder dummyComponentBuilder = new ComponentBuilder(analysisResult.getRoot(),
+                somoxConfiguration, analysisResult);
+        final PCMSystemBuilder pcmSystemBuilder = new PCMSystemBuilder(analysisResult.getRoot(), somoxConfiguration,
+                analysisResult, dummyComponentBuilder);
+        pcmSystemBuilder.buildSystemModel();
     }
 
     private void analyzeProjectWithJaMoPP(final SoMoXConfiguration somoxConfiguration,

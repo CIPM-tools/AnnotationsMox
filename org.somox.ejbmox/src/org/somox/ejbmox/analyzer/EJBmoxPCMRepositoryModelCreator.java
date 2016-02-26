@@ -32,9 +32,9 @@ import org.somox.util.Seff2JavaCreatorUtil;
  * @author langhamm
  *
  */
-public class EJB2StaticPCMModelCreator {
+public class EJBmoxPCMRepositoryModelCreator {
 
-    private static final Logger logger = Logger.getLogger(EJB2StaticPCMModelCreator.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(EJBmoxPCMRepositoryModelCreator.class.getSimpleName());
 
     private final HashSet<CompilationUnit> compilationUnits;
 
@@ -49,12 +49,12 @@ public class EJB2StaticPCMModelCreator {
      */
     private final Map<BasicComponent, Class> basicComponent2EJBClassMap;
 
-    public EJB2StaticPCMModelCreator(final Collection<CompilationUnit> compilationUnits,
+    public EJBmoxPCMRepositoryModelCreator(final Collection<CompilationUnit> compilationUnits,
             final AnalysisResult analysisResult) {
         this(new HashSet<CompilationUnit>(compilationUnits), analysisResult);
     }
 
-    public EJB2StaticPCMModelCreator(final HashSet<CompilationUnit> compilationUnits,
+    public EJBmoxPCMRepositoryModelCreator(final HashSet<CompilationUnit> compilationUnits,
             final AnalysisResult analysisResult) {
         this.compilationUnits = compilationUnits;
         this.analysisResult = analysisResult;
@@ -68,7 +68,7 @@ public class EJB2StaticPCMModelCreator {
     public Repository createStaticArchitectureModel() {
         this.compilationUnits.forEach(compilationUnit -> compilationUnit.getClassifiers().stream()
                 .filter(classifier -> classifier instanceof Class).map(classifier -> (Class) classifier)
-                .filter(jamoppClass -> AnnotationHelper.isEJBClass(jamoppClass))
+                .filter(jamoppClass -> EJBAnnotationHelper.isEJBClass(jamoppClass))
                 .forEach(ejbClass -> this.createArchitectureForEJBClass(ejbClass)));
         this.basicComponent2EJBClassMap.keySet().forEach(
                 component -> this.createRequiredRoles(component, this.basicComponent2EJBClassMap.get(component)));
@@ -101,7 +101,7 @@ public class EJB2StaticPCMModelCreator {
         final Collection<OperationInterface> opInterfaces = new ArrayList<OperationInterface>();
         switch (implementedInterfaces.size()) {
         case 0:
-            EJB2StaticPCMModelCreator.logger
+            EJBmoxPCMRepositoryModelCreator.logger
                     .warn("No implementing interface for EJB class " + ejbClass.getName() + " found.");
             break;
         case 1:
@@ -112,7 +112,7 @@ public class EJB2StaticPCMModelCreator {
             // only those interfaces that are annotated with @Local or @Remote are business
             // interfaces
             implementedInterfaces.stream()
-                    .filter(implemententedInterface -> AnnotationHelper.isEJBBuisnessInterface(implemententedInterface))
+                    .filter(implemententedInterface -> EJBAnnotationHelper.isEJBBuisnessInterface(implemententedInterface))
                     .forEach(buisnessInterface -> this.createArchitecturalInterfaceForEJBInterface(buisnessInterface,
                             opInterfaces));
             break;
@@ -144,14 +144,14 @@ public class EJB2StaticPCMModelCreator {
 
     private void createRequiredRoles(final BasicComponent basicComponent, final Class ejbClass) {
         final List<Field> ejbFields = ejbClass.getMembers().stream().filter(member -> member instanceof Field)
-                .map(member -> (Field) member).filter(field -> AnnotationHelper.hasEJBAnnotation(field))
+                .map(member -> (Field) member).filter(field -> EJBAnnotationHelper.hasEJBAnnotation(field))
                 .collect(Collectors.toList());
         for (final Field ejbField : ejbFields) {
             final Type accessedType = GetAccessedType.getAccessedType(ejbField.getTypeReference());
             final OperationInterface requiredInterface = this.sourceCodeDecoratorHelper
                     .findPCMOperationInterfaceForJaMoPPType(accessedType);
             if (null == requiredInterface) {
-                EJB2StaticPCMModelCreator.logger.warn("Could not find an OperationInterface for the EJB type: "
+                EJBmoxPCMRepositoryModelCreator.logger.warn("Could not find an OperationInterface for the EJB type: "
                         + accessedType + ". Maybe the interface " + accessedType
                         + " is not provided by a component within the source code");
                 continue;

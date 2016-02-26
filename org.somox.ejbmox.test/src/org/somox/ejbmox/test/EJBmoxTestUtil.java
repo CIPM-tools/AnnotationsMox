@@ -1,21 +1,31 @@
 package org.somox.ejbmox.test;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.palladiosimulator.pcm.PcmPackage;
 import org.palladiosimulator.pcm.util.PcmResourceFactoryImpl;
+import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
 import org.somox.sourcecodedecorator.SourcecodedecoratorPackage;
 import org.somox.sourcecodedecorator.util.SourcecodedecoratorResourceFactoryImpl;
 
 public class EJBmoxTestUtil {
+    private static final String SOURCECODEDECORATOR_FILE_ENDING = "sourcecodedecorator";
+    private static final String REPOSITORY_FILE_ENDING = "repository";
+    private static final String USAGEMODEL_FILE_ENDING = "usagemodel";
+    private static final String SYSTEM_FILE_ENDING = "system";
+
     private static final String DEFAULT_MODEL_PATH = "defaultModels/";
     private static final String PRIMITIVE_TYPE_REPOSITORY_PATH = DEFAULT_MODEL_PATH + "PrimitiveTypes.repository";
     private static final String RESOURCE_TYPES_PATH = DEFAULT_MODEL_PATH + "ResourceTypes.resourcetype";
@@ -56,12 +66,38 @@ public class EJBmoxTestUtil {
 
         // register PCM
         EPackage.Registry.INSTANCE.put(PcmPackage.eNS_URI, PcmPackage.eINSTANCE);
-        m.put("repository", new PcmResourceFactoryImpl());
-        m.put("system", new PcmResourceFactoryImpl());
-        m.put("usagemodel", new PcmResourceFactoryImpl());
+        m.put(REPOSITORY_FILE_ENDING, new PcmResourceFactoryImpl());
+        m.put(SYSTEM_FILE_ENDING, new PcmResourceFactoryImpl());
+        m.put(USAGEMODEL_FILE_ENDING, new PcmResourceFactoryImpl());
 
         // register SourceCodeDecoratorMM package and factory globally
         EPackage.Registry.INSTANCE.put(SourcecodedecoratorPackage.eNS_URI, SourcecodedecoratorPackage.eINSTANCE);
-        m.put("sourcecodedecorator", new SourcecodedecoratorResourceFactoryImpl());
+        m.put(SOURCECODEDECORATOR_FILE_ENDING, new SourcecodedecoratorResourceFactoryImpl());
+    }
+
+    public static void saveModel(final EObject eObject, final String name, final String fileExtension) {
+        final ResourceSet resourceSet = new ResourceSetImpl();
+        final URI fileURI = URI
+                .createFileURI(EJBmoxAbstractTest.TEST_OUTPUT_FOLDER_NAME + "/" + name + "." + fileExtension);
+        final Resource resource = resourceSet.createResource(fileURI);
+        resource.getContents().add(eObject);
+        try {
+            resource.save(null);
+        } catch (final IOException e) {
+            throw new RuntimeException("Could not save eObject " + name + "." + fileExtension, e);
+        }
+    }
+
+    public static void saveRepoSourceCodeDecoratorAndSystem(final AnalysisResult analysisResult,
+            final String testMethodName) {
+        saveReposiotryAndSourceCodeDecorator(analysisResult, testMethodName);
+        saveModel(analysisResult.getSystemModel(), testMethodName, SYSTEM_FILE_ENDING);
+
+    }
+
+    public static void saveReposiotryAndSourceCodeDecorator(final AnalysisResult analysisResult,
+            final String testMethodName) {
+        saveModel(analysisResult.getInternalArchitectureModel(), testMethodName, REPOSITORY_FILE_ENDING);
+        saveModel(analysisResult.getSourceCodeDecoratorRepository(), testMethodName, SOURCECODEDECORATOR_FILE_ENDING);
     }
 }

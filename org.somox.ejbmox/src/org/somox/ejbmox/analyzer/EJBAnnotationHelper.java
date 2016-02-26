@@ -13,9 +13,9 @@ import org.emftext.language.java.classifiers.Interface;
 import org.emftext.language.java.members.Field;
 import org.emftext.language.java.modifiers.AnnotableAndModifiable;
 
-public final class AnnotationHelper {
+public final class EJBAnnotationHelper {
 
-    private static final Logger logger = Logger.getLogger(AnnotationHelper.class.getSimpleName());
+    private static final Logger logger = Logger.getLogger(EJBAnnotationHelper.class.getSimpleName());
 
     private static final String STATELESS_ANNOTATION_NAME = "Stateless";
     private static final String STATEFUL_ANNOTATION_NAME = "Stateful";
@@ -25,17 +25,17 @@ public final class AnnotationHelper {
     private static final String EJB_ANNOTATION_NAME = "EJB";
 
     static final Set<String> EJB_COMPONENT_ANNOTATION_NAMES = new HashSet<String>(
-            Arrays.asList(AnnotationHelper.STATELESS_ANNOTATION_NAME, AnnotationHelper.STATEFUL_ANNOTATION_NAME,
-                    AnnotationHelper.MESSAGE_DRIVEN_ANNOTATION_NAME));
+            Arrays.asList(EJBAnnotationHelper.STATELESS_ANNOTATION_NAME, EJBAnnotationHelper.STATEFUL_ANNOTATION_NAME,
+                    EJBAnnotationHelper.MESSAGE_DRIVEN_ANNOTATION_NAME));
     static final Set<String> EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES = new HashSet<String>(
-            Arrays.asList(AnnotationHelper.LOCAL_ANNOTATION_NAME, AnnotationHelper.REMOTE_ANNOTATION_NAME));
+            Arrays.asList(EJBAnnotationHelper.LOCAL_ANNOTATION_NAME, EJBAnnotationHelper.REMOTE_ANNOTATION_NAME));
 
-    private AnnotationHelper() {
+    private EJBAnnotationHelper() {
     }
 
     public static boolean isEJBClass(final Class jamoppClass) {
-        final boolean found = AnnotationHelper.hasAnnoations(jamoppClass,
-                AnnotationHelper.EJB_COMPONENT_ANNOTATION_NAMES);
+        final boolean found = EJBAnnotationHelper.hasAnnoations(jamoppClass,
+                EJBAnnotationHelper.EJB_COMPONENT_ANNOTATION_NAMES);
         if (found) {
             logger.info("Found EJB class: " + jamoppClass.getQualifiedName());
         }
@@ -56,13 +56,13 @@ public final class AnnotationHelper {
         return annotableAndModifiable.getAnnotationsAndModifiers().stream()
                 .filter(annotationOrModifier -> annotationOrModifier instanceof AnnotationInstance)
                 .map(annotation -> (AnnotationInstance) annotation)
-                .filter(annotation -> AnnotationHelper.filterAnnotationName(annotation, annotationClassifiersToCheck))
+                .filter(annotation -> EJBAnnotationHelper.filterAnnotationName(annotation, annotationClassifiersToCheck))
                 .collect(Collectors.toList()).size() > 0;
     }
 
     public static boolean isEJBBuisnessInterface(final Interface implemententedInterface) {
-        final boolean found = AnnotationHelper.hasAnnoations(implemententedInterface,
-                AnnotationHelper.EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES);
+        final boolean found = EJBAnnotationHelper.hasAnnoations(implemententedInterface,
+                EJBAnnotationHelper.EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES);
         if (found) {
             logger.info("Found EJB buisness interface " + implemententedInterface.getQualifiedName());
         }
@@ -70,8 +70,8 @@ public final class AnnotationHelper {
     }
 
     public static boolean hasEJBAnnotation(final Field field) {
-        final boolean found = AnnotationHelper.hasAnnoations(field,
-                new HashSet<String>(Arrays.asList(AnnotationHelper.EJB_ANNOTATION_NAME)));
+        final boolean found = EJBAnnotationHelper.hasAnnoations(field,
+                new HashSet<String>(Arrays.asList(EJBAnnotationHelper.EJB_ANNOTATION_NAME)));
         if (found) {
             logger.info("Found field with EJB annotation: " + field.getName() + " in class: "
                     + field.getContainingConcreteClassifier().getQualifiedName());
