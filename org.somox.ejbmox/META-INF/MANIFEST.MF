@@ -18,5 +18,6 @@ Require-Bundle: org.somox.core,
  org.somox.kdmhelper,
  org.somox.util
 Export-Package: org.somox.ejbmox.analyzer,
+ org.somox.ejbmox.commandline,
  org.somox.ejbmox.ejb.functionclassification,
  org.somox.ejbmox.util

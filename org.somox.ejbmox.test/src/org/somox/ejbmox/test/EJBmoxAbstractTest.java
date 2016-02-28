@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.somox.ejbmox.util.EJBmoxUtil;
 
 public abstract class EJBmoxAbstractTest<T> {
 
@@ -29,9 +30,9 @@ public abstract class EJBmoxAbstractTest<T> {
 
     @BeforeClass
     public static void beforeClass() {
-        EJBmoxTestUtil.registerMetamodels();
-        EJBmoxTestUtil.initializeLogger();
-        EJBmoxTestUtil.setupURIPathmaps();
+        EJBmoxUtil.registerMetamodels();
+        EJBmoxUtil.initializeLogger();
+        EJBmoxUtil.setupURIPathmaps();
         final File outputFolder = new File(EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/");
         final File[] listFiles = outputFolder.listFiles();
         if (null != listFiles) {

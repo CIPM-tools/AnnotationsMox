@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Assert;
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.palladiosimulator.pcm.repository.OperationInterface;
@@ -17,18 +15,11 @@ import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.ServiceEffectSpecification;
 import org.palladiosimulator.pcm.system.System;
 import org.somox.analyzer.AnalysisResult;
-import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
-import org.somox.configuration.SoMoXConfiguration;
-import org.somox.ejbmox.util.EJBmoxUtil;
+import org.somox.ejbmox.commandline.EJBmoxCommandLine;
 import org.somox.test.gast2seff.visitors.AssertSEFFHelper;
 import org.somox.test.gast2seff.visitors.SEFFCreationHelper;
-import org.somox.ui.runconfig.ModelAnalyzerConfiguration;
 
-import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
-import de.uka.ipd.sdq.workflow.jobs.SequentialBlackboardInteractingJob;
-import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
-
-public class EJBmoxIntegrationTest extends EJBmoxAbstractTest<AnalysisResult> {
+public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
 
     private static final String FIND_PAST_ITEMS_IN_CATEGORY_AND_REGION = "findPastItemsInCategoryAndRegion";
     private static final String FIND_CATEGORIES_IN_REGION = "findCategoriesInRegion";
@@ -44,20 +35,10 @@ public class EJBmoxIntegrationTest extends EJBmoxAbstractTest<AnalysisResult> {
     protected AnalysisResult executeTest(final String testMethodName) {
         final String inputPath = EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName;
 
-        final ModelAnalyzerConfiguration modelAnalyzerConfig = new ModelAnalyzerConfiguration();
-        final SoMoXConfiguration configuration = new SoMoXConfiguration();
-        configuration.getFileLocations().setAnalyserInputFile(inputPath);
-        configuration.getFileLocations().setProjectName(inputPath);
-        configuration.getFileLocations().setOutputFolder(EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME);
-        modelAnalyzerConfig.setSomoxConfiguration(configuration);
-        SequentialBlackboardInteractingJob<SoMoXBlackboard> ejbMoxWorkflow;
-        try {
-            ejbMoxWorkflow = EJBmoxUtil.createEJBmoxWorkflowJobs(modelAnalyzerConfig);
-            ejbMoxWorkflow.execute(new NullProgressMonitor());
-            return ejbMoxWorkflow.getBlackboard().getAnalysisResult();
-        } catch (CoreException | JobFailedException | UserCanceledException e) {
-            throw new RuntimeException("Could not create and execute EJBmox workflow.", e);
-        }
+        final EJBmoxCommandLine ejbCommandLine = new EJBmoxCommandLine(inputPath,
+                "/../../" + EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/" + testMethodName);
+
+        return ejbCommandLine.runEJBmox();
     }
 
     @Override

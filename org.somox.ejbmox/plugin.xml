@@ -14,14 +14,14 @@
 	    <launchConfigurationTabGroup
 	        type="org.somox.ejbmox.analyzer.ejbmodelanalyzer.runconfig.LaunchEJBModelAnalyzer"
 	        class="org.somox.ejbmox.ejb.ui.EJBmoxModelAnalyzerTabGroup"
-	        id="org.somox.analyzer.simplemodelanalyzer.ui.launchConfigurationTabGroupAnalyzer">
+	        id="org.somox.analyzer.ejbmoxanalyzer.ui.launchConfigurationTabGroupAnalyzer">
 	    </launchConfigurationTabGroup>
 	</extension>
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
 	        icon="icons/ejbmox_16x16.gif"
 	        configTypeID="org.somox.ejbmox.analyzer.ejbmodelanalyzer.runconfig.LaunchEJBModelAnalyzer"
-	        id="org.somox.ui.runconfig.LaunchSimpleModelAnalyzerImage">
+	        id="org.somox.ejbmox.ui.runconfig.LaunchSimpleModelAnalyzerImage">
 	    </launchConfigurationTypeImage>
 	</extension>
 </plugin>
