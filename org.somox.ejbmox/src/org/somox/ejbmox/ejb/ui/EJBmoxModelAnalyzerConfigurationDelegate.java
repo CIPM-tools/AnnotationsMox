@@ -19,7 +19,7 @@ import de.uka.ipd.sdq.workflow.jobs.SequentialBlackboardInteractingJob;
 import de.uka.ipd.sdq.workflow.launchconfig.AbstractWorkflowBasedLaunchConfigurationDelegate;
 
 /**
- * Class that creates the EJBmox workflow
+ * Class that creates the EJBmox workflow.
  *
  * @author langhamm
  *

@@ -51,14 +51,17 @@ public class InventoryServiceBean implements InventoryService {
     }
 
     private void internalCallContainingExternalCall() {
+        //intenal stuff
+        int i =0;
+        i++;
         // external call
         this.queryService.findCategoriesInRegion("test");
 
     }
 
     private void internalCall() {
-        // TODO Auto-generated method stub
-
+        //library call, which only has influence in building of SEFFs not by testing the FunctionCallClassification Visitor
+        this.inStream.available();
     }
 
     /**

@@ -11,11 +11,12 @@ Require-Bundle: org.somox.core,
  org.somox.analyzer.simplemodelanalyzer,
  org.somox.analyzer.simplemodelanalyzer.ui,
  org.eclipse.debug.ui,
- org.somox.kdmhelper,
  org.emftext.language.java,
  org.palladiosimulator.pcm,
  org.somox.sourcecodedecorator,
  org.somox.gast2seff,
+ org.somox.kdmhelper,
  org.somox.util
 Export-Package: org.somox.ejbmox.analyzer,
- org.somox.ejbmox.ejb.functionclassification
+ org.somox.ejbmox.ejb.functionclassification,
+ org.somox.ejbmox.util

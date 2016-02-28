@@ -112,7 +112,8 @@ public class EJBmoxPCMRepositoryModelCreator {
             // only those interfaces that are annotated with @Local or @Remote are business
             // interfaces
             implementedInterfaces.stream()
-                    .filter(implemententedInterface -> EJBAnnotationHelper.isEJBBuisnessInterface(implemententedInterface))
+                    .filter(implemententedInterface -> EJBAnnotationHelper
+                            .isEJBBuisnessInterface(implemententedInterface))
                     .forEach(buisnessInterface -> this.createArchitecturalInterfaceForEJBInterface(buisnessInterface,
                             opInterfaces));
             break;

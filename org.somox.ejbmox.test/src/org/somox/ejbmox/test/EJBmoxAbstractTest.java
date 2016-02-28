@@ -15,6 +15,7 @@ public abstract class EJBmoxAbstractTest<T> {
     protected static final String NAME_OF_PROV_INTERFACE = NAME_OF_SINGLE_INTERFACE;
     protected static final String NAME_OF_REQ_INTERFACE = "QueryService";
     protected static final String NAME_OF_REQ_COMPONENT = "QueryServiceBean";
+    public static final String INVESTIGATED_METHOD_NAME = "reserveItem";
 
     protected abstract void beforeTest();
 

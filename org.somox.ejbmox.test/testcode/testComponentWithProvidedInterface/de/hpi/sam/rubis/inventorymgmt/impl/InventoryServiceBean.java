@@ -7,7 +7,6 @@ import de.hpi.sam.rubis.entity.Bid;
 import de.hpi.sam.rubis.entity.Item;
 import de.hpi.sam.rubis.inventorymgmt.InventoryService;
 import de.hpi.sam.rubis.inventorymgmt.InventoryServiceException;
-import de.hpi.sam.rubis.queryservice.QueryService;
 
 /**
  * Implementation of the {@link InventoryService}.
@@ -20,6 +19,8 @@ public class InventoryServiceBean implements InventoryService {
 
     InputStream inStream = new FileInputStream("test");
 
+    private final Bid bid;
+    
     /**
      * {@inheritDoc}
      */
@@ -32,6 +33,11 @@ public class InventoryServiceBean implements InventoryService {
      */
     @Override
     public boolean reserveItem(final Item item, final int numberOfItems) throws InventoryServiceException {
+        // dummy loop is necessray to create a SEFF --> JaMoPPStatementVisitor thinks we do some actual work here
+        int j = 0;
+        for(int i = 0; i < 10; i++){
+            j += i;
+        }
         // internal call
         this.internalCall();
         // libary call
@@ -43,9 +49,7 @@ public class InventoryServiceBean implements InventoryService {
         // end of method calls
     }
 
-
     private void internalCall() {
-        // TODO Auto-generated method stub
 
     }
 
