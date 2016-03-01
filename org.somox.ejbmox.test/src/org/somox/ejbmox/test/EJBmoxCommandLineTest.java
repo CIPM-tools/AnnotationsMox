@@ -36,7 +36,7 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
         final String inputPath = EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName;
 
         final EJBmoxCommandLine ejbCommandLine = new EJBmoxCommandLine(inputPath,
-                "/../../" + EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/" + testMethodName);
+                EJBmoxTestUtil.TEST_OUTPUT_FOLDER_NAME + "/" + testMethodName);
 
         return ejbCommandLine.runEJBmox();
     }

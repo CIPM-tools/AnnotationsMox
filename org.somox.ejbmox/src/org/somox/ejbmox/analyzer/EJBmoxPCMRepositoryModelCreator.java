@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,7 @@ import org.palladiosimulator.pcm.repository.Repository;
 import org.palladiosimulator.pcm.repository.RepositoryFactory;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.kdmhelper.GetAccessedType;
+import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.util.PCMModelCreationHelper;
 import org.somox.util.Seff2JavaCreatorUtil;
 
@@ -93,29 +95,30 @@ public class EJBmoxPCMRepositoryModelCreator {
     }
 
     private Collection<OperationInterface> createInterfacesForEJBClass(final Class ejbClass) {
-        final List<Interface> implementedInterfaces = ejbClass.getImplements().stream()
+        final List<Interface> directImplementedInterfaces = ejbClass.getImplements().stream()
                 .map(typeReference -> GetAccessedType.getAccessedType(typeReference))
                 .filter(type -> type instanceof Interface).map(jaMoPPInterface -> (Interface) jaMoPPInterface)
-                .collect(Collectors.toList());
-        // TODO: filter the Interfaces EJB ignores (e.g. Serializable)
+                .filter(jaMoPPif -> this.isEJBRelevantInterface(jaMoPPif)).collect(Collectors.toList());
+        logger.info(
+                "implementedInterfaces for class " + ejbClass.getName() + ": " + directImplementedInterfaces.size());
         final Collection<OperationInterface> opInterfaces = new ArrayList<OperationInterface>();
-        switch (implementedInterfaces.size()) {
+        switch (directImplementedInterfaces.size()) {
         case 0:
             EJBmoxPCMRepositoryModelCreator.logger
                     .warn("No implementing interface for EJB class " + ejbClass.getName() + " found.");
             break;
         case 1:
             // the implemented interface is by definition an EJB Buisness Interface
-            this.createArchitecturalInterfaceForEJBInterface(implementedInterfaces.get(0), opInterfaces);
+            this.createArchitecturalInterfaceForEJBInterface(directImplementedInterfaces.get(0), opInterfaces, null);
             break;
         default:// >1
             // only those interfaces that are annotated with @Local or @Remote are business
             // interfaces
-            implementedInterfaces.stream()
+            directImplementedInterfaces.stream()
                     .filter(implemententedInterface -> EJBAnnotationHelper
                             .isEJBBuisnessInterface(implemententedInterface))
                     .forEach(buisnessInterface -> this.createArchitecturalInterfaceForEJBInterface(buisnessInterface,
-                            opInterfaces));
+                            opInterfaces, null));
             break;
         }
         this.repository.getInterfaces__Repository().addAll(opInterfaces);
@@ -124,7 +127,21 @@ public class EJBmoxPCMRepositoryModelCreator {
     }
 
     private void createArchitecturalInterfaceForEJBInterface(final Interface jaMoPPInterface,
-            final Collection<OperationInterface> opInterfaces) {
+            final Collection<OperationInterface> opInterfaces, final OperationInterface possibleChildInterface) {
+        final Optional<InterfaceSourceCodeLink> existingInterfaceSourceCodeLink = this.analysisResult
+                .getSourceCodeDecoratorRepository().getInterfaceSourceCodeLink().stream()
+                .filter(interfaceSourceCodeLink -> interfaceSourceCodeLink.getGastClass().equals(jaMoPPInterface))
+                .findAny();
+        if (existingInterfaceSourceCodeLink.isPresent()) {
+            // not create a new one, only add the new child as child of the
+            final org.palladiosimulator.pcm.repository.Interface pcmInterface = existingInterfaceSourceCodeLink.get()
+                    .getInterface();
+            if (null != possibleChildInterface) {
+                pcmInterface.getParentInterfaces__Interface().add(possibleChildInterface);
+            }
+
+            return;
+        }
         final OperationInterface opInterface = RepositoryFactory.eINSTANCE.createOperationInterface();
         opInterface.setEntityName(jaMoPPInterface.getName());
         opInterfaces.add(opInterface);
@@ -133,6 +150,10 @@ public class EJBmoxPCMRepositoryModelCreator {
             this.pcmModelCreationHelper.createOperationSignatureInInterfaceForJaMoPPMemberAndUpdateSourceCodeDecorator(
                     opInterface, this.repository, jaMoPPMember);
         }
+        jaMoPPInterface.getAllSuperClassifiers().stream().filter(type -> type instanceof Interface)
+                .map(jaMoPPIf -> (Interface) jaMoPPIf).filter(jaMoPPIf -> this.isEJBRelevantInterface(jaMoPPIf))
+                .forEach(relevantInterface -> this.createArchitecturalInterfaceForEJBInterface(relevantInterface,
+                        opInterfaces, opInterface));
     }
 
     private void createOperationProvidedRole(final BasicComponent basicComponent,
@@ -141,6 +162,12 @@ public class EJBmoxPCMRepositoryModelCreator {
         opr.setProvidedInterface__OperationProvidedRole(providedOpInterface);
         opr.setProvidingEntity_ProvidedRole(basicComponent);
         opr.setEntityName(basicComponent.getEntityName() + "_provides_" + providedOpInterface.getEntityName());
+    }
+
+    private boolean isEJBRelevantInterface(final Interface implementedInterfaces) {
+        return !(implementedInterfaces.getName().equals("Serializable")
+                || implementedInterfaces.getName().equals("Externalizable")
+                || implementedInterfaces.getContainingPackageName().toString().startsWith("javax.ejb"));
     }
 
     private void createRequiredRoles(final BasicComponent basicComponent, final Class ejbClass) {
