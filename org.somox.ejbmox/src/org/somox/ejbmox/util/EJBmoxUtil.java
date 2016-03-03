@@ -15,12 +15,14 @@ import org.palladiosimulator.pcm.util.PcmResourceFactoryImpl;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SaveSoMoXModelsJob;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
+import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.ejbmox.ejb.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
 import org.somox.ejbmox.ejb.ui.EJBmoxAnalzerJob;
+import org.somox.ejbmox.performance.inspectit2pcm.ReadInspectITFilesJob;
 import org.somox.gast2seff.jobs.GAST2SEFFJob;
 import org.somox.sourcecodedecorator.SourcecodedecoratorPackage;
 import org.somox.sourcecodedecorator.util.SourcecodedecoratorResourceFactoryImpl;
-import org.somox.ui.runconfig.ModelAnalyzerConfiguration;
 
 import de.uka.ipd.sdq.workflow.jobs.SequentialBlackboardInteractingJob;
 
@@ -45,20 +47,28 @@ public class EJBmoxUtil {
      * @throws CoreException
      */
     public static SequentialBlackboardInteractingJob<SoMoXBlackboard> createEJBmoxWorkflowJobs(
-            final ModelAnalyzerConfiguration modelAnalyzerConfig) throws CoreException {
+            final EJBmoxAnalyzerConfiguration modelAnalyzerConfig) throws CoreException {
         final SequentialBlackboardInteractingJob<SoMoXBlackboard> ejbMoxJob = new SequentialBlackboardInteractingJob<SoMoXBlackboard>();
 
         final SoMoXBlackboard soMoXBlackboard = new SoMoXBlackboard();
         ejbMoxJob.setBlackboard(soMoXBlackboard);
+        final EJBmoxConfiguration ejbmoxConfiguration = modelAnalyzerConfig.getMoxConfiguration();
+        soMoXBlackboard.addPartition(EJBmoxConfiguration.EJBMOX_INSPECTIT_FILE_PATHS,
+                ejbmoxConfiguration.getInspectITFilePaths());
 
         ejbMoxJob.add(new EJBmoxAnalzerJob(modelAnalyzerConfig));
 
-        final boolean reverseEngineerResourceDemandingInternalBehaviour = modelAnalyzerConfig.getSomoxConfiguration()
+        final boolean reverseEngineerResourceDemandingInternalBehaviour = ejbmoxConfiguration
                 .isReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour();
         ejbMoxJob.add(new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
                 new EJBmoxFunctionClassificationStrategyFactory()));
 
-        ejbMoxJob.add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getSomoxConfiguration()));
+        if (null != ejbmoxConfiguration.getInspectITFilePaths()
+                && 0 < ejbmoxConfiguration.getInspectITFilePaths().size()) {
+            ejbMoxJob.add(new ReadInspectITFilesJob());
+        }
+
+        ejbMoxJob.add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
 
         return ejbMoxJob;
     }

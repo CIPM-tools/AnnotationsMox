@@ -6,10 +6,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.ModelAnalyzer;
 import org.somox.analyzer.ModelAnalyzerException;
-import org.somox.configuration.SoMoXConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.extractor.ExtractionResult;
 
-public class DummyModelAnalyzer implements ModelAnalyzer {
+public class DummyModelAnalyzer implements ModelAnalyzer<EJBmoxConfiguration> {
 
     @Override
     public void init() {
@@ -17,7 +17,7 @@ public class DummyModelAnalyzer implements ModelAnalyzer {
     }
 
     @Override
-    public AnalysisResult analyze(final SoMoXConfiguration somoxConfiguration,
+    public AnalysisResult analyze(final EJBmoxConfiguration somoxConfiguration,
             final HashMap<String, ExtractionResult> extractionResultMap, final IProgressMonitor progressMonitor)
                     throws ModelAnalyzerException {
         return null;

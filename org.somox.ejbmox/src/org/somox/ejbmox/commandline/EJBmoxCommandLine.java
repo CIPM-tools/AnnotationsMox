@@ -5,9 +5,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
-import org.somox.configuration.SoMoXConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.ejbmox.util.EJBmoxUtil;
-import org.somox.ui.runconfig.ModelAnalyzerConfiguration;
 
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
 import de.uka.ipd.sdq.workflow.jobs.SequentialBlackboardInteractingJob;
@@ -43,14 +43,14 @@ public class EJBmoxCommandLine {
 
     public AnalysisResult runEJBmox() {
         final long start = System.nanoTime();
-        final ModelAnalyzerConfiguration modelAnalyzerConfig = new ModelAnalyzerConfiguration();
-        final SoMoXConfiguration configuration = new SoMoXConfiguration();
+        final EJBmoxAnalyzerConfiguration modelAnalyzerConfig = new EJBmoxAnalyzerConfiguration();
+        final EJBmoxConfiguration configuration = new EJBmoxConfiguration();
         configuration.getFileLocations().setAnalyserInputFile(this.inputPath);
         configuration.getFileLocations().setProjectName(this.inputPath);
         configuration.getFileLocations().setOutputFolder(this.outputPath);
         configuration.setReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour(
                 this.reverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour);
-        modelAnalyzerConfig.setSomoxConfiguration(configuration);
+        modelAnalyzerConfig.setMoxConfiguration(configuration);
         SequentialBlackboardInteractingJob<SoMoXBlackboard> ejbMoxWorkflow;
         try {
             ejbMoxWorkflow = EJBmoxUtil.createEJBmoxWorkflowJobs(modelAnalyzerConfig);

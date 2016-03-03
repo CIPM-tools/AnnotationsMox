@@ -5,9 +5,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.somox.configuration.SoMoXConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
+import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.ejbmox.util.EJBmoxUtil;
-import org.somox.ui.runconfig.ModelAnalyzerConfiguration;
 
 import de.uka.ipd.sdq.workflow.Workflow;
 import de.uka.ipd.sdq.workflow.jobs.IJob;
@@ -20,21 +20,21 @@ import de.uka.ipd.sdq.workflow.launchconfig.AbstractWorkflowBasedLaunchConfigura
  *
  */
 public class EJBmoxModelAnalyzerConfigurationDelegate
-        extends AbstractWorkflowBasedLaunchConfigurationDelegate<ModelAnalyzerConfiguration, Workflow> {
+        extends AbstractWorkflowBasedLaunchConfigurationDelegate<EJBmoxAnalyzerConfiguration, Workflow> {
 
     @Override
-    protected IJob createWorkflowJob(final ModelAnalyzerConfiguration modelAnalyzerConfig, final ILaunch mode)
+    protected IJob createWorkflowJob(final EJBmoxAnalyzerConfiguration modelAnalyzerConfig, final ILaunch mode)
             throws CoreException {
         return EJBmoxUtil.createEJBmoxWorkflowJobs(modelAnalyzerConfig);
     }
 
     @Override
-    protected ModelAnalyzerConfiguration deriveConfiguration(final ILaunchConfiguration launchconfiguration,
+    protected EJBmoxAnalyzerConfiguration deriveConfiguration(final ILaunchConfiguration launchconfiguration,
             final String mode) throws CoreException {
-        final ModelAnalyzerConfiguration modelAnalyzerConfig = new ModelAnalyzerConfiguration();
+        final EJBmoxAnalyzerConfiguration modelAnalyzerConfig = new EJBmoxAnalyzerConfiguration();
         final Map<String, Object> attributeMap = launchconfiguration.getAttributes();
-        final SoMoXConfiguration somoxConfiguration = new SoMoXConfiguration(attributeMap);
-        modelAnalyzerConfig.setSomoxConfiguration(somoxConfiguration);
+        final EJBmoxConfiguration ejbMoxConfiguration = new EJBmoxConfiguration(attributeMap);
+        modelAnalyzerConfig.setMoxConfiguration(ejbMoxConfiguration);
         return modelAnalyzerConfig;
     }
 

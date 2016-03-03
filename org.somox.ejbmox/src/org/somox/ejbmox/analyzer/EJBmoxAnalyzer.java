@@ -10,22 +10,21 @@ import org.somox.analyzer.ModelAnalyzerException;
 import org.somox.analyzer.SimpleAnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.builder.ComponentBuilder;
 import org.somox.analyzer.simplemodelanalyzer.builder.PCMSystemBuilder;
-import org.somox.configuration.SoMoXConfiguration;
+import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.extractor.ExtractionResult;
 import org.somox.kdmhelper.KDMReader;
 
-public class EJBmoxAnalyzer implements ModelAnalyzer {
+public class EJBmoxAnalyzer implements ModelAnalyzer<EJBmoxConfiguration> {
 
     private ModelAnalyzer.Status status = ModelAnalyzer.Status.READY;
 
     @Override
     public void init() {
         this.status = Status.READY;
-
     }
 
     @Override
-    public AnalysisResult analyze(final SoMoXConfiguration somoxConfiguration,
+    public AnalysisResult analyze(final EJBmoxConfiguration somoxConfiguration,
             final HashMap<String, ExtractionResult> extractionResultMap, final IProgressMonitor progressMonitor)
                     throws ModelAnalyzerException {
         this.status = Status.RUNNING;
@@ -44,19 +43,19 @@ public class EJBmoxAnalyzer implements ModelAnalyzer {
         return analysisResult;
     }
 
-    private void createPCMSystem(final SoMoXConfiguration somoxConfiguration,
+    private void createPCMSystem(final EJBmoxConfiguration ejbmoxConfiguration,
             final SimpleAnalysisResult analysisResult) {
         final ComponentBuilder dummyComponentBuilder = new ComponentBuilder(analysisResult.getRoot(),
-                somoxConfiguration, analysisResult);
-        final PCMSystemBuilder pcmSystemBuilder = new PCMSystemBuilder(analysisResult.getRoot(), somoxConfiguration,
-                analysisResult, dummyComponentBuilder);
+                ejbmoxConfiguration.convertToSoMoXConfiguration(), analysisResult);
+        final PCMSystemBuilder pcmSystemBuilder = new PCMSystemBuilder(analysisResult.getRoot(), null, analysisResult,
+                dummyComponentBuilder);
         pcmSystemBuilder.buildSystemModel();
     }
 
-    private void analyzeProjectWithJaMoPP(final SoMoXConfiguration somoxConfiguration,
+    private void analyzeProjectWithJaMoPP(final AbstractMoxConfiguration moxConfiguration,
             final AnalysisResult analysisResult) throws ModelAnalyzerException {
         final KDMReader jaMoPPReader = new KDMReader();
-        final String projectName = somoxConfiguration.getFileLocations().getProjectName();
+        final String projectName = moxConfiguration.getFileLocations().getProjectName();
         try {
             jaMoPPReader.loadProject(projectName);
         } catch (final IOException e) {

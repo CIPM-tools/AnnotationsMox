@@ -4,8 +4,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.palladiosimulator.pcm.system.System;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.ModelAnalyzerException;
-import org.somox.configuration.SoMoXConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzer;
+import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 
 public class EJBmoxAnalyzerTest extends EJBmoxAbstractTest<System> {
 
@@ -19,11 +19,11 @@ public class EJBmoxAnalyzerTest extends EJBmoxAbstractTest<System> {
 
     @Override
     protected System executeTest(final String testMethodName) {
-        final SoMoXConfiguration somoxConfiguration = new SoMoXConfiguration();
-        somoxConfiguration.getFileLocations()
+        final EJBmoxConfiguration ejbmoxConfiguration = new EJBmoxConfiguration();
+        ejbmoxConfiguration.getFileLocations()
                 .setProjectName(EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName);
         try {
-            final AnalysisResult analysisResult = this.ejbMoxAnalyzer.analyze(somoxConfiguration, null,
+            final AnalysisResult analysisResult = this.ejbMoxAnalyzer.analyze(ejbmoxConfiguration, null,
                     new NullProgressMonitor());
             EJBmoxTestUtil.saveRepoSourceCodeDecoratorAndSystem(analysisResult, testMethodName);
             return analysisResult.getSystemModel();
