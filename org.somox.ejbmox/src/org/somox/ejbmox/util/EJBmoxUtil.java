@@ -19,6 +19,7 @@ import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.ejbmox.ejb.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
 import org.somox.ejbmox.ejb.ui.EJBmoxAnalzerJob;
+import org.somox.ejbmox.performance.inspectit2pcm.AnnotatePCMWithInspectITResults;
 import org.somox.gast2seff.jobs.GAST2SEFFJob;
 import org.somox.sourcecodedecorator.SourcecodedecoratorPackage;
 import org.somox.sourcecodedecorator.util.SourcecodedecoratorResourceFactoryImpl;
@@ -64,7 +65,9 @@ public class EJBmoxUtil {
 
         if (null != ejbmoxConfiguration.getInspectITFilePaths()
                 && 0 < ejbmoxConfiguration.getInspectITFilePaths().size()) {
+        	// TODO
         }
+        ejbMoxJob.add(new AnnotatePCMWithInspectITResults());
 
         ejbMoxJob.add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
 
