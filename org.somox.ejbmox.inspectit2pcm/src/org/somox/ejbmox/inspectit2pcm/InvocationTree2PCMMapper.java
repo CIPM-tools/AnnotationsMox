@@ -10,12 +10,18 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
+import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementSequence;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
- * Relates the events produced by a {@link InvocationTreeScanner} to SEFF actions of a PCM model. This allows to collect, for instance, the execution times of InternalActions. These are collected in a {@link PCMParametrization} instance, and are finally used to parametrize the PCM model ({@link #parametrize(AggregationStrategy)}).    
+ * Relates the events produced by a {@link InvocationTreeScanner} to SEFF
+ * actions of a PCM model. This allows to collect, for instance, the execution
+ * times of InternalActions. These are collected in a {@link PCMParametrization}
+ * instance, and are finally used to parametrize the PCM model (
+ * {@link #parametrize(AggregationStrategy)}).
  * 
  * @author Philipp Merkle
  *
@@ -86,8 +92,8 @@ public class InvocationTree2PCMMapper {
 		}
 
 		@Override
-		public void scanFinished() {
-			delegatee.scanFinished();
+		public void systemCallEnd(MethodIdent calledService, double time) {
+			delegatee.systemCallEnd(calledService, time);
 		}
 
 		@Override
@@ -115,6 +121,11 @@ public class InvocationTree2PCMMapper {
 			delegatee.internalActionEnd(callingService, time);
 		}
 
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			delegatee.sqlStatement(callingService, statement);
+		}
+
 		public void setDetectionType(ScanningProgressListener delegatee) {
 			this.delegatee = delegatee;
 		}
@@ -124,7 +135,7 @@ public class InvocationTree2PCMMapper {
 	private static abstract class AbstractScannerListener implements ScanningProgressListener {
 
 		@Override
-		public void scanFinished() {
+		public void systemCallEnd(MethodIdent calledService, double time) {
 			logger.warn("Encountered unexpected end of traversal.");
 		}
 
@@ -151,6 +162,11 @@ public class InvocationTree2PCMMapper {
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
 			logger.warn("Encountered unexpected end of internal action.");
+		}
+
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			logger.warn("Encountered unexpected SQL statement.");
 		}
 
 	}
@@ -213,11 +229,20 @@ public class InvocationTree2PCMMapper {
 		}
 
 		@Override
-		public void scanFinished() {
+		public void systemCallEnd(MethodIdent calledService, double time) {
 			if (!nestedMatcher.isEmpty()) {
-				nestedMatcher.peek().getScannerListener().scanFinished();
+				nestedMatcher.peek().getScannerListener().systemCallEnd(calledService, time);
 			} else {
-				super.scanFinished();
+				super.systemCallEnd(calledService, time);
+			}
+		}
+
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			if (!nestedMatcher.isEmpty()) {
+				nestedMatcher.peek().getScannerListener().sqlStatement(callingService, statement);
+			} else {
+				super.sqlStatement(callingService, statement);
 			}
 		}
 
@@ -226,6 +251,8 @@ public class InvocationTree2PCMMapper {
 	private class DetectInternalAction extends AbstractScannerListener {
 
 		private double timeBegin;
+
+		private SQLStatementSequence sqlStatements = new SQLStatementSequence();
 
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
@@ -245,7 +272,18 @@ public class InvocationTree2PCMMapper {
 
 			parametrization.captureResourceDemand((InternalAction) expectedAction, difference);
 
+			// capture SQL statements, if present
+			if (sqlStatements.size() > 0) {
+				parametrization.captureSQLStatementSequence((InternalAction) expectedAction, sqlStatements);
+				logger.info("Detected " + sqlStatements.size() + " SQL statements within internal action.");
+			}
+
 			expectNextAction(expectedAction.getSuccessor_AbstractAction());
+		}
+
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			sqlStatements.add(statement);
 		}
 
 	}
@@ -253,7 +291,7 @@ public class InvocationTree2PCMMapper {
 	private class DetectStopAction extends AbstractScannerListener {
 
 		@Override
-		public void scanFinished() {
+		public void systemCallEnd(MethodIdent calledService, double time) {
 			logger.debug("Successfully detected end of invocation tree.");
 
 			// reset detection

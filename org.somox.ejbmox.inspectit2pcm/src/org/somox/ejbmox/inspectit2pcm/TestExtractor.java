@@ -8,10 +8,16 @@ import java.util.Set;
 import org.apache.log4j.BasicConfigurator;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.RESTClient;
 
+/**
+ * 
+ * @author Philipp Merkle
+ *
+ */
 public class TestExtractor {
 	
 	private static Set<String> servicesFQN = new HashSet<>();
@@ -48,17 +54,17 @@ public class TestExtractor {
 
 		@Override
 		public void systemCallBegin(MethodIdent calledService, double time) {
-			System.out.println("BEGIN SYSTEM " + calledService.toFQN() + " @ " + time);
+			System.out.println("BEGIN SYSTEM CALL " + calledService.toFQN() + " @ " + time);
 		}
 
 		@Override
 		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-			System.out.println(callingService.toFQN() + "--END EXTERNAL " + calledService.toFQN() + " @ " + time);
+			System.out.println(callingService.toFQN() + "--END EXTERNAL CALL " + calledService.toFQN() + " @ " + time);
 		}
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			System.out.println(callingService.toFQN() + "--BEGIN EXTERNAL " + calledService.toFQN() + " @ " + time);
+			System.out.println(callingService.toFQN() + "--BEGIN EXTERNAL CALL " + calledService.toFQN() + " @ " + time);
 		}
 
 		@Override
@@ -70,9 +76,15 @@ public class TestExtractor {
 		public void internalActionEnd(MethodIdent callingService, double time) {
 			System.out.println(callingService.toFQN() + "--END INTERNAL ACTION " + " @ " + time);
 		}
+		
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			System.out.println(callingService.toFQN() + "--SQL STATEMENT " + statement);
+		}
 
 		@Override
-		public void scanFinished() {
+		public void systemCallEnd(MethodIdent calledService, double time) {
+			System.out.println("END SYSTEM CALL " + calledService.toFQN() + " @ " + time);
 			System.out.println("----------------");
 		}
 

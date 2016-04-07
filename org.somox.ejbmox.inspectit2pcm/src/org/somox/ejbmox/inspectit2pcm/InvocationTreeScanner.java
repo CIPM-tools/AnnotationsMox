@@ -8,12 +8,13 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
 
 /**
- * Scans an invocation tree (@link {@link InvocationSequence}) recursively in
- * order of (ascending) invocation times.
+ * Scans an invocation tree ({@link InvocationSequence}) recursively in order of
+ * (ascending) invocation times of nested invocation sequences.
  * <p>
  * The scanning progress is reported to a {@link ScanningProgressListener},
  * which allows to react to certain scanning events, including, for instance,
@@ -54,48 +55,55 @@ public class InvocationTreeScanner {
 	}
 
 	public void scanInvocationTree(InvocationSequence invocation) {
-		scanExternalServiceInvocation(invocation);
-		listener.scanFinished();
+		MethodIdent calledService = methodIdent(invocation);
+		listener.systemCallBegin(calledService, invocation.getStart());
+		listener.internalActionBegin(calledService, invocation.getStart());
+		scanInvocationTreeRecursive(invocation);
+		listener.internalActionEnd(calledService, invocation.getEnd());
+		listener.systemCallEnd(calledService, invocation.getEnd());
 	}
 
-	private void scanExternalServiceInvocation(InvocationSequence invocation) {
-		scanExternalServiceInvocation(invocation, new Stack<MethodIdent>());
+	private void scanInvocationTreeRecursive(InvocationSequence invocation) {
+		MethodIdent calledService = methodIdent(invocation);
+		Stack<MethodIdent> externalServicesStack = new Stack<>();
+		externalServicesStack.push(calledService);
+		scanInvocationTreeRecursive(invocation, externalServicesStack);
 	}
 
-	private void scanExternalServiceInvocation(InvocationSequence invocation, Stack<MethodIdent> invocationStack) {
-		MethodIdent calledService = methodIdToIdentMap.get(invocation.getMethodId());
-
-		// process external service invocation
-		if (!invocationStack.isEmpty()) {
-			listener.internalActionEnd(invocationStack.peek(), invocation.getStart());
-			listener.externalCallBegin(invocationStack.peek(), calledService, invocation.getStart());
-		} else {
-			listener.systemCallBegin(calledService, invocation.getStart());
-		}
-		invocationStack.push(calledService);
-		listener.internalActionBegin(invocationStack.peek(), invocation.getStart());
-
-		// recursively traverse child invocations
-		scanNestedInvocations(invocation, invocationStack);
-
-		// after traversing child invocations
-		listener.internalActionEnd(invocationStack.peek(), invocation.getEnd());
-		invocationStack.pop();
-
-		if (invocationStack.size() >= 1) {
-			listener.externalCallEnd(invocationStack.peek(), calledService, invocation.getEnd());
-			listener.internalActionBegin(invocationStack.peek(), invocation.getEnd());
-		}
-	}
-
-	private void scanNestedInvocations(InvocationSequence invocation, Stack<MethodIdent> invocationStack) {
+	private void scanInvocationTreeRecursive(InvocationSequence invocation, Stack<MethodIdent> externalServicesStack) {
+		MethodIdent callingService = methodIdent(invocation);
 		for (InvocationSequence nestedInvocation : invocation.getNestedSequences()) {
-			MethodIdent calledService = methodIdToIdentMap.get(nestedInvocation.getMethodId());
+			MethodIdent calledService = methodIdent(nestedInvocation);
 			if (isExternalService(calledService)) {
-				scanExternalServiceInvocation(nestedInvocation, invocationStack);
-			} else {
-				scanNestedInvocations(nestedInvocation, invocationStack);
+				// before external call, close existing internal action
+				listener.internalActionEnd(callingService, nestedInvocation.getStart());
+
+				// external call
+				listener.externalCallBegin(callingService, calledService, nestedInvocation.getStart());
+				listener.internalActionBegin(calledService, nestedInvocation.getStart());
+				externalServicesStack.push(calledService);
+				scanInvocationTreeRecursive(nestedInvocation, externalServicesStack);
+				externalServicesStack.pop();
+				listener.internalActionEnd(calledService, nestedInvocation.getEnd());
+				listener.externalCallEnd(callingService, calledService, nestedInvocation.getEnd());
+
+				// after external call, open new internal action
+				listener.internalActionBegin(callingService, nestedInvocation.getEnd());
+			} else { // internal call
+				scanSQLStatements(externalServicesStack.peek(), nestedInvocation);
+				scanInvocationTreeRecursive(nestedInvocation, externalServicesStack);
 			}
+		}
+	}
+
+	private MethodIdent methodIdent(InvocationSequence s) {
+		return methodIdToIdentMap.get(s.getMethodId());
+	}
+
+	private void scanSQLStatements(MethodIdent callingService, InvocationSequence invocation) {
+		SQLStatement stmt = invocation.getSqlStatement();
+		if (stmt != null) {
+			listener.sqlStatement(callingService, stmt);
 		}
 	}
 

@@ -30,6 +30,11 @@ public class InvocationSequence {
 	private InvocationSequence parentSequence;
 
 	/**
+	 * The associated sql statement data object. Can be <code>null</code>.
+	 */
+	private SQLStatement sqlStatementData;
+	
+	/**
 	 * The position if parent sequence is not <code>null</code>.
 	 */
 	private long position;
@@ -64,6 +69,10 @@ public class InvocationSequence {
 
 	public InvocationSequence getParentSequence() {
 		return parentSequence;
+	}
+	
+	public SQLStatement getSqlStatement() {
+		return sqlStatementData;
 	}
 
 	public long getPosition() {

@@ -8,6 +8,8 @@ import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import com.google.gson.reflect.TypeToken;
 
 /**
+ * REST service client to retrieve invocation sequences from a running InspectIT
+ * CMR.
  * 
  * @author Philipp Merkle
  *

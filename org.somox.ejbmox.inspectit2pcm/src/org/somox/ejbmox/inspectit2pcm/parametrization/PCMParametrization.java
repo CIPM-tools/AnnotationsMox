@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.palladiosimulator.pcm.seff.InternalAction;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
@@ -22,10 +23,26 @@ public class PCMParametrization {
 
 	private Map<InternalAction, List<Double>> resourceDemandMap;
 
+	private Map<InternalAction, List<SQLStatementSequence>> sqlStatementMap;
+
 	// private Map<String, List<Integer>> loopIterationMap;
 
 	public PCMParametrization() {
 		resourceDemandMap = new HashMap<>();
+		sqlStatementMap = new HashMap<>();
+	}
+
+	public void captureSQLStatementSequence(InternalAction action, SQLStatementSequence statements) {
+		if (action == null) {
+			throw new IllegalArgumentException("Action may not be null");
+		}
+		if (statements == null) {
+			throw new IllegalArgumentException("SQL Statements may not be null.");
+		}
+		if (!sqlStatementMap.containsKey(action)) {
+			sqlStatementMap.put(action, new ArrayList<>());
+		}
+		sqlStatementMap.get(action).add(statements);
 	}
 
 	public void captureResourceDemand(InternalAction action, double demand) {
@@ -47,7 +64,8 @@ public class PCMParametrization {
 			throw new UnsupportedOperationException();
 			// break;
 		case MEAN:
-			parametrizeWithMean();
+			parametrizeResourceDemandsWithMean();
+			parametrizeSQLStatementsWithMean();
 			break;
 		case MEDIAN:
 			throw new UnsupportedOperationException();
@@ -57,7 +75,7 @@ public class PCMParametrization {
 		}
 	}
 
-	private void parametrizeWithMean() {
+	private void parametrizeResourceDemandsWithMean() {
 		for (Entry<InternalAction, List<Double>> e : resourceDemandMap.entrySet()) {
 			InternalAction action = e.getKey();
 			List<Double> demands = e.getValue();
@@ -70,7 +88,22 @@ public class PCMParametrization {
 			PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
 			action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
 		}
+	}
 
+	private void parametrizeSQLStatementsWithMean() {
+		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
+			InternalAction action = e.getKey();
+			List<SQLStatementSequence> sequence = e.getValue();
+
+			// TODO iterate over list
+			if (!sequence.isEmpty()) {
+				SQLStatementSequence stmts = sequence.get(sequence.size() - 1);
+				for (SQLStatement stmt : stmts.getSequence()) {
+					PCMHelper.insertSQLStatementAsResourceCall(action, stmt);
+				}
+			}
+
+		}
 	}
 
 }
