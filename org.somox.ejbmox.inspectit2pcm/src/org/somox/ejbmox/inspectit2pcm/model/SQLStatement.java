@@ -19,6 +19,10 @@ public class SQLStatement extends TimerData {
 	 */
 	private String databaseUrl;
 
+	public SQLStatement(String sql) {
+		this.sql = sql;
+	}
+
 	public String getSql() {
 		return sql;
 	}
@@ -29,8 +33,7 @@ public class SQLStatement extends TimerData {
 
 	@Override
 	public String toString() {
-		return "SQLStatement [sql=" + sql + ", databaseUrl=" + databaseUrl + ", count=" + count + ", duration="
-				+ duration + ", cpuDuration=" + cpuDuration + ", exclusiveDuration=" + exclusiveDuration + "]";
+		return sql;
 	}
-	
+
 }
