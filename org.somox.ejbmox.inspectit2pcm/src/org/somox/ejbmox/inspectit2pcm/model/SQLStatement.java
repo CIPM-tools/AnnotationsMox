@@ -36,4 +36,31 @@ public class SQLStatement extends TimerData {
 		return sql;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((sql == null) ? 0 : sql.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SQLStatement other = (SQLStatement) obj;
+		if (sql == null) {
+			if (other.sql != null)
+				return false;
+		} else if (!sql.equals(other.sql))
+			return false;
+		return true;
+	}
+	
+	
+
 }

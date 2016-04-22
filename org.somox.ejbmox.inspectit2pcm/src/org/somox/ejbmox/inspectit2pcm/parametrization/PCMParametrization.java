@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
+import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
-import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
+import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
+import org.palladiosimulator.pcm.seff.SeffFactory;
+import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
@@ -90,19 +94,35 @@ public class PCMParametrization {
 		}
 	}
 
+	// TODO simplify whole method
 	private void parametrizeSQLStatementsWithMean() {
-		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
-			InternalAction action = e.getKey();
-			List<SQLStatementSequence> sequence = e.getValue();
 
-			// TODO iterate over list
-			if (!sequence.isEmpty()) {
-				SQLStatementSequence stmts = sequence.get(sequence.size() - 1);
-				for (SQLStatement stmt : stmts.getSequence()) {
-					PCMHelper.insertSQLStatementAsResourceCall(action, stmt);
-				}
+		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
+			SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
+
+			InternalAction action = e.getKey();
+			List<SQLStatementSequence> sequences = e.getValue();
+
+			for (SQLStatementSequence s : sequences) {
+				sql2pcm.addStatementSequence(s);
 			}
 
+			ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+
+			SPGraph g = sql2pcm.getLearner().getGraph();
+			g.toVerboseRepresentation();
+			g.traverse(new Graph2SEFFVisitor(), rdb);
+
+			for (AbstractAction aa : EcoreUtil.copyAll(rdb.getSteps_Behaviour())) {
+				aa.setResourceDemandingBehaviour_AbstractAction(action.getResourceDemandingBehaviour_AbstractAction());
+			}
+
+			AbstractAction predecessor = action.getPredecessor_AbstractAction();
+			AbstractAction successor = action.getSuccessor_AbstractAction();
+
+			predecessor.setSuccessor_AbstractAction(rdb.getSteps_Behaviour().get(0));
+			successor.setPredecessor_AbstractAction(rdb.getSteps_Behaviour().get(rdb.getSteps_Behaviour().size() - 1));
+			action.setResourceDemandingBehaviour_AbstractAction(null);
 		}
 	}
 
