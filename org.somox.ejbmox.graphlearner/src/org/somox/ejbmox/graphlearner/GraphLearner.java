@@ -27,14 +27,6 @@ public class GraphLearner {
 
 	private SPGraph graph;
 
-	public GraphLearner() {
-		// nothing to do
-	}
-
-	public GraphLearner(SPGraph initialGraph) {
-		this.graph = initialGraph;
-	}
-
 	public void integratePath(Path path) {
 		if (graph == null) {
 			graph = SPGraph.fromPath(path);
