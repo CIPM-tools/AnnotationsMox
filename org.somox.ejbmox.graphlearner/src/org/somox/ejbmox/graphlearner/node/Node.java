@@ -17,9 +17,13 @@ public abstract class Node {
 	public boolean hasParent() {
 		return parent != null;
 	}
-	
+
 	public void setParent(NestableNode parent) {
-		parent.addChild(this);
+		if (parent == null) {
+			parent = null;
+		} else {
+			parent.addChild(this);
+		}
 	}
 
 	public abstract <R> void accept(Visitor<R> v, R arg);
