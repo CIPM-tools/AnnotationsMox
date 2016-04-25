@@ -13,8 +13,8 @@ public class EnsureParallelParent implements ReturnOrientedVisitor<ParallelNode>
 	@Override
 	public ParallelNode visit(SeriesNode currentParent) {
 		ParallelNode newParent = new ParallelNode();
-		currentParent.replaceChildren(node, newParent);
-		node.insertAsChild(newParent);
+		currentParent.replaceChild(node, newParent);
+		node.setParent(newParent);
 		return newParent;
 	}
 

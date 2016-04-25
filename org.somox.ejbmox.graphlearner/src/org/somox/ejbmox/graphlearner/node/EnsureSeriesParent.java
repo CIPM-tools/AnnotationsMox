@@ -18,8 +18,8 @@ public class EnsureSeriesParent implements ReturnOrientedVisitor<SeriesNode> {
 	@Override
 	public SeriesNode visit(ParallelNode currentParent) {
 		SeriesNode newParent = new SeriesNode();
-		currentParent.replaceChildren(node, newParent);
-		node.insertAsChild(newParent);
+		currentParent.replaceChild(node, newParent);
+		node.setParent(newParent);
 		return newParent;
 	}
 

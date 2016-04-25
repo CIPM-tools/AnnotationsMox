@@ -14,8 +14,20 @@ public abstract class Node {
 		return parent;
 	}
 
-	public void setParent(NestableNode parent) {
-		this.parent = parent;
+	public boolean hasParent() {
+		return parent != null;
+	}
+	
+	public void setParent(NestableNode newParent) {
+		if (parent == newParent) {
+			return;
+		}
+		// remove this node from parent's children
+		if (parent != null) {
+			parent.removeChild(this);
+		}
+		parent = newParent;
+		newParent.children.add(this); // don't call add children
 	}
 
 	public abstract <R> void accept(Visitor<R> v, R arg);
@@ -25,20 +37,11 @@ public abstract class Node {
 	public NestableNode insertParent(NestableNode newParent) {
 		newParent.setParent(parent);
 		if (parent != null) {
-			parent.replaceChildren(this, newParent);
+			parent.replaceChild(this, newParent);
 		}
 		parent = newParent;
-		insertAsChild(newParent); // TODO
+		setParent(newParent); // TODO
 		return newParent;
-	}
-
-	public void insertAsChild(NestableNode newParent) {
-		// remove this node from parent's children
-		if (parent != null) {
-			parent.getChildren().remove(this);
-		}
-		newParent.getChildren().add(this);
-		parent = newParent;
 	}
 
 	public void insertAfter(Node node) {
@@ -61,10 +64,10 @@ public abstract class Node {
 		}
 		// remove this node from parent's children
 		if (parent != null) {
-			parent.getChildren().remove(this);
+			parent.removeChild(this);
 		}
 		NestableNode newParent = node.getParent();
-		newParent.getChildren().add(newParent.getChildren().indexOf(node) + position, this);
+		newParent.addChild(newParent.getChildren().indexOf(node) + position, this);
 		parent = newParent;
 	}
 
