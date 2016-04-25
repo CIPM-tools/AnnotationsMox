@@ -12,6 +12,8 @@ import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
+import org.palladiosimulator.pcm.seff.StartAction;
+import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
@@ -100,30 +102,45 @@ public class PCMParametrization {
 		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
 			SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
 
+			// learn graph from paths (SQL statement sequences)
 			InternalAction action = e.getKey();
 			List<SQLStatementSequence> sequences = e.getValue();
-
 			for (SQLStatementSequence s : sequences) {
 				sql2pcm.addStatementSequence(s);
 			}
-
-			ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-
 			SPGraph g = sql2pcm.getLearner().getGraph();
+
+			// create SEFF from graph (assumes "verbose" representation)
+			ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
 			g.toVerboseRepresentation();
-			g.traverse(new Graph2SEFFVisitor(), rdb);
+			g.traverse(new Graph2SEFFVisitor(), rdb); // stores SEFF in rdb
+														// variable
 
-			for (AbstractAction aa : EcoreUtil.copyAll(rdb.getSteps_Behaviour())) {
-				aa.setResourceDemandingBehaviour_AbstractAction(action.getResourceDemandingBehaviour_AbstractAction());
-			}
-
-			AbstractAction predecessor = action.getPredecessor_AbstractAction();
-			AbstractAction successor = action.getSuccessor_AbstractAction();
-
-			predecessor.setSuccessor_AbstractAction(rdb.getSteps_Behaviour().get(0));
-			successor.setPredecessor_AbstractAction(rdb.getSteps_Behaviour().get(rdb.getSteps_Behaviour().size() - 1));
-			action.setResourceDemandingBehaviour_AbstractAction(null);
+			replaceAction(action, rdb);
 		}
+	}
+
+	private void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour) {
+		// first collect all actions in a new ArrayList to avoid
+		// ConcurrentModificationException thrown by EMF
+		List<AbstractAction> insertActions = new ArrayList<>(behaviour.getSteps_Behaviour());
+		for (AbstractAction insertAction : insertActions) {
+			// ignore Start and Stop actions
+			if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
+				continue;
+			}
+			insertAction.setResourceDemandingBehaviour_AbstractAction(
+					replaceAction.getResourceDemandingBehaviour_AbstractAction());
+		}
+
+		AbstractAction predecessor = replaceAction.getPredecessor_AbstractAction();
+		predecessor.setSuccessor_AbstractAction(PCMHelper.findStartAction(behaviour).getSuccessor_AbstractAction());
+
+		AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
+		successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
+
+		// remove action that has been replaced 
+		replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
 	}
 
 }

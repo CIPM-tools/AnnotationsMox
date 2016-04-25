@@ -15,6 +15,7 @@ import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
+import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
@@ -73,6 +74,11 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
 		StopAction stopAction = SeffFactory.eINSTANCE.createStopAction();
 		stopAction.setResourceDemandingBehaviour_AbstractAction(arg);
 		stopAction.setPredecessor_AbstractAction(lastActionStack.pop());
+	}
+
+	@Override
+	public void visit(RootNode n, ResourceDemandingBehaviour arg) {
+		n.getChild().accept(this, arg);
 	}
 
 }
