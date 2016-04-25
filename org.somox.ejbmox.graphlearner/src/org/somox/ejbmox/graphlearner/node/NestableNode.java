@@ -17,9 +17,13 @@ public abstract class NestableNode extends Node {
 	}
 
 	public void addChild(int index, Node node) {
+		if (children.contains(node)) {
+			throw new IllegalStateException("Cannot add node because it is already a child: " + node);
+		}
+
 		// remove node from current parent's children
-		if (node.hasParent()) {
-			node.getParent().removeChild(this);
+		if (node.parent != null && node.parent != this) {
+			node.parent.children.remove(node);
 		}
 		children.add(index, node);
 
@@ -28,6 +32,10 @@ public abstract class NestableNode extends Node {
 	}
 
 	public void removeChild(Node node) {
+		if (!children.contains(node)) {
+			throw new IllegalStateException("Cannot remove node because it is no child: " + node);
+		}
+
 		children.remove(node);
 		node.parent = null;
 	}

@@ -1,5 +1,7 @@
 package org.somox.ejbmox.graphlearner.visitor;
 
+import java.util.ArrayList;
+
 import org.somox.ejbmox.graphlearner.Visitor;
 import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
@@ -28,14 +30,16 @@ public class VerboseGraphVisitor implements Visitor<Void> {
 
 	@Override
 	public void visit(ParallelNode n, Void arg) {
-		for (Node child : n.getChildren()) {
+		// use new ArrayList to avoid concurrent modification exception
+		for (Node child : new ArrayList<>(n.getChildren())) {
 			child.accept(this, arg);
 		}
 	}
 
 	@Override
 	public void visit(SeriesNode n, Void arg) {
-		for (Node child : n.getChildren()) {
+		// use new ArrayList to avoid concurrent modification exception
+		for (Node child : new ArrayList<>(n.getChildren())) {
 			child.accept(this, arg);
 		}
 	}

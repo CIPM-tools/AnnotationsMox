@@ -13,18 +13,8 @@ public class RootNode extends NestableNode {
 	}
 
 	@Override
-	public NestableNode insertParent(NestableNode newParent) {
-		throw new RuntimeException("Cannot change position of root node");
-	}
-
-	@Override
-	public void insertAfter(Node node) {
-		throw new RuntimeException("Cannot change position of root node");
-	}
-
-	@Override
-	public void insertBefore(Node node) {
-		throw new RuntimeException("Cannot change position of root node");
+	public void insertParent(NestableNode newParent) {
+		throw new RuntimeException("Cannot insert parent for root node");
 	}
 
 	@Override
@@ -45,7 +35,6 @@ public class RootNode extends NestableNode {
 	@Override
 	public void insertSeriesSuccessor(Node successor) {
 		SeriesNode n = new SeriesNode();
-		successor.setParent(n);
 		n.setParent(this);
 		successor.setParent(n);
 	}
@@ -53,7 +42,6 @@ public class RootNode extends NestableNode {
 	@Override
 	public void insertSeriesPredecessor(Node predecessor) {
 		SeriesNode n = new SeriesNode();
-		predecessor.setParent(n);
 		n.setParent(this);
 		predecessor.setParent(n);
 	}
@@ -61,7 +49,6 @@ public class RootNode extends NestableNode {
 	@Override
 	public void insertParallel(Node parallel) {
 		ParallelNode n = new ParallelNode();
-		parallel.setParent(n);
 		n.setParent(this);
 		parallel.setParent(n);
 	}
