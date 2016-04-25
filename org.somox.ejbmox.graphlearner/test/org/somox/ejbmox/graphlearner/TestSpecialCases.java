@@ -27,14 +27,14 @@ public class TestSpecialCases {
 	public void inverseOrderWithCommonPrefix() {
 		learner.integratePath(PathBuilder.path("A", "B", "C"));
 		learner.integratePath(PathBuilder.path("A", "C", "B"));
-		Assert.assertEquals("A[BC|CB]", learner.getGraph().toString());
+		Assert.assertEquals("A[B|]C[B|]", learner.getGraph().toString()); // or A[BC|CB]?
 	}
 	
 	@Test
 	public void inverseOrderWithoutCommonPrefix() {
 		learner.integratePath(PathBuilder.path("B", "C"));
 		learner.integratePath(PathBuilder.path("C", "B"));
-		Assert.assertEquals("[BC|CB]", learner.getGraph().toString());
+		Assert.assertEquals("[B|]C[B|]", learner.getGraph().toString()); // or [BC|CB]?
 	}
 	
 	@Test
@@ -52,10 +52,17 @@ public class TestSpecialCases {
 	}
 	
 	@Test
-	public void insertTail() {
+	public void insertTailOneNode() {
 		learner.integratePath(PathBuilder.path("A", "B"));
 		learner.integratePath(PathBuilder.path("A", "B", "C"));
 		Assert.assertEquals("AB[C|]", learner.getGraph().toString());
+	}
+	
+	@Test
+	public void insertTailTwoNodes() {
+		learner.integratePath(PathBuilder.path("A", "B"));
+		learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
+		Assert.assertEquals("AB[CD|]", learner.getGraph().toString());
 	}
 	
 	@Test

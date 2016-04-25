@@ -75,7 +75,7 @@ public class TestCombinationsOfThree {
 	public void missingAll() {
 		learner.integratePath(PathBuilder.path("A", "B", "C"));
 		learner.integratePath(PathBuilder.path("D"));
-		Assert.assertEquals("[ABC|][D|]", learner.getGraph().toString()); // or [A|][B|][C|][D|]?
+		Assert.assertEquals("[ABC|D]", learner.getGraph().toString()); // or [ABC|D]?
 	}
 
 }

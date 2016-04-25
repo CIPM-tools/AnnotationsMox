@@ -10,8 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.somox.ejbmox.graphlearner.GraphLearner;
-import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.util.PathBuilder;
 
 public class TestAllPaths {
@@ -40,7 +38,7 @@ public class TestAllPaths {
 		
 		List<Path> actual = learner.getGraph().allPaths();
 		
-		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(toStringSet(expected), toStringSet(actual));
 	}
 	
 	@Test
@@ -54,7 +52,7 @@ public class TestAllPaths {
 		
 		List<Path> actual = learner.getGraph().allPaths();
 		
-		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(toStringSet(expected), toStringSet(actual));
 	}
 	
 	@Test
@@ -63,15 +61,21 @@ public class TestAllPaths {
 		learner.integratePath(PathBuilder.path("A", "C"));
 		learner.integratePath(PathBuilder.path("C"));
 		
-		Set<Path> expected = new HashSet<>();
+		List<Path> expected = new ArrayList<>();
 		expected.add(PathBuilder.path("A", "B", "C"));
 		expected.add(PathBuilder.path("A", "C"));
 		expected.add(PathBuilder.path("B", "C"));
 		expected.add(PathBuilder.path("C"));
 		
-		Set<Path> actual = new HashSet<>(learner.getGraph().allPaths());
+		List<Path> actual = learner.getGraph().allPaths();
 		
-		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(toStringSet(expected), toStringSet(actual));
+	}
+
+	private Set<String> toStringSet(List<Path> allPaths) {
+		Set<String> allPathString = new HashSet<>();
+		allPaths.forEach(p -> allPathString.add(p.toString()));
+		return allPathString;
 	}
 	
 }
