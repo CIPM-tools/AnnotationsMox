@@ -3,6 +3,7 @@ package org.somox.ejbmox.graphlearner;
 import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
+import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 /**
@@ -21,5 +22,7 @@ public interface ReturnOrientedVisitor<R> {
 	R visit(ParallelNode n);
 
 	R visit(SeriesNode n);
+	
+	R visit(RootNode n);
 
 }

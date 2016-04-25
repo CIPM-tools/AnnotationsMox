@@ -91,16 +91,16 @@ public class GraphLearner {
 			switch (delta.getType()) {
 			case CHANGE:
 				if (haveSameParent(originalPath)) { // TODO actually needed!?
-					graph.insertParallel(originalPath.first(), revisedPath.first());
+					SPGraph.insertParallel(originalPath.first(), revisedPath.first());
 					Node lastNode = originalPath.first();
 					for (Node insertNode : originalPath.subPathStartingAt(1).getNodes()) {
-						graph.insertSuccessor(lastNode, insertNode);
+						SPGraph.insertSeriesSuccessor(lastNode, insertNode);
 						lastNode = insertNode;
 					}
 
 					lastNode = revisedPath.first();
 					for (Node insertNode : revisedPath.subPathStartingAt(1).getNodes()) {
-						graph.insertSuccessor(lastNode, insertNode);
+						SPGraph.insertSeriesSuccessor(lastNode, insertNode);
 						lastNode = insertNode;
 					}
 				} else {
@@ -110,10 +110,10 @@ public class GraphLearner {
 				break;
 			case DELETE: {
 				Node firstDeleteNode = originalPath.first();
-				graph.insertParallel(firstDeleteNode, new EpsilonLeafNode());
+				SPGraph.insertParallel(firstDeleteNode, new EpsilonLeafNode());
 				Node lastNode = firstDeleteNode;
 				for (Node insertNode : originalPath.subPathStartingAt(1).getNodes()) {
-					graph.insertSuccessor(lastNode, insertNode);
+					SPGraph.insertSeriesSuccessor(lastNode, insertNode);
 					lastNode = insertNode;
 				}
 				break;
@@ -122,21 +122,21 @@ public class GraphLearner {
 				if (delta.getOriginal().getPosition() == 0) { // head
 					// inserting optional node at head
 					Node firstInsertNode = revisedPath.first();
-					graph.insertPredecessor(graph.getSource(), firstInsertNode);
-					graph.insertParallel(firstInsertNode, new EpsilonLeafNode());
+					SPGraph.insertSeriesPredecessor(graph.getSource(), firstInsertNode);
+					SPGraph.insertParallel(firstInsertNode, new EpsilonLeafNode());
 					Node lastNode = firstInsertNode;
 					for (Node insertNode : revisedPath.subPathStartingAt(1).getNodes()) {
-						graph.insertSuccessor(lastNode, insertNode);
+						SPGraph.insertSeriesSuccessor(lastNode, insertNode);
 						lastNode = insertNode;
 					}
 				} else {
 					Node firstInsertNode = revisedPath.first();
 					Node nodeBeforeInsert = closestPath.getNodes().get(delta.getOriginal().getPosition() - 1);
-					graph.insertSuccessor(nodeBeforeInsert, firstInsertNode);
-					graph.insertParallel(firstInsertNode, new EpsilonLeafNode());
+					SPGraph.insertSeriesSuccessor(nodeBeforeInsert, firstInsertNode);
+					SPGraph.insertParallel(firstInsertNode, new EpsilonLeafNode());
 					Node lastNode = firstInsertNode;
 					for (Node insertNode : revisedPath.subPathStartingAt(1).getNodes()) {
-						graph.insertSuccessor(lastNode, insertNode);
+						SPGraph.insertSeriesSuccessor(lastNode, insertNode);
 						lastNode = insertNode;
 					}
 				}

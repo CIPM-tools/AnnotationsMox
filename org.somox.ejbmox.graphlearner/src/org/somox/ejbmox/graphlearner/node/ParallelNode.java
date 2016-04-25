@@ -14,5 +14,5 @@ public class ParallelNode extends NestableNode {
 	public <R> R accept(ReturnOrientedVisitor<R> v) {
 		return v.visit(this);
 	}
-	
+
 }

@@ -3,10 +3,8 @@ package org.somox.ejbmox.graphlearner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.somox.ejbmox.graphlearner.node.NestableNode;
 import org.somox.ejbmox.graphlearner.node.Node;
-import org.somox.ejbmox.graphlearner.node.ParallelNode;
-import org.somox.ejbmox.graphlearner.node.SeriesNode;
+import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.visitor.AllPathsVisitor;
 import org.somox.ejbmox.graphlearner.visitor.DepthFirstVisitor;
 import org.somox.ejbmox.graphlearner.visitor.StringifyVisitor;
@@ -22,26 +20,26 @@ import org.somox.ejbmox.graphlearner.visitor.VerboseGraphVisitor;
  */
 public class SPGraph {
 
-	private Node root;
+	private RootNode root;
 
-	public SPGraph(Node root) {
-		this.root = root;
+	public SPGraph() {
+		this.root = new RootNode();
 	}
 
 	public static SPGraph fromPath(Path path) {
 		if (path.isEmpty()) {
 			throw new RuntimeException("Path may not be empty");
 		}
-		SPGraph graph = new SPGraph(path.first());
+		SPGraph graph = new SPGraph();
 		Node lastNode = graph.root;
-		for (Node node : path.subPathStartingAt(1).getNodes()) {
-			graph.insertSuccessor(lastNode, node);
+		for (Node node : path.getNodes()) {
+			lastNode.insertSeriesSuccessor(node);
 			lastNode = node;
 		}
 		return graph;
 	}
 
-	public Node getRoot() {
+	public RootNode getRoot() {
 		return root;
 	}
 
@@ -81,51 +79,16 @@ public class SPGraph {
 		getRoot().accept(v, null);
 	}
 
-	public NestableNode ensureSeriesParent(Node anchor) {
-		if (anchor.getParent() == null) { // anchor is root
-			SeriesNode n = new SeriesNode();
-			anchor.insertAsChild(n);
-			root = n;
-			return n;
-		} else if (anchor.getParent() instanceof SeriesNode) {
-			return (SeriesNode) anchor.getParent();
-		} else if (anchor.getParent() instanceof ParallelNode) {
-			NestableNode n = anchor.insertParent(new SeriesNode());
-			return n;
-		} else {
-			throw new RuntimeException("Unknown type: " + anchor.getParent().getClass());
-		}
+	public static void insertSeriesSuccessor(Node node, Node successor) {
+		node.insertSeriesSuccessor(successor);
 	}
 
-	public NestableNode ensureParallelParent(Node anchor) {
-		if (anchor.getParent() == null) { // anchor is root
-			ParallelNode n = new ParallelNode();
-			anchor.insertAsChild(n);
-			root = n;
-			return n;
-		} else if (anchor.getParent() instanceof SeriesNode) {
-			NestableNode n = anchor.insertParent(new ParallelNode());
-			return n;
-		} else if (anchor.getParent() instanceof ParallelNode) {
-			return anchor.getParent();
-		} else {
-			throw new RuntimeException("Unknown type: " + anchor.getParent().getClass());
-		}
+	public static void insertSeriesPredecessor(Node node, Node predecessor) {
+		node.insertSeriesPredecessor(predecessor);
 	}
-
-	public void insertSuccessor(Node anchor, Node successor) {
-		ensureSeriesParent(anchor);
-		successor.insertAfter(anchor);
-	}
-
-	public void insertPredecessor(Node anchor, Node predecessor) {
-		ensureSeriesParent(anchor);
-		predecessor.insertBefore(anchor);
-	}
-
-	public void insertParallel(Node anchor, Node parallel) {
-		ensureParallelParent(anchor);
-		parallel.insertAfter(anchor);
+	
+	public static void insertParallel(Node node, Node parallel) {
+		node.insertParallel(parallel);
 	}
 
 	@Override

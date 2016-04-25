@@ -9,6 +9,7 @@ import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
+import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 public class AllPathsVisitor implements Visitor<List<Path>> {
@@ -40,6 +41,11 @@ public class AllPathsVisitor implements Visitor<List<Path>> {
 		for (Node child : node.getChildren()) {
 			child.accept(this, paths);
 		}
+	}
+
+	@Override
+	public void visit(RootNode n, List<Path> arg) {
+		n.getChild().accept(this, arg);
 	}
 
 	private List<Path> copy(List<Path> paths) {

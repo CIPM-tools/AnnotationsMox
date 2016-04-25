@@ -9,4 +9,5 @@ Export-Package: difflib,
  difflib.myers,
  org.somox.ejbmox.graphlearner,
  org.somox.ejbmox.graphlearner.node,
+ org.somox.ejbmox.graphlearner.util,
  org.somox.ejbmox.graphlearner.visitor

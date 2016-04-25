@@ -8,6 +8,7 @@ import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
+import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 public class DepthFirstVisitor implements Visitor<Void> {
@@ -40,6 +41,11 @@ public class DepthFirstVisitor implements Visitor<Void> {
 
 	public List<Node> getNodes() {
 		return nodes;
+	}
+
+	@Override
+	public void visit(RootNode n, Void arg) {
+		n.getChild().accept(this, arg);
 	}
 
 }
