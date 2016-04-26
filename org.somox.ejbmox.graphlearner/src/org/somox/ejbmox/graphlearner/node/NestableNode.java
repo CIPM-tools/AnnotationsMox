@@ -24,9 +24,9 @@ public abstract class NestableNode extends Node {
 		children.add(index, node);
 	}
 
-	private void adjustParent(Node node, NestableNode newParent) {
+	private static void adjustParent(Node node, NestableNode newParent) {
 		// remove node from current parent's children
-		if (node.parent != null && node.parent != this) {
+		if (node.parent != null && node.parent != newParent) {
 			node.parent.children.remove(node);
 		}
 
