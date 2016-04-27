@@ -6,6 +6,7 @@ import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
 import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
+import org.palladiosimulator.pcm.seff.ProbabilisticBranchTransition;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.StartAction;
@@ -51,9 +52,10 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
 		BranchAction branch = SeffFactory.eINSTANCE.createBranchAction();
 		branch.setResourceDemandingBehaviour_AbstractAction(arg);
 		for (Node node : n.getChildren()) {
-			AbstractBranchTransition transition = SeffFactory.eINSTANCE.createProbabilisticBranchTransition();
+			ProbabilisticBranchTransition transition = SeffFactory.eINSTANCE.createProbabilisticBranchTransition();
 			transition.setBranchAction_AbstractBranchTransition(branch);
 			transition.setBranchBehaviour_BranchTransition(SeffFactory.eINSTANCE.createResourceDemandingBehaviour());
+			transition.setBranchProbability((double) node.getAttribute(NodeAttribute.INVOCATION_PROBABILITY));
 			node.accept(this, transition.getBranchBehaviour_BranchTransition());
 		}
 
