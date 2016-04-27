@@ -2,6 +2,7 @@ package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
@@ -11,28 +12,36 @@ import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
-import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.graphlearner.util.PathBuilder;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class TestGraph2SEFFVisitor {
 
+	private InvocationGraphLearner learner;
+	
 	@BeforeClass
 	public static void setup() {
 		// log4j basic setup
 		BasicConfigurator.configure();
 	}
+	
+	@Before
+	public void beforeTest() {
+		learner = new InvocationGraphLearner();
+	}
 
 	@Test
 	public void testSingleNode() {
-		GraphLearner learner = new GraphLearner();
 		learner.integratePath(PathBuilder.path("A"));
 
 		SPGraph learnedGraph = learner.getGraph();
 		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
 		learnedGraph.toVerboseRepresentation();
+		learnedGraph.traverse(new InvocationProbabilityVisitor());
 		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
 		Assert.assertEquals(3, behaviour.getSteps_Behaviour().size());
@@ -44,12 +53,12 @@ public class TestGraph2SEFFVisitor {
 
 	@Test
 	public void testTwoNodes() {
-		GraphLearner learner = new GraphLearner();
 		learner.integratePath(PathBuilder.path("A", "B"));
 
 		SPGraph learnedGraph = learner.getGraph();
 		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
 		learnedGraph.toVerboseRepresentation();
+		learnedGraph.traverse(new InvocationProbabilityVisitor());
 		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
 		Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
@@ -62,13 +71,13 @@ public class TestGraph2SEFFVisitor {
 
 	@Test
 	public void testTwoNodes_oneParallel() {
-		GraphLearner learner = new GraphLearner();
 		learner.integratePath(PathBuilder.path("A", "B"));
 		learner.integratePath(PathBuilder.path("A", "C"));
 
 		SPGraph learnedGraph = learner.getGraph();
 		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
 		learnedGraph.toVerboseRepresentation();
+		learnedGraph.traverse(new InvocationProbabilityVisitor());
 		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
 		Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
