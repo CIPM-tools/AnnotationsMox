@@ -14,12 +14,6 @@ import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 public class AllPathsVisitor implements Visitor<List<Path>> {
 
-	public boolean includeEpsilon = false;
-
-	public AllPathsVisitor(boolean includeEpsilon) {
-		this.includeEpsilon = includeEpsilon;
-	}
-
 	@Override
 	public void visit(LeafNode node, List<Path> paths) {
 		concat(paths, node);
@@ -27,13 +21,12 @@ public class AllPathsVisitor implements Visitor<List<Path>> {
 
 	@Override
 	public void visit(EpsilonLeafNode node, List<Path> paths) {
-		if (includeEpsilon) {
-			concat(paths, node);
-		}
+		concat(paths, node);
 	}
 
 	@Override
 	public void visit(ParallelNode node, List<Path> paths) {
+		concat(paths, node);
 		List<Path> pathsNew = new ArrayList<>();
 		for (Node child : node.getChildren()) {
 			List<Path> pathsCopy = copy(paths);
@@ -46,14 +39,16 @@ public class AllPathsVisitor implements Visitor<List<Path>> {
 
 	@Override
 	public void visit(SeriesNode node, List<Path> paths) {
+		concat(paths, node);
 		for (Node child : node.getChildren()) {
 			child.accept(this, paths);
 		}
 	}
 
 	@Override
-	public void visit(RootNode n, List<Path> arg) {
-		n.getChild().accept(this, arg);
+	public void visit(RootNode node, List<Path> paths) {
+		concat(paths, node);
+		node.getChild().accept(this, paths);
 	}
 
 	private List<Path> copy(List<Path> paths) {
@@ -69,11 +64,10 @@ public class AllPathsVisitor implements Visitor<List<Path>> {
 		return copy;
 	}
 
-	private List<Path> concat(List<Path> paths, Node node) {
+	private void concat(List<Path> paths, Node node) {
 		for (Path path : paths) {
 			path.add(node);
 		}
-		return paths;
 	}
 
 }

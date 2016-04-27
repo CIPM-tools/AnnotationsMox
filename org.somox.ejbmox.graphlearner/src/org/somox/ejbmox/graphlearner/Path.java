@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
+import org.somox.ejbmox.graphlearner.node.NestableNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 
 public class Path implements Cloneable {
@@ -63,10 +64,22 @@ public class Path implements Cloneable {
 		return fromNodes(nodes.subList(fromIndex, nodes.size()));
 	}
 	
+	// TODO better use visitor to avoid instanceof?
 	public Path excludeEpsilon() {
 		List<Node> result = new ArrayList<>();
 		for(Node n : getNodes()) {
 			if(!(n instanceof EpsilonLeafNode)) {
+				result.add(n);
+			}
+		}
+		return fromNodes(result);
+	}
+
+	// TODO better use visitor to avoid instanceof?
+	public Path excludeNonLeaves() {
+		List<Node> result = new ArrayList<>();
+		for(Node n : getNodes()) {
+			if(!(n instanceof NestableNode)) {
 				result.add(n);
 			}
 		}

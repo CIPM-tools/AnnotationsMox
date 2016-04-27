@@ -96,6 +96,10 @@ public abstract class Node {
 	public Object getAttribute(Object key) {
 		return attributes.get(key);
 	}
+	
+	public void copyAttributesFrom(Node node) {
+		attributes = new HashMap<>(node.attributes);
+	}
 
 	/**
 	 * Adds or updates a annotation.

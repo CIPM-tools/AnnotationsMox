@@ -60,15 +60,11 @@ public class SPGraph {
 	public <R> void traverse(Visitor<R> visitor, R arg) {
 		getRoot().accept(visitor, arg);
 	}
-
-	public List<Path> allPaths() {
-		return allPaths(false);
-	}
 	
-	public List<Path> allPaths(boolean includeEpsilon) {
+	public List<Path> allPaths() {
 		List<Path> paths = new ArrayList<>();
 		paths.add(Path.emptyPath());
-		getRoot().accept(new AllPathsVisitor(includeEpsilon), paths);
+		getRoot().accept(new AllPathsVisitor(), paths);
 		return paths;
 	}
 

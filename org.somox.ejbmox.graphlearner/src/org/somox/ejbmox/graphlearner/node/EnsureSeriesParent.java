@@ -18,6 +18,10 @@ public class EnsureSeriesParent implements ReturnOrientedVisitor<SeriesNode> {
 	@Override
 	public SeriesNode visit(ParallelNode currentParent) {
 		SeriesNode newParent = new SeriesNode();
+
+		// TODO copying attributes may not be appropriate in any case
+		newParent.copyAttributesFrom(node);
+		
 		currentParent.replaceChild(node, newParent);
 		node.setParent(newParent);
 		return newParent;

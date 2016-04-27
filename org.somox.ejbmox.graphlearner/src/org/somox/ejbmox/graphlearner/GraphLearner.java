@@ -32,7 +32,7 @@ public class GraphLearner {
 			graph = SPGraph.fromPath(path);
 		} else {
 			Path closestPath = findPathClosestTo(path);
-			integrate(closestPath.excludeEpsilon(), path.excludeEpsilon());
+			integrate(closestPath.excludeNonLeaves().excludeEpsilon(), path.excludeNonLeaves().excludeEpsilon());
 		}
 	}
 
@@ -47,13 +47,13 @@ public class GraphLearner {
 	 * @return
 	 */
 	protected Path findPathClosestTo(Path path) {
-		List<Path> paths = graph.allPaths(true);
+		List<Path> paths = graph.allPaths();
 		LOG.debug("Collected paths: " + paths);
 		int minCost = Integer.MAX_VALUE;
 		Path minPath = null;
 		for (Path p : paths) {
-			Patch<Node> patch = DiffUtils.diff(p.excludeEpsilon().getNodes(), path.excludeEpsilon().getNodes(),
-					new NodeEqualiser());
+			Patch<Node> patch = DiffUtils.diff(p.excludeNonLeaves().excludeEpsilon().getNodes(),
+					path.excludeNonLeaves().excludeEpsilon().getNodes(), new NodeEqualiser());
 			int cost = cost(patch);
 			if (cost < minCost) {
 				minCost = cost;
