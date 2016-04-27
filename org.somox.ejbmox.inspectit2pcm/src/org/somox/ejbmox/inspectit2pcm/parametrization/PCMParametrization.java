@@ -15,6 +15,7 @@ import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**

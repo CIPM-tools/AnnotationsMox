@@ -1,9 +1,10 @@
-package org.somox.ejbmox.graphlearner.util;
+package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import java.util.List;
 
 import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.Path;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.NodeAttribute;
 
 public class PathUtils {
 
@@ -11,7 +12,7 @@ public class PathUtils {
 		Path path = findPath(pathRepresentation, learner);
 		int[] counts = new int[path.size()];
 		for (int i = 0; i < path.size(); i++) {
-			counts[i] = path.getNodes().get(i).getCounter();
+			counts[i] = (int) path.getNodes().get(i).getAttribute(NodeAttribute.INVOCATION_COUNT);
 		}
 		return counts;
 	}

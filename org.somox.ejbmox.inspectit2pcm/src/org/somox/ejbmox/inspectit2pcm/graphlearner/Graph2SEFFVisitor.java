@@ -1,4 +1,4 @@
-package org.somox.ejbmox.inspectit2pcm.parametrization;
+package org.somox.ejbmox.inspectit2pcm.graphlearner;
 
 import java.util.Stack;
 

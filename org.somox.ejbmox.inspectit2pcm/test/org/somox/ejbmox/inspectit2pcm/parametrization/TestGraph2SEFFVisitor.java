@@ -14,6 +14,7 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.graphlearner.util.PathBuilder;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class TestGraph2SEFFVisitor {

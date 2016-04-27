@@ -1,4 +1,4 @@
-package org.somox.ejbmox.graphlearner;
+package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import java.util.List;
 
@@ -7,8 +7,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.util.PathBuilder;
-import org.somox.ejbmox.graphlearner.util.PathUtils;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
 
 public class TestCounter {
 
@@ -22,7 +23,7 @@ public class TestCounter {
 
 	@Before
 	public void beforeTest() {
-		learner = new GraphLearner();
+		learner = new InvocationGraphLearner();
 	}
 
 	@Test

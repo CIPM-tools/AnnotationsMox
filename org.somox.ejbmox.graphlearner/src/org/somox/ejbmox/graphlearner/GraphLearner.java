@@ -34,17 +34,6 @@ public class GraphLearner {
 			Path closestPath = findPathClosestTo(path);
 			integrate(closestPath.excludeEpsilon(), path.excludeEpsilon());
 		}
-		Path integratedPath = findPathClosestTo(path);
-		incrementCounterAlongPath(integratedPath);
-	}
-
-	private void incrementCounterAlongPath(Path integratedPath) {
-		for (Node node : integratedPath.getNodes()) {
-			if (node instanceof LeafNode) {
-				LeafNode leaf = (LeafNode) node;
-				leaf.incrementCounter();
-			}
-		}
 	}
 
 	public SPGraph getGraph() {
@@ -57,7 +46,7 @@ public class GraphLearner {
 	 * @param path
 	 * @return
 	 */
-	private Path findPathClosestTo(Path path) {
+	protected Path findPathClosestTo(Path path) {
 		List<Path> paths = graph.allPaths(true);
 		LOG.debug("Collected paths: " + paths);
 		int minCost = Integer.MAX_VALUE;
@@ -75,7 +64,7 @@ public class GraphLearner {
 	}
 
 	// TODO cost calculation could be improved
-	private int cost(Patch<Node> patch) {
+	protected int cost(Patch<Node> patch) {
 		int cost = 0;
 		for (Delta<Node> d : patch.getDeltas()) {
 			cost += Math.max(d.getOriginal().size(), d.getRevised().size());
@@ -84,7 +73,7 @@ public class GraphLearner {
 	}
 
 	// TODO simplify and get rid of duplicated code
-	private void integrate(Path closestPath, Path path) {
+	protected void integrate(Path closestPath, Path path) {
 		LOG.debug("Integrating " + path + " into path " + closestPath);
 
 		Patch<Node> patch = DiffUtils.diff(closestPath.getNodes(), path.getNodes(), new NodeEqualiser());

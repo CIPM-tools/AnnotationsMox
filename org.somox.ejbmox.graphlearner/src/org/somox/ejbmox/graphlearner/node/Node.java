@@ -1,5 +1,8 @@
 package org.somox.ejbmox.graphlearner.node;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.somox.ejbmox.graphlearner.ReturnOrientedVisitor;
 import org.somox.ejbmox.graphlearner.Visitor;
 
@@ -10,7 +13,7 @@ public abstract class Node {
 
 	protected NestableNode parent;
 
-	private int counter;
+	private Map<Object, Object> attributes = new HashMap<>();
 
 	public NestableNode getParent() {
 		return parent;
@@ -90,12 +93,18 @@ public abstract class Node {
 		parallel.insertAfter(this);
 	}
 
-	public void incrementCounter() {
-		counter++;
+	public Object getAttribute(Object key) {
+		return attributes.get(key);
 	}
 
-	public int getCounter() {
-		return counter;
+	/**
+	 * Adds or updates a annotation.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void setAttribute(Object key, Object value) {
+		attributes.put(key, value);
 	}
 
 	@Override
