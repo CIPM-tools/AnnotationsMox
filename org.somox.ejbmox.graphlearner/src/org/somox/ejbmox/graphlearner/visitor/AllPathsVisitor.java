@@ -14,14 +14,22 @@ import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 public class AllPathsVisitor implements Visitor<List<Path>> {
 
+	public boolean includeEpsilon = false;
+
+	public AllPathsVisitor(boolean includeEpsilon) {
+		this.includeEpsilon = includeEpsilon;
+	}
+
 	@Override
 	public void visit(LeafNode node, List<Path> paths) {
 		concat(paths, node);
 	}
 
 	@Override
-	public void visit(EpsilonLeafNode n, List<Path> arg) {
-		// include only "real" leaf nodes
+	public void visit(EpsilonLeafNode node, List<Path> paths) {
+		if (includeEpsilon) {
+			concat(paths, node);
+		}
 	}
 
 	@Override

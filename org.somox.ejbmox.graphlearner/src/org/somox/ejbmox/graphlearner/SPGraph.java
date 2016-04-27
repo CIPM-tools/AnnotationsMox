@@ -62,9 +62,13 @@ public class SPGraph {
 	}
 
 	public List<Path> allPaths() {
+		return allPaths(false);
+	}
+	
+	public List<Path> allPaths(boolean includeEpsilon) {
 		List<Path> paths = new ArrayList<>();
 		paths.add(Path.emptyPath());
-		getRoot().accept(new AllPathsVisitor(), paths);
+		getRoot().accept(new AllPathsVisitor(includeEpsilon), paths);
 		return paths;
 	}
 

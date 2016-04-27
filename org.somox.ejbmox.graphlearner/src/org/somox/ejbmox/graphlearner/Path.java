@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 
 public class Path implements Cloneable {
@@ -60,6 +61,16 @@ public class Path implements Cloneable {
 	 */
 	public Path subPathStartingAt(int fromIndex) {
 		return fromNodes(nodes.subList(fromIndex, nodes.size()));
+	}
+	
+	public Path excludeEpsilon() {
+		List<Node> result = new ArrayList<>();
+		for(Node n : getNodes()) {
+			if(!(n instanceof EpsilonLeafNode)) {
+				result.add(n);
+			}
+		}
+		return fromNodes(result);
 	}
 
 	@Override

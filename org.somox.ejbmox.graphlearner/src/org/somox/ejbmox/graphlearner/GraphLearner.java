@@ -32,7 +32,18 @@ public class GraphLearner {
 			graph = SPGraph.fromPath(path);
 		} else {
 			Path closestPath = findPathClosestTo(path);
-			integrate(closestPath, path);
+			integrate(closestPath.excludeEpsilon(), path.excludeEpsilon());
+		}
+		Path integratedPath = findPathClosestTo(path);
+		incrementCounterAlongPath(integratedPath);
+	}
+
+	private void incrementCounterAlongPath(Path integratedPath) {
+		for (Node node : integratedPath.getNodes()) {
+			if (node instanceof LeafNode) {
+				LeafNode leaf = (LeafNode) node;
+				leaf.incrementCounter();
+			}
 		}
 	}
 
@@ -47,12 +58,13 @@ public class GraphLearner {
 	 * @return
 	 */
 	private Path findPathClosestTo(Path path) {
-		List<Path> paths = graph.allPaths();
+		List<Path> paths = graph.allPaths(true);
 		LOG.debug("Collected paths: " + paths);
 		int minCost = Integer.MAX_VALUE;
 		Path minPath = null;
 		for (Path p : paths) {
-			Patch<Node> patch = DiffUtils.diff(p.getNodes(), path.getNodes(), new NodeEqualiser());
+			Patch<Node> patch = DiffUtils.diff(p.excludeEpsilon().getNodes(), path.excludeEpsilon().getNodes(),
+					new NodeEqualiser());
 			int cost = cost(patch);
 			if (cost < minCost) {
 				minCost = cost;
@@ -72,10 +84,10 @@ public class GraphLearner {
 	}
 
 	// TODO simplify and get rid of duplicated code
-	private void integrate(Path closestPath, Path node) {
-		LOG.debug("Integrating " + node + " into path " + closestPath);
+	private void integrate(Path closestPath, Path path) {
+		LOG.debug("Integrating " + path + " into path " + closestPath);
 
-		Patch<Node> patch = DiffUtils.diff(closestPath.getNodes(), node.getNodes(), new NodeEqualiser());
+		Patch<Node> patch = DiffUtils.diff(closestPath.getNodes(), path.getNodes(), new NodeEqualiser());
 		for (Delta<Node> delta : patch.getDeltas()) {
 			LOG.debug("Delta: " + delta);
 			Path originalPath = Path.fromNodes(delta.getOriginal().getLines());
