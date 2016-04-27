@@ -16,6 +16,7 @@ import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
@@ -114,6 +115,7 @@ public class PCMParametrization {
 			// create SEFF from graph (assumes "verbose" representation)
 			ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
 			g.toVerboseRepresentation();
+			g.traverse(new InvocationProbabilityVisitor());
 			g.traverse(new Graph2SEFFVisitor(), rdb); // stores SEFF in rdb
 														// variable
 

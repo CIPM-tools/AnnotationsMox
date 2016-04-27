@@ -15,16 +15,16 @@ public class VerboseGraphVisitor implements Visitor<Void> {
 	@Override
 	public void visit(LeafNode n, Void arg) {
 		if (n.getParent() == null) { // leaf node is root
-			n.insertParent(new SeriesNode());
+			insertSeriesParent(n);
 		} else if (n.getParent() != null && n.getParent() instanceof ParallelNode) {
-			n.insertParent(new SeriesNode());
+			insertSeriesParent(n);
 		}
 	}
 
 	@Override
 	public void visit(EpsilonLeafNode n, Void arg) {
 		if (n.getParent() != null && n.getParent() instanceof ParallelNode) {
-			n.insertParent(new SeriesNode());
+			insertSeriesParent(n);
 		}
 	}
 
@@ -47,6 +47,12 @@ public class VerboseGraphVisitor implements Visitor<Void> {
 	@Override
 	public void visit(RootNode n, Void arg) {
 		n.getChild().accept(this, arg);
+	}
+
+	private void insertSeriesParent(Node node) {
+		SeriesNode seriesParent = new SeriesNode();
+		seriesParent.copyAttributesFrom(node);
+		node.insertParent(seriesParent);
 	}
 
 }
