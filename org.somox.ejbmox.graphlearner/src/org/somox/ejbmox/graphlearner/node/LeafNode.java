@@ -30,7 +30,4 @@ public class LeafNode extends Node {
 		return v.visit(this);
 	}
 
-	// avoid overriding hashCode/equals! Otherwise, graph construction will be
-	// flawed.
-
 }
