@@ -3,7 +3,6 @@ package org.somox.ejbmox.inspectit2pcm.graphlearner;
 import java.util.Stack;
 
 import org.palladiosimulator.pcm.seff.AbstractAction;
-import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
 import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ProbabilisticBranchTransition;
@@ -18,6 +17,8 @@ import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
 import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
+import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
 
@@ -34,6 +35,11 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
 		InternalAction ia = SeffFactory.eINSTANCE.createInternalAction();
 		ia.setResourceDemandingBehaviour_AbstractAction(arg);
 		ia.setEntityName(n.getContent().toString());
+		if(n.getContent() instanceof SQLStatement) {
+			SQLStatement stmt = (SQLStatement) n.getContent();
+			double duration = stmt.getExclusiveDuration(); // TODO use another kind of duration?
+			ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(duration));
+		}
 
 		ia.setPredecessor_AbstractAction(previousAction);
 		lastActionStack.push(ia);

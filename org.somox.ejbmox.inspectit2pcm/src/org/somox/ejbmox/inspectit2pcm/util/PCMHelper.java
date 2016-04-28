@@ -2,12 +2,15 @@ package org.somox.ejbmox.inspectit2pcm.util;
 
 import org.palladiosimulator.pcm.core.CoreFactory;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
+import org.palladiosimulator.pcm.resourcetype.ProcessingResourceType;
 import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
+import org.palladiosimulator.pcm.seff.seff_performance.ParametricResourceDemand;
 import org.palladiosimulator.pcm.seff.seff_performance.ResourceCall;
 import org.palladiosimulator.pcm.seff.seff_performance.SeffPerformanceFactory;
+import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 
 /**
@@ -32,6 +35,16 @@ public class PCMHelper {
 		PCMRandomVariable rv = CoreFactory.eINSTANCE.createPCMRandomVariable();
 		rv.setSpecification(Double.toString(demand));
 		return rv;
+	}
+
+	public static ParametricResourceDemand createParametricResourceDemandCPU(double demand) {
+		ParametricResourceDemand prd = SeffPerformanceFactory.eINSTANCE.createParametricResourceDemand();
+		prd.setSpecification_ParametericResourceDemand(createPCMRandomVariable(demand));
+		
+		ProcessingResourceType cpu = DefaultResourceEnvironment.getCPUProcessingResourceType();
+		prd.setRequiredResource_ParametricResourceDemand(cpu);
+		
+		return prd;
 	}
 
 	public static StartAction findStartAction(ResourceDemandingBehaviour behaviour) {
