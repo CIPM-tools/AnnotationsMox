@@ -22,14 +22,32 @@ public class TestExtractor {
 	
 	private static Set<String> servicesFQN = new HashSet<>();
 	
+	private static Set<String> interfacesFQN = new HashSet<>();
+	
 	static {
 		servicesFQN.add("de.hpi.sam.rubis.bidandbuy.impl.BuyNowServiceBean.buyItemNow");
 		servicesFQN.add("de.hpi.sam.rubis.authservice.impl.AuthenticationServiceBean.authenticate");
 		servicesFQN.add("de.hpi.sam.rubis.queryservice.impl.QueryServiceBean.findItemBidHistory");
+		servicesFQN.add("de.hpi.sam.rubis.queryservice.impl.QueryServiceBean.retrieveAvailabilityOfItem");
 		servicesFQN.add("de.hpi.sam.rubis.queryservice.impl.BasicQueryServiceBean.findItemById");
+		servicesFQN.add("de.hpi.sam.rubis.queryservice.impl.BasicQueryServiceBean.findUserByNickname");
 		servicesFQN.add("de.hpi.sam.rubis.inventorymgmt.impl.InventoryServiceBean.checkAvailabilityOfItem");
 		servicesFQN.add("de.hpi.sam.rubis.inventorymgmt.impl.InventoryServiceBean.reserveItem");
 		servicesFQN.add("de.hpi.sam.rubis.persistenceservice.impl.BusinessObjectsPersistenceServiceBean.persistBuyNow");
+		servicesFQN.add("de.hpi.sam.rubis.persistenceservice.impl.BusinessObjectsPersistenceServiceBean.reduceInventoryItem");
+		
+		interfacesFQN.add("de.hpi.sam.rubis.authservice.AuthenticationService");
+		interfacesFQN.add("de.hpi.sam.rubis.bidandbuy.BidService");
+		interfacesFQN.add("de.hpi.sam.rubis.bidandbuy.BuyNowService");
+		interfacesFQN.add("de.hpi.sam.rubis.inventorymgmt.InventoryService");
+		interfacesFQN.add("de.hpi.sam.rubis.itemmgmt.BrowseCategoriesService");
+		interfacesFQN.add("de.hpi.sam.rubis.itemmgmt.ItemRegistrationService");
+		interfacesFQN.add("de.hpi.sam.rubis.persistenceservice.BusinessObjectsPersistenceService");
+		interfacesFQN.add("de.hpi.sam.rubis.queryservice.BasicQueryService");
+		interfacesFQN.add("de.hpi.sam.rubis.queryservice.QueryService");
+		interfacesFQN.add("de.hpi.sam.rubis.reputationservice.ReputationService");
+		// TODO 3 missing (from de.hpi.sam.rubis.reputationservice)
+		
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -41,7 +59,7 @@ public class TestExtractor {
 		InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
 
 		InvocationTreeScanner scanner = new InvocationTreeScanner(new ConsoleOutputTraversalListener(),
-				servicesFQN, identService, invocationsService);
+				servicesFQN, interfacesFQN, identService, invocationsService);
 
 		List<Long> invocationIds = invocationsService.getInvocationSequencesId();
 		for (long invocationId : invocationIds) {

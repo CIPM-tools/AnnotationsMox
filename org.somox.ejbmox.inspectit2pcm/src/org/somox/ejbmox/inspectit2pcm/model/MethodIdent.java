@@ -47,7 +47,19 @@ public class MethodIdent {
 	}
 
 	public String toFQN() {
-		return getPackageName() + "." + getClassName() + "." + getMethodName();
+		return toFQN(false);
+	}
+
+	public String toFQN(boolean excludeMethodName) {
+		if (excludeMethodName) {
+			return getPackageName() + "." + getClassName();
+		} else {
+			return getPackageName() + "." + getClassName() + "." + getMethodName();
+		}
+	}
+
+	public boolean isWrapper() {
+		return false;
 	}
 
 }

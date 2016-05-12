@@ -1,14 +1,25 @@
 package org.somox.ejbmox.inspectit2pcm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Stack;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
+import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
+import org.palladiosimulator.pcm.seff.BranchAction;
+import org.palladiosimulator.pcm.seff.ExternalCallAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
+import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StartAction;
+import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
@@ -34,20 +45,40 @@ public class InvocationTree2PCMMapper {
 
 	private ScannerListenerDelegator detector = new ScannerListenerDelegator();
 
-	private ResourceDemandingSEFF seff;
+	private ResourceDemandingBehaviour behaviour;
 
 	private AbstractAction expectedAction;
 
 	private Map<ResourceDemandingSEFF, String> seffToFQNMap;
 
-	private InvocationTree2PCMMapper(Map<ResourceDemandingSEFF, String> seffToFQNMap, ResourceDemandingSEFF seff,
-			PCMParametrization parametrization) {
+	static {
+		// TODO use config file
+		Logger.getRootLogger().setLevel(Level.INFO);
+	}
+
+	private InvocationTree2PCMMapper(Map<ResourceDemandingSEFF, String> seffToFQNMap,
+			ResourceDemandingBehaviour behaviour, PCMParametrization parametrization) {
 		this(seffToFQNMap);
-		this.seff = seff;
+		this.behaviour = behaviour;
 		this.parametrization = parametrization;
 
+		// insert one InternalAction before each SEFF's stop, if not present
+		// yet; serves as a placeholder for SQL statements issued at the end of
+		// the service invocation
+		for (ResourceDemandingSEFF seff : seffToFQNMap.keySet()) {
+			StopAction stop = PCMHelper.findStopAction(seff);
+			AbstractAction stopPredecessor = stop.getPredecessor_AbstractAction();
+			if (!(stopPredecessor instanceof InternalAction)) {
+				InternalAction placeholder = PCMHelper.createInternalActionStub(
+						stop.getResourceDemandingBehaviour_AbstractAction(),
+						"Inserted by InspectIT2PCM processor");
+				placeholder.setPredecessor_AbstractAction(stopPredecessor);
+				stop.setPredecessor_AbstractAction(placeholder);
+			}
+		}
+
 		// begin detection with Start action's successor
-		StartAction startAction = PCMHelper.findStartAction(seff);
+		StartAction startAction = PCMHelper.findStartAction(behaviour);
 		expectNextAction(startAction.getSuccessor_AbstractAction());
 	}
 
@@ -58,6 +89,7 @@ public class InvocationTree2PCMMapper {
 	}
 
 	public void expectNextAction(AbstractAction action) {
+		// logger.debug("Expecting action of type " + action.eClass());
 		this.expectedAction = action;
 		if (SeffPackage.eINSTANCE.getExternalCallAction().isInstance(expectedAction)) {
 			detector.setDetectionType(new DetectExternalCallAction());
@@ -65,8 +97,12 @@ public class InvocationTree2PCMMapper {
 			detector.setDetectionType(new DetectInternalAction());
 		} else if (SeffPackage.eINSTANCE.getStopAction().isInstance(expectedAction)) {
 			detector.setDetectionType(new DetectStopAction());
+		} else if (SeffPackage.eINSTANCE.getBranchAction().isInstance(expectedAction)) {
+			detector.setDetectionType(new DetectBranchAction());
 		} else {
-			logger.warn("Could not find extractor for AbstractActions of type " + expectedAction.getClass());
+			logger.warn("Could not find extractor for AbstractActions of type " + expectedAction.getClass()
+					+ ". Continuing with successor...");
+			expectNextAction(action.getSuccessor_AbstractAction());
 		}
 	}
 
@@ -78,8 +114,24 @@ public class InvocationTree2PCMMapper {
 		return detector;
 	}
 
+	public PCMParametrization getParametrization() {
+		return parametrization;
+	}
+
+	public ResourceDemandingBehaviour getBehaviour() {
+		return behaviour;
+	}
+
+	public AbstractAction getExpectedAction() {
+		return expectedAction;
+	}
+
 	private ResourceDemandingSEFF seffFromFQN(String fqn) {
-		return seffToFQNMap.entrySet().stream().filter(e -> e.getValue().equals(fqn)).findFirst().get().getKey();
+		try {
+			return seffToFQNMap.entrySet().stream().filter(e -> e.getValue().equals(fqn)).findFirst().get().getKey();
+		} catch (NoSuchElementException e) {
+			throw new RuntimeException("Could not find SEFF with FQN " + fqn, e);
+		}
 	}
 
 	private static class ScannerListenerDelegator implements ScanningProgressListener {
@@ -175,10 +227,10 @@ public class InvocationTree2PCMMapper {
 
 		@Override
 		public void systemCallBegin(MethodIdent calledService, double time) {
-			seff = seffFromFQN(calledService.toFQN());
+			behaviour = seffFromFQN(calledService.toFQN());
 
 			// begin detection with Start action's successor
-			StartAction startAction = PCMHelper.findStartAction(seff);
+			StartAction startAction = PCMHelper.findStartAction(behaviour);
 			expectNextAction(startAction.getSuccessor_AbstractAction());
 		}
 
@@ -188,7 +240,16 @@ public class InvocationTree2PCMMapper {
 
 		private int callDepth;
 
+		// TODO stack really needed?
 		private Stack<InvocationTree2PCMMapper> nestedMatcher = new Stack<>();
+
+		@Override
+		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
+			callDepth++;
+			ResourceDemandingSEFF seff = seffFromFQN(calledService.toFQN());
+			nestedMatcher.push(new InvocationTree2PCMMapper(seffToFQNMap, seff, parametrization));
+			// TODO delegate to nested matcher?
+		}
 
 		@Override
 		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
@@ -202,14 +263,6 @@ public class InvocationTree2PCMMapper {
 				// finished ExternalCall detection
 				expectNextAction(expectedAction.getSuccessor_AbstractAction());
 			}
-		}
-
-		@Override
-		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			callDepth++;
-			ResourceDemandingSEFF seff = seffFromFQN(calledService.toFQN());
-			nestedMatcher.push(new InvocationTree2PCMMapper(seffToFQNMap, seff, parametrization));
-			// TODO delegate to nested matcher?
 		}
 
 		@Override
@@ -243,6 +296,110 @@ public class InvocationTree2PCMMapper {
 				nestedMatcher.peek().getScannerListener().sqlStatement(callingService, statement);
 			} else {
 				super.sqlStatement(callingService, statement);
+			}
+		}
+
+	}
+
+	private class DetectBranchAction extends AbstractScannerListener {
+
+		private BranchAction branch;
+
+		private List<InvocationTree2PCMMapper> candidatesMatcher = new CopyOnWriteArrayList<>();
+
+		public DetectBranchAction() {
+			branch = (BranchAction) expectedAction;
+			// we don't know yet which branch transition will be taken, so
+			// create a candidate mapper for each of them and later throw away
+			// each matcher no longer appropriate in light of the advanced
+			// scanning progress.
+			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
+				ResourceDemandingBehaviour behaviour = t.getBranchBehaviour_BranchTransition();
+				try {
+					candidatesMatcher.add(new InvocationTree2PCMMapper(seffToFQNMap, behaviour,
+							(PCMParametrization) parametrization.clone()));
+				} catch (CloneNotSupportedException e) {
+					// should not happen actually
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+		@Override
+		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
+			List<InvocationTree2PCMMapper> removedCandidates = new ArrayList<>();
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				ExternalCallAction nextExternalCall = PCMHelper.findNextExternalCall(m.getExpectedAction());
+				boolean match = isSameService(nextExternalCall, calledService);
+				if (!match) {
+					// no longer a candidate
+					candidatesMatcher.remove(m);
+					removedCandidates.add(m);
+				}
+			}
+
+			if (candidatesMatcher.isEmpty()) {
+				if (removedCandidates.size() > 1) {
+					logger.warn("Could not decide which branch transition to follow "
+							+ "because more than one candidate is left. Choosing first candidate.");
+				}
+
+				// finalize branch detection
+				InvocationTree2PCMMapper chosenMapper = removedCandidates.get(0);
+				parametrization.mergeFrom(chosenMapper.getParametrization());
+				expectNextAction(branch.getSuccessor_AbstractAction());
+			}
+
+			// delegate to all candidates
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				m.getScannerListener().externalCallBegin(callingService, calledService, time);
+			}
+		}
+
+		@Override
+		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
+			// delegate to all candidates
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				m.getScannerListener().externalCallEnd(callingService, calledService, time);
+			}
+		}
+
+		private boolean isSameService(ExternalCallAction firstExternalCall, MethodIdent calledService) {
+			if (firstExternalCall == null) {
+				return false;
+			}
+			OperationSignature signature = firstExternalCall.getCalledService_ExternalService();
+			// TODO very hack solution right now!! check if interface/bean do
+			// match
+			if (calledService.getMethodName().equals(signature.getEntityName())) {
+				return true;
+			} else {
+				return false;
+			}
+
+		}
+
+		@Override
+		public void internalActionBegin(MethodIdent callingService, double time) {
+			// delegate to all candidates
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				m.getScannerListener().internalActionBegin(callingService, time);
+			}
+		}
+
+		@Override
+		public void internalActionEnd(MethodIdent callingService, double time) {
+			// delegate to all candidates
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				m.getScannerListener().internalActionEnd(callingService, time);
+			}
+		}
+
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			// delegate to all candidates
+			for (InvocationTree2PCMMapper m : candidatesMatcher) {
+				m.getScannerListener().sqlStatement(callingService, statement);
 			}
 		}
 

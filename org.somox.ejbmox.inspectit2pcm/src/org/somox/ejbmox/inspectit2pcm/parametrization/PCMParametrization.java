@@ -16,6 +16,7 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
@@ -26,7 +27,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
  * @author Philipp Merkle
  *
  */
-public class PCMParametrization {
+public class PCMParametrization implements Cloneable {
 
 	private Map<InternalAction, List<Double>> resourceDemandMap;
 
@@ -63,6 +64,29 @@ public class PCMParametrization {
 			resourceDemandMap.put(action, new ArrayList<>());
 		}
 		resourceDemandMap.get(action).add(demand);
+	}
+
+	public void mergeFrom(PCMParametrization other) {
+		// merge resource demands
+		for (Entry<InternalAction, List<Double>> entry : other.resourceDemandMap.entrySet()) {
+			for (Double demand : entry.getValue()) {
+				captureResourceDemand(entry.getKey(), demand);
+			}
+		}
+
+		// merge SQL statements
+		for (Entry<InternalAction, List<SQLStatementSequence>> entry : other.sqlStatementMap.entrySet()) {
+			for (SQLStatementSequence stmtSequence : entry.getValue()) {
+				captureSQLStatementSequence(entry.getKey(), stmtSequence);
+			}
+		}
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		PCMParametrization clone = new PCMParametrization();
+		clone.mergeFrom(this);
+		return clone;
 	}
 
 	public void parametrize(AggregationStrategy aggregation) {
@@ -141,8 +165,30 @@ public class PCMParametrization {
 		AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
 		successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
 
-		// remove action that has been replaced 
+		// remove action that has been replaced
 		replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("==== Resource Demands =============\n");
+		for (Entry<InternalAction, List<Double>> e : resourceDemandMap.entrySet()) {
+			builder.append(e.getKey().getEntityName() + ": " + e.getValue().toString() + "\n");
+		}
+		builder.append("==== SQL Statements ===============\n");
+		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
+			builder.append(e.getKey().getEntityName() + ": \n");
+			for (SQLStatementSequence s : e.getValue()) {
+				for (SQLStatement stmt : s.getSequence()) {
+					builder.append("    " + stmt + " \n");
+				}
+				builder.append("--\n");
+			}
+			builder.append("--------\n");
+		}
+
+		return builder.toString();
 	}
 
 }

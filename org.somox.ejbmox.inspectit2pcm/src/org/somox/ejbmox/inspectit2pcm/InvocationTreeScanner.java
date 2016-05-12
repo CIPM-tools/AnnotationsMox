@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
+import org.somox.ejbmox.inspectit2pcm.model.WrapperMethodIdent;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
 
@@ -37,14 +38,17 @@ public class InvocationTreeScanner {
 	 */
 	private Set<String> externalServicesFQN;
 
+	private Set<String> interfacesFQN;
+
 	private Map<Long, MethodIdent> methodIdToIdentMap;
 
 	private Map<String, MethodIdent> methodFQNToIdentMap;
 
 	public InvocationTreeScanner(ScanningProgressListener listener, Set<String> externalServicesFQN,
-			IdentsServiceClient identService, InvocationsServiceClient invocationsService) {
+			Set<String> interfacesFQN, IdentsServiceClient identService, InvocationsServiceClient invocationsService) {
 		this.listener = listener;
 		this.externalServicesFQN = externalServicesFQN;
+		this.interfacesFQN = interfacesFQN;
 
 		methodIdToIdentMap = new HashMap<>();
 		methodFQNToIdentMap = new HashMap<>();
@@ -71,10 +75,14 @@ public class InvocationTreeScanner {
 	}
 
 	private void scanInvocationTreeRecursive(InvocationSequence invocation, Stack<MethodIdent> externalServicesStack) {
-		MethodIdent callingService = methodIdent(invocation);
+		MethodIdent callingService = externalServicesStack.peek();
+		scanSQLStatements(callingService, invocation);
 		for (InvocationSequence nestedInvocation : invocation.getNestedSequences()) {
 			MethodIdent calledService = methodIdent(nestedInvocation);
-			if (isExternalService(calledService)) {
+			if (isExternalServiceWrapper(calledService)) {
+				calledService = new WrapperMethodIdent(calledService, findWrappedService(nestedInvocation));
+			}
+			if ((isExternalService(calledService) && !callingService.isWrapper()) || calledService.isWrapper()) {
 				// before external call, close existing internal action
 				listener.internalActionEnd(callingService, nestedInvocation.getStart());
 
@@ -90,10 +98,14 @@ public class InvocationTreeScanner {
 				// after external call, open new internal action
 				listener.internalActionBegin(callingService, nestedInvocation.getEnd());
 			} else { // internal call
-				scanSQLStatements(externalServicesStack.peek(), nestedInvocation);
 				scanInvocationTreeRecursive(nestedInvocation, externalServicesStack);
 			}
 		}
+	}
+
+	private MethodIdent findWrappedService(InvocationSequence wrapperInvocation) {
+		return methodIdent(wrapperInvocation.getNestedSequences().stream()
+				.filter(i -> isExternalService(methodIdent(i))).findFirst().get());
 	}
 
 	private MethodIdent methodIdent(InvocationSequence s) {
@@ -109,6 +121,26 @@ public class InvocationTreeScanner {
 
 	private boolean isExternalService(MethodIdent ident) {
 		return externalServicesFQN.contains(ident.toFQN());
+	}
+
+	private boolean isExternalServiceWrapper(MethodIdent calledService) {
+		boolean excludeMethodName = true;
+		boolean isWrapper = calledService.toFQN(excludeMethodName).matches(".*_Wrapper$");
+		if (isWrapper && isRepositoryInterface(wrappedInterfaceFQN(calledService))) {
+			return true;
+		}
+		return false;
+	}
+
+	private String wrappedInterfaceFQN(MethodIdent wrapperService) {
+		boolean excludeMethodName = true;
+		String[] segments = wrapperService.toFQN(excludeMethodName).split("\\.");
+		segments[segments.length - 1] = segments[segments.length - 1].replaceAll("^_", "").replaceAll("_Wrapper$", "");
+		return String.join(".", segments);
+	}
+
+	private boolean isRepositoryInterface(String interfaceFQN) {
+		return interfaceFQN.contains(interfaceFQN);
 	}
 
 }

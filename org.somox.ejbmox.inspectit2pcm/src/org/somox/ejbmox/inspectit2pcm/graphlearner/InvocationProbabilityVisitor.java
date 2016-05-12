@@ -50,8 +50,14 @@ public class InvocationProbabilityVisitor implements Visitor<Void> {
 
 	private void calculateRelativeInvocationProbability(Node n) {
 		int parentInvocations = (int) n.getParent().getAttribute(NodeAttribute.INVOCATION_COUNT);
-		int invocations = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
-		n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, invocations / (double) parentInvocations);
+		if (n.getAttribute(NodeAttribute.INVOCATION_COUNT) != null) {
+			int invocations = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
+			n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, invocations / (double) parentInvocations);
+		} else {
+			// TODO log error / warning!
+			n.setAttribute(NodeAttribute.INVOCATION_COUNT, 0);
+			n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, 0.0);
+		}
 	}
 
 }
