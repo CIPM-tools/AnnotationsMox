@@ -5,11 +5,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.emftext.language.java.classifiers.ConcreteClassifier;
 import org.emftext.language.java.members.ClassMethod;
+import org.palladiosimulator.pcm.repository.Interface;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.inspectit2pcm.InspectIT2PCM;
 import org.somox.ejbmox.inspectit2pcm.InspectIT2PCMConfiguration;
+import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.sourcecodedecorator.SEFF2MethodMapping;
 import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
 
@@ -35,13 +38,24 @@ public class AnnotatePCMWithInspectITResults extends AbstractBlackboardInteracti
 			seffToFQNMap.put((ResourceDemandingSEFF) m.getSeff(), fqn);
 			logger.debug("Adding SEFF with FQN " + fqn);
 		}
+		
+		Map<Interface, String> ifaceToFQNMap = new HashMap<>();
+		for(InterfaceSourceCodeLink link : sourceDecorator.getInterfaceSourceCodeLink()) {
+			String fqn = fullyQualifiedName(link.getGastClass());
+			ifaceToFQNMap.put(link.getInterface(), fqn);
+			logger.debug("Adding Interface with FQN " + fqn);
+		}
 
 		// parametrize SEFFs
 		InspectIT2PCMConfiguration config = new InspectIT2PCMConfiguration();
 		InspectIT2PCM iit2pcm = new InspectIT2PCM(config);
-		iit2pcm.parametrizeSEFFs(seffToFQNMap);
+		iit2pcm.parametrizeSEFFs(seffToFQNMap, ifaceToFQNMap);
 	}
 
+	private static String fullyQualifiedName(ConcreteClassifier classifier) {
+		return classifier.getQualifiedName();
+	}
+	
 	private static String fullyQualifiedName(ClassMethod method) {
 		return method.getContainingCompilationUnit().getContainedClass().getQualifiedName() + "." + method.getName();
 	}
