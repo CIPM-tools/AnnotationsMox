@@ -2,13 +2,18 @@ package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.palladiosimulator.pcm.seff.AbstractAction;
+import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
+import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
+import org.palladiosimulator.pcm.seff.ProbabilisticBranchTransition;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.StartAction;
@@ -33,11 +38,14 @@ public class PCMParametrization implements Cloneable {
 
 	private Map<InternalAction, List<SQLStatementSequence>> sqlStatementMap;
 
+	private Map<AbstractBranchTransition, Integer> branchTransitionMap;
+
 	// private Map<String, List<Integer>> loopIterationMap;
 
 	public PCMParametrization() {
 		resourceDemandMap = new HashMap<>();
 		sqlStatementMap = new HashMap<>();
+		branchTransitionMap = new HashMap<>();
 	}
 
 	public void captureSQLStatementSequence(InternalAction action, SQLStatementSequence statements) {
@@ -60,18 +68,21 @@ public class PCMParametrization implements Cloneable {
 		if (demand < 0) {
 			throw new IllegalArgumentException("Demand may not be negative.");
 		}
-		if (!resourceDemandMap.containsKey(action)) {
-			resourceDemandMap.put(action, new ArrayList<>());
+		resourceDemandMap.getOrDefault(action, new ArrayList<>()).add(demand);
+	}
+
+	public void captureBranchTransition(AbstractBranchTransition transition) {
+		if (transition == null) {
+			throw new IllegalArgumentException("Branch transition may not be null");
 		}
-		resourceDemandMap.get(action).add(demand);
+		Integer count = branchTransitionMap.getOrDefault(transition, 0);
+		branchTransitionMap.put(transition, ++count);
 	}
 
 	public void mergeFrom(PCMParametrization other) {
 		// merge resource demands
 		for (Entry<InternalAction, List<Double>> entry : other.resourceDemandMap.entrySet()) {
-			for (Double demand : entry.getValue()) {
-				captureResourceDemand(entry.getKey(), demand);
-			}
+			resourceDemandMap.getOrDefault(entry.getKey(), new ArrayList<>()).addAll(entry.getValue());
 		}
 
 		// merge SQL statements
@@ -80,8 +91,15 @@ public class PCMParametrization implements Cloneable {
 				captureSQLStatementSequence(entry.getKey(), stmtSequence);
 			}
 		}
+
+		// merge branch transitions
+		for (Entry<AbstractBranchTransition, Integer> entry : other.branchTransitionMap.entrySet()) {
+			for (int i = 0; i < entry.getValue(); i++) {
+				captureBranchTransition(entry.getKey());
+			}
+		}
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		PCMParametrization clone = new PCMParametrization();
@@ -97,12 +115,47 @@ public class PCMParametrization implements Cloneable {
 		case MEAN:
 			parametrizeResourceDemandsWithMean();
 			parametrizeSQLStatementsWithMean();
+			parametrizeBranchingProbabilities();
 			break;
 		case MEDIAN:
 			throw new UnsupportedOperationException();
 			// break;
 		default:
 			throw new RuntimeException("Unknown aggregation strategy: " + aggregation);
+		}
+	}
+
+	private void resetBranchingProbabilities() {
+		// collect all branches for which there is at least one branching
+		// probability
+		Set<BranchAction> branches = new HashSet<>();
+		for (AbstractBranchTransition t : branchTransitionMap.keySet()) {
+			branches.add(t.getBranchAction_AbstractBranchTransition());
+		}
+
+		// reset branching probabilities
+		for (BranchAction branch : branches) {
+			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
+				((ProbabilisticBranchTransition) t).setBranchProbability(0);
+			}
+		}
+	}
+
+	private void parametrizeBranchingProbabilities() {
+		resetBranchingProbabilities();
+		for (Entry<AbstractBranchTransition, Integer> e : branchTransitionMap.entrySet()) {
+			// summarize invocation count of this transition and all sibling
+			// transitions
+			List<AbstractBranchTransition> transitions = e.getKey().getBranchAction_AbstractBranchTransition()
+					.getBranches_Branch();
+			int totalCount = 0;
+			for (AbstractBranchTransition t : transitions) {
+				int count = branchTransitionMap.getOrDefault(t, 0);
+				totalCount += count;
+			}
+			double probability = branchTransitionMap.get(e.getKey()).doubleValue() / totalCount;
+			((ProbabilisticBranchTransition) e.getKey()).setBranchProbability(probability);
+			e.getKey().setEntityName("Measured branch probability");
 		}
 	}
 
@@ -168,7 +221,7 @@ public class PCMParametrization implements Cloneable {
 		// remove action that has been replaced
 		replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

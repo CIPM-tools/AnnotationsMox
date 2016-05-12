@@ -1,6 +1,7 @@
 package org.somox.ejbmox.inspectit2pcm;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -70,8 +71,7 @@ public class InvocationTree2PCMMapper {
 			AbstractAction stopPredecessor = stop.getPredecessor_AbstractAction();
 			if (!(stopPredecessor instanceof InternalAction)) {
 				InternalAction placeholder = PCMHelper.createInternalActionStub(
-						stop.getResourceDemandingBehaviour_AbstractAction(),
-						"Inserted by InspectIT2PCM processor");
+						stop.getResourceDemandingBehaviour_AbstractAction(), "Inserted by InspectIT2PCM processor");
 				placeholder.setPredecessor_AbstractAction(stopPredecessor);
 				stop.setPredecessor_AbstractAction(placeholder);
 			}
@@ -107,6 +107,7 @@ public class InvocationTree2PCMMapper {
 	}
 
 	public void parametrize(AggregationStrategy aggregation) {
+		logger.info("Storing monitored runtime behaviour to PCM model...");
 		parametrization.parametrize(aggregation);
 	}
 
@@ -116,10 +117,6 @@ public class InvocationTree2PCMMapper {
 
 	public PCMParametrization getParametrization() {
 		return parametrization;
-	}
-
-	public ResourceDemandingBehaviour getBehaviour() {
-		return behaviour;
 	}
 
 	public AbstractAction getExpectedAction() {
@@ -307,6 +304,8 @@ public class InvocationTree2PCMMapper {
 
 		private List<InvocationTree2PCMMapper> candidatesMatcher = new CopyOnWriteArrayList<>();
 
+		private Map<InvocationTree2PCMMapper, AbstractBranchTransition> transitionMap = new HashMap<>();
+
 		public DetectBranchAction() {
 			branch = (BranchAction) expectedAction;
 			// we don't know yet which branch transition will be taken, so
@@ -316,8 +315,10 @@ public class InvocationTree2PCMMapper {
 			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
 				ResourceDemandingBehaviour behaviour = t.getBranchBehaviour_BranchTransition();
 				try {
-					candidatesMatcher.add(new InvocationTree2PCMMapper(seffToFQNMap, behaviour,
-							(PCMParametrization) parametrization.clone()));
+					InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(seffToFQNMap, behaviour,
+							(PCMParametrization) parametrization.clone());
+					candidatesMatcher.add(mapper);
+					transitionMap.put(mapper, t);
 				} catch (CloneNotSupportedException e) {
 					// should not happen actually
 					throw new RuntimeException(e);
@@ -347,6 +348,7 @@ public class InvocationTree2PCMMapper {
 				// finalize branch detection
 				InvocationTree2PCMMapper chosenMapper = removedCandidates.get(0);
 				parametrization.mergeFrom(chosenMapper.getParametrization());
+				parametrization.captureBranchTransition(transitionMap.get(chosenMapper));
 				expectNextAction(branch.getSuccessor_AbstractAction());
 			}
 

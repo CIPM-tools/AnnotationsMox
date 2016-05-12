@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.Interface;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
@@ -22,9 +23,10 @@ import org.somox.ejbmox.inspectit2pcm.rest.RESTClient;
  */
 public class InspectIT2PCM {
 
-	
+	private static final Logger LOG = Logger.getLogger(InspectIT2PCM.class);
+
 	private InspectIT2PCMConfiguration config;
-	
+
 	private IdentsServiceClient identService;
 
 	private InvocationsServiceClient invocationsService;
@@ -40,7 +42,7 @@ public class InspectIT2PCM {
 
 	public void parametrizeSEFFs(Map<ResourceDemandingSEFF, String> seffToFQNMap,
 			Map<Interface, String> ifaceToFQNMap) {
-		
+
 		InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(seffToFQNMap);
 		Set<String> externalServicesFQN = new HashSet<>(seffToFQNMap.values());
 		Set<String> interfacesFQN = new HashSet<>(ifaceToFQNMap.values());
@@ -51,10 +53,12 @@ public class InspectIT2PCM {
 		List<Long> invocationIds = invocationsService.getInvocationSequencesId();
 		int i = 0;
 		for (long invocationId : invocationIds) {
-			if(++i < config.getWarmupLength()) {
+			if (++i < config.getWarmupLength()) {
 				continue;
 			}
 			InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
+			LOG.info("Scanning invocation sequence " + (i - config.getWarmupLength()) + " out of "
+					+ (invocationIds.size() - config.getWarmupLength()) + "...");
 			scanner.scanInvocationTree(invocation);
 		}
 
