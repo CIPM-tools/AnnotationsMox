@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
@@ -42,67 +41,40 @@ public class InvocationTree2PCMMapper {
 
 	private static final Logger logger = Logger.getLogger(InvocationTree2PCMMapper.class);
 
-	private PCMParametrization parametrization;
-
-	private ScannerListenerDelegator detector = new ScannerListenerDelegator();
-
-	private ResourceDemandingBehaviour behaviour;
-
-	private AbstractAction expectedAction;
-
 	private Map<ResourceDemandingSEFF, String> seffToFQNMap;
+
+	private ScanningProgressDispatcher dispatcher = new ScanningProgressDispatcher();
+
+	private PCMParametrization parametrization;
 
 	static {
 		// TODO use config file
-		Logger.getRootLogger().setLevel(Level.INFO);
-	}
-
-	private InvocationTree2PCMMapper(Map<ResourceDemandingSEFF, String> seffToFQNMap,
-			ResourceDemandingBehaviour behaviour, PCMParametrization parametrization) {
-		this(seffToFQNMap);
-		this.behaviour = behaviour;
-		this.parametrization = parametrization;
-
-		// insert one InternalAction before each SEFF's stop, if not present
-		// yet; serves as a placeholder for SQL statements issued at the end of
-		// the service invocation
-		for (ResourceDemandingSEFF seff : seffToFQNMap.keySet()) {
-			StopAction stop = PCMHelper.findStopAction(seff);
-			AbstractAction stopPredecessor = stop.getPredecessor_AbstractAction();
-			if (!(stopPredecessor instanceof InternalAction)) {
-				InternalAction placeholder = PCMHelper.createInternalActionStub(
-						stop.getResourceDemandingBehaviour_AbstractAction(), "Inserted by InspectIT2PCM processor");
-				placeholder.setPredecessor_AbstractAction(stopPredecessor);
-				stop.setPredecessor_AbstractAction(placeholder);
-			}
-		}
-
-		// begin detection with Start action's successor
-		StartAction startAction = PCMHelper.findStartAction(behaviour);
-		expectNextAction(startAction.getSuccessor_AbstractAction());
+		// Logger.getRootLogger().setLevel(Level.INFO);
 	}
 
 	public InvocationTree2PCMMapper(Map<ResourceDemandingSEFF, String> seffToFQNMap) {
 		this.seffToFQNMap = seffToFQNMap;
-		this.detector.setDetectionType(new DetectSystemCall());
 		this.parametrization = new PCMParametrization();
+
+		ensureInternalActionBeforeStopActions();
 	}
 
-	public void expectNextAction(AbstractAction action) {
-		// logger.debug("Expecting action of type " + action.eClass());
-		this.expectedAction = action;
-		if (SeffPackage.eINSTANCE.getExternalCallAction().isInstance(expectedAction)) {
-			detector.setDetectionType(new DetectExternalCallAction());
-		} else if (SeffPackage.eINSTANCE.getInternalAction().isInstance(expectedAction)) {
-			detector.setDetectionType(new DetectInternalAction());
-		} else if (SeffPackage.eINSTANCE.getStopAction().isInstance(expectedAction)) {
-			detector.setDetectionType(new DetectStopAction());
-		} else if (SeffPackage.eINSTANCE.getBranchAction().isInstance(expectedAction)) {
-			detector.setDetectionType(new DetectBranchAction());
-		} else {
-			logger.warn("Could not find extractor for AbstractActions of type " + expectedAction.getClass()
-					+ ". Continuing with successor...");
-			expectNextAction(action.getSuccessor_AbstractAction());
+	/**
+	 * Insert one InternalAction before each SEFF's stop, if not present yet;
+	 * serves as a placeholder for SQL statements issued at the end of the
+	 * service invocation
+	 */
+	private void ensureInternalActionBeforeStopActions() {
+		for (Entry<ResourceDemandingSEFF, String> entry : seffToFQNMap.entrySet()) {
+			StopAction stop = PCMHelper.findStopAction(entry.getKey());
+			AbstractAction stopPredecessor = stop.getPredecessor_AbstractAction();
+			if (!(stopPredecessor instanceof InternalAction)) {
+				InternalAction placeholder = PCMHelper.createInternalActionStub(
+						stop.getResourceDemandingBehaviour_AbstractAction(),
+						"Inserted by InspectIT2PCM processor @ " + entry.getValue());
+				placeholder.setPredecessor_AbstractAction(stopPredecessor);
+				stop.setPredecessor_AbstractAction(placeholder);
+			}
 		}
 	}
 
@@ -111,19 +83,15 @@ public class InvocationTree2PCMMapper {
 		parametrization.parametrize(aggregation);
 	}
 
-	public ScanningProgressListener getScannerListener() {
-		return detector;
+	public ScanningProgressListener getScanningProgressDispatcher() {
+		return dispatcher;
 	}
 
 	public PCMParametrization getParametrization() {
 		return parametrization;
 	}
 
-	public AbstractAction getExpectedAction() {
-		return expectedAction;
-	}
-
-	private ResourceDemandingSEFF seffFromFQN(String fqn) {
+	private static ResourceDemandingSEFF seffFromFQN(Map<ResourceDemandingSEFF, String> seffToFQNMap, String fqn) {
 		try {
 			return seffToFQNMap.entrySet().stream().filter(e -> e.getValue().equals(fqn)).findFirst().get().getKey();
 		} catch (NoSuchElementException e) {
@@ -131,330 +99,571 @@ public class InvocationTree2PCMMapper {
 		}
 	}
 
-	private static class ScannerListenerDelegator implements ScanningProgressListener {
+	private static boolean isSameService(ExternalCallAction firstExternalCall, MethodIdent calledService) {
+		if (firstExternalCall == null) {
+			return false;
+		}
+		OperationSignature signature = firstExternalCall.getCalledService_ExternalService();
+		// TODO very hack solution right now!! check if interface/bean do
+		// match
+		if (calledService.getMethodName().equals(signature.getEntityName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-		private ScanningProgressListener delegatee;
+	private static boolean isWithinSameService(InternalAction action, MethodIdent callingService,
+			DetectionContext context) {
+		ResourceDemandingSEFF seff = PCMHelper.findSeffForInternalAction(action);
+		String seffFQN = context.seffToFQNMap.get(seff);
 
-		public ScannerListenerDelegator() {
-			this.delegatee = new AbstractScannerListener() {
-			};
+		boolean isSame = callingService.toFQN().equals(seffFQN);
+		if (!isSame) {
+			logErrorInContext("Expected internal action within SEFF " + seffFQN
+					+ ", but encountered internal action in scope of " + callingService.toFQN(), context);
+		}
+
+		return isSame;
+	}
+
+	private static String message(String message, DetectionContext ctx) {
+		return ctx.getShortName() + ": " + message;
+	}
+
+	private static void logErrorInContext(String message, DetectionContext ctx) {
+		logger.error(message(message, ctx));
+	}
+
+	private static void logWarnInContext(String message, DetectionContext ctx) {
+		logger.warn(message(message, ctx));
+	}
+
+	private static void logInfoInContext(String message, DetectionContext ctx) {
+		logger.info(message(message, ctx));
+	}
+
+	private static void logDebugInContext(String message, DetectionContext ctx) {
+		logger.debug(message(message, ctx));
+	}
+
+	private class ScanningProgressDispatcher implements ScanningProgressListener {
+
+		private DetectionContext rootContext;
+
+		@Override
+		public void systemCallBegin(MethodIdent calledService, double time) {
+			logger.debug("Dispatching begin of system call " + calledService.toFQN());
+			
+			if (rootContext != null) {
+				throw new IllegalStateException(
+						"Encountered begin of system call" + " although another system call is still being processed.");
+			}
+			ResourceDemandingBehaviour behaviour = seffFromFQN(seffToFQNMap, calledService.toFQN());
+			DetectionContext parent = null;
+			rootContext = new DetectionContext(calledService.toFQN(), parent, behaviour, parametrization, seffToFQNMap);
+
+			// TODO delegate to contexts?
 		}
 
 		@Override
 		public void systemCallEnd(MethodIdent calledService, double time) {
-			delegatee.systemCallEnd(calledService, time);
-		}
+			logger.debug("Dispatching end of system call " + calledService.toFQN());
+			
+			// delegate to allow for clean up operations
+			rootContext.getDetector().systemCallEnd(calledService, time);
 
-		@Override
-		public void systemCallBegin(MethodIdent calledService, double time) {
-			delegatee.systemCallBegin(calledService, time);
-		}
-
-		@Override
-		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-			delegatee.externalCallEnd(callingService, calledService, time);
-		}
-
-		@Override
-		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			delegatee.externalCallBegin(callingService, calledService, time);
-		}
-
-		@Override
-		public void internalActionBegin(MethodIdent callingService, double time) {
-			delegatee.internalActionBegin(callingService, time);
-		}
-
-		@Override
-		public void internalActionEnd(MethodIdent callingService, double time) {
-			delegatee.internalActionEnd(callingService, time);
-		}
-
-		@Override
-		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
-			delegatee.sqlStatement(callingService, statement);
-		}
-
-		public void setDetectionType(ScanningProgressListener delegatee) {
-			this.delegatee = delegatee;
-		}
-
-	}
-
-	private static abstract class AbstractScannerListener implements ScanningProgressListener {
-
-		@Override
-		public void systemCallEnd(MethodIdent calledService, double time) {
-			logger.warn("Encountered unexpected end of traversal.");
-		}
-
-		@Override
-		public void systemCallBegin(MethodIdent calledService, double time) {
-			logger.warn("Encountered unexpected begin of system level service call.");
-		}
-
-		@Override
-		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-			logger.warn("Encountered unexpected end of external service call.");
+			if (rootContext == null) {
+				throw new IllegalStateException(
+						"Encountered end of system call, but there is no system call being processed.");
+			}
+			rootContext = null;
 		}
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			logger.warn("Encountered unexpected begin of external service call.");
+			logger.debug("Dispatching begin of external call " + calledService.toFQN() + ", called by "
+					+ callingService.toFQN());
+			rootContext.getDetector().externalCallBegin(callingService, calledService, time);
+		}
+
+		@Override
+		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
+			logger.debug("Dispatching end of external call " + calledService.toFQN() + ", called by "
+					+ callingService.toFQN());
+			rootContext.getDetector().externalCallEnd(callingService, calledService, time);
 		}
 
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
-			logger.warn("Encountered unexpected begin of internal action.");
+			logger.debug("Dispatching begin of internal action, called by " + callingService.toFQN());
+			rootContext.getDetector().internalActionBegin(callingService, time);
 		}
 
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
-			logger.warn("Encountered unexpected end of internal action.");
+			logger.debug("Dispatching end of internal action, called by " + callingService.toFQN());
+			rootContext.getDetector().internalActionEnd(callingService, time);
 		}
 
 		@Override
 		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
-			logger.warn("Encountered unexpected SQL statement.");
+			logger.debug("Dispatching SQL statement, called by " + callingService.toFQN());
+			rootContext.getDetector().sqlStatement(callingService, statement);
 		}
 
 	}
 
-	private class DetectSystemCall extends AbstractScannerListener {
+	private static class DetectionContext {
 
-		@Override
-		public void systemCallBegin(MethodIdent calledService, double time) {
-			behaviour = seffFromFQN(calledService.toFQN());
+		private ResourceDemandingBehaviour behaviour;
+
+		private DetectionContext parent;
+
+		private AbstractAction expectedAction;
+
+		private PCMParametrization parametrization;
+
+		private ScanningProgressListener currentDetector;
+
+		private DetectionContext nestedContext;
+
+		private Map<ResourceDemandingSEFF, String> seffToFQNMap;
+
+		private String name;
+
+		public DetectionContext(String name, DetectionContext parent, ResourceDemandingBehaviour behaviour,
+				PCMParametrization parametrization, Map<ResourceDemandingSEFF, String> seffToFQNMap) {
+			this.name = name;
+			this.parent = parent;
+			this.behaviour = behaviour;
+			this.parametrization = parametrization;
+			this.seffToFQNMap = seffToFQNMap;
 
 			// begin detection with Start action's successor
 			StartAction startAction = PCMHelper.findStartAction(behaviour);
 			expectNextAction(startAction.getSuccessor_AbstractAction());
 		}
 
+		public void expectNextAction(AbstractAction action) {
+			logDebugInContext("Expecting next action " + PCMHelper.entityToString(action), this);
+			this.expectedAction = action;
+			if (SeffPackage.eINSTANCE.getExternalCallAction().isInstance(action)) {
+				currentDetector = new DetectExternalCallAction((ExternalCallAction) action, this, seffToFQNMap);
+			} else if (SeffPackage.eINSTANCE.getInternalAction().isInstance(action)) {
+				currentDetector = new DetectInternalAction((InternalAction) action, this, seffToFQNMap);
+			} else if (SeffPackage.eINSTANCE.getStopAction().isInstance(action)) {
+				currentDetector = null;
+				// currentDetector = new StopDetector(this);
+			} else if (SeffPackage.eINSTANCE.getBranchAction().isInstance(action)) {
+				currentDetector = new DetectBranchAction((BranchAction) action, this, seffToFQNMap);
+			} else {
+				logWarnInContext("Could not find extractor for AbstractActions of type " + action.getClass()
+						+ ". Continuing with successor...", this);
+				expectNextAction(action.getSuccessor_AbstractAction());
+			}
+		}
+
+		public void leaveNestedContext() {
+			logDebugInContext("Clearing nested context", this);
+			nestedContext = null;
+			expectNextAction(expectedAction.getSuccessor_AbstractAction());
+		}
+
+		public ScanningProgressListener getDetector() {
+			if (nestedContext != null && nestedContext.getDetector() != null) {
+				return nestedContext.getDetector();
+			} else {
+				return currentDetector;
+			}
+		}
+
+		public AbstractAction getExpectedAction() {
+			return expectedAction;
+		}
+
+		public PCMParametrization getParametrization() {
+			return parametrization;
+		}
+
+		public String getName() {
+			String parentNames = "";
+			if (parent == null) {
+				parentNames = "#";
+			} else {
+				parentNames = parent.getName();
+			}
+			return parentNames + " -> " + name;
+		}
+
+		public String getShortName() {
+			String parentNames = "";
+			if (parent == null) {
+				parentNames = "#";
+			} else {
+				parentNames = parent.getShortName() + " -> ";
+			}
+			String[] nameSegments = name.split("\\.");
+			String shortName = "";
+			if (nameSegments.length <= 2) {
+				shortName = name;
+			} else {
+				int n = nameSegments.length;
+				shortName = nameSegments[n - 2] + "." + nameSegments[n - 1];
+			}
+			return parentNames + shortName;
+		}
+
 	}
 
-	private class DetectExternalCallAction extends AbstractScannerListener {
+	private static class DefaultDetector implements ScanningProgressListener {
 
-		private int callDepth;
+		protected DetectionContext context;
 
-		// TODO stack really needed?
-		private Stack<InvocationTree2PCMMapper> nestedMatcher = new Stack<>();
+		protected Map<ResourceDemandingSEFF, String> seffToFQNMap;
+
+		public DefaultDetector(DetectionContext context, Map<ResourceDemandingSEFF, String> seffToFQNMap) {
+			this.context = context;
+			this.seffToFQNMap = seffToFQNMap;
+		}
+
+		@Override
+		public void systemCallBegin(MethodIdent calledService, double time) {
+			// nothing to do
+		}
+
+		@Override
+		public void systemCallEnd(MethodIdent calledService, double time) {
+			// nothing to do
+		}
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			callDepth++;
-			ResourceDemandingSEFF seff = seffFromFQN(calledService.toFQN());
-			nestedMatcher.push(new InvocationTree2PCMMapper(seffToFQNMap, seff, parametrization));
-			// TODO delegate to nested matcher?
+
 		}
 
 		@Override
 		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-			callDepth--;
-			nestedMatcher.pop();
-			// TODO delegate to nested matcher?
-			if (callDepth == 0) {
-				// TODO check if this is the expected external call
-				logger.debug("Successfully detected external call " + calledService.toFQN());
 
-				// finished ExternalCall detection
-				expectNextAction(expectedAction.getSuccessor_AbstractAction());
-			}
+			// context.clearNestedDetector();
 		}
 
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
-			// ignore internal actions not present in the model
-			if (!nestedMatcher.isEmpty()) {
-				nestedMatcher.peek().getScannerListener().internalActionBegin(callingService, time);
-			}
+			logWarnInContext("Encountered unexpected begin of internal action.", context);
 		}
 
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
-			// ignore internal actions not present in the model
-			if (!nestedMatcher.isEmpty()) {
-				nestedMatcher.peek().getScannerListener().internalActionEnd(callingService, time);
+			logWarnInContext("Encountered unexpected end of internal action.", context);
+		}
+
+		@Override
+		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
+			logWarnInContext("Encountered unexpected SQL statement.", context);
+		}
+
+	}
+
+	private static class DetectExternalCallAction extends DefaultDetector {
+
+		private ExternalCallAction externalCall;
+
+		public DetectExternalCallAction(ExternalCallAction externalCall, DetectionContext context,
+				Map<ResourceDemandingSEFF, String> seffToFQNMap) {
+			super(context, seffToFQNMap);
+			this.externalCall = externalCall;
+		}
+
+		@Override
+		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
+			// TODO check if this is the expected call
+			// super.externalCallBegin(callingService, calledService, time);
+
+			boolean match = isSameService(externalCall, calledService);
+			if (match) {
+				logDebugInContext("Detected start of external call " + calledService.toFQN(), context);
+				ResourceDemandingSEFF seff = seffFromFQN(seffToFQNMap, calledService.toFQN());
+				// TODO improve following statement
+				context.nestedContext = new DetectionContext(calledService.toFQN(), context, seff,
+						context.getParametrization(), seffToFQNMap);
+			} else {
+				// TODO refine message
+				String interfaceMethodFQN = externalCall.getCalledService_ExternalService()
+						.getInterface__OperationSignature().getEntityName() + "."
+						+ externalCall.getCalledService_ExternalService().getEntityName();
+				logErrorInContext("Expected external call from " + callingService.toFQN() + " to interface method "
+						+ interfaceMethodFQN + ", but got call to class " + calledService.toFQN(), context);
+			}
+		}
+
+		@Override
+		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
+			// TODO check if this is the expected call
+			boolean match = isSameService(externalCall, calledService);
+			if (match) {
+				logDebugInContext("Detected end of external call " + calledService.toFQN(), context);
+
+				// super.externalCallEnd(callingService, calledService, time);
+				context.leaveNestedContext();
+			} else {
+				// TODO refine message
+				String interfaceMethodFQN = externalCall.getCalledService_ExternalService()
+						.getInterface__OperationSignature().getEntityName() + "."
+						+ externalCall.getCalledService_ExternalService().getEntityName();
+				logErrorInContext("Expected external call from " + callingService.toFQN() + " to interface method "
+						+ interfaceMethodFQN + ", but got call to class " + calledService.toFQN(), context);
+			}
+		}
+
+	}
+
+	private static class DetectBranchAction extends DefaultDetector {
+
+		private BranchAction branch;
+
+		private List<DetectionContext> contextCandidates = new CopyOnWriteArrayList<>();
+
+		private Map<DetectionContext, AbstractBranchTransition> transitionMap = new HashMap<>();
+
+		public DetectBranchAction(BranchAction branch, DetectionContext context,
+				Map<ResourceDemandingSEFF, String> seffToFQNMap) {
+			super(context, seffToFQNMap);
+			this.branch = branch;
+			logDebugInContext("Trying to detect " + PCMHelper.entityToString(branch), context);
+
+			// we don't know yet which branch transition will be taken, so
+			// create a candidate mapper for each of them and later throw away
+			// each matcher no longer appropriate in light of the advanced
+			// scanning progress.
+			int i = 0;
+			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
+				ResourceDemandingBehaviour behaviour = t.getBranchBehaviour_BranchTransition();
+				DetectionContext mapper = new DetectionContext("Transition_" + i, context, behaviour,
+						(PCMParametrization) new PCMParametrization(), seffToFQNMap);
+				contextCandidates.add(mapper);
+				transitionMap.put(mapper, t);
+				i++;
 			}
 		}
 
 		@Override
 		public void systemCallEnd(MethodIdent calledService, double time) {
-			if (!nestedMatcher.isEmpty()) {
-				nestedMatcher.peek().getScannerListener().systemCallEnd(calledService, time);
-			} else {
-				super.systemCallEnd(calledService, time);
-			}
-		}
-
-		@Override
-		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
-			if (!nestedMatcher.isEmpty()) {
-				nestedMatcher.peek().getScannerListener().sqlStatement(callingService, statement);
-			} else {
-				super.sqlStatement(callingService, statement);
-			}
-		}
-
-	}
-
-	private class DetectBranchAction extends AbstractScannerListener {
-
-		private BranchAction branch;
-
-		private List<InvocationTree2PCMMapper> candidatesMatcher = new CopyOnWriteArrayList<>();
-
-		private Map<InvocationTree2PCMMapper, AbstractBranchTransition> transitionMap = new HashMap<>();
-
-		public DetectBranchAction() {
-			branch = (BranchAction) expectedAction;
-			// we don't know yet which branch transition will be taken, so
-			// create a candidate mapper for each of them and later throw away
-			// each matcher no longer appropriate in light of the advanced
-			// scanning progress.
-			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
-				ResourceDemandingBehaviour behaviour = t.getBranchBehaviour_BranchTransition();
-				try {
-					InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(seffToFQNMap, behaviour,
-							(PCMParametrization) parametrization.clone());
-					candidatesMatcher.add(mapper);
-					transitionMap.put(mapper, t);
-				} catch (CloneNotSupportedException e) {
-					// should not happen actually
-					throw new RuntimeException(e);
-				}
-			}
+			finalizeBranchDetection();
 		}
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			List<InvocationTree2PCMMapper> removedCandidates = new ArrayList<>();
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				ExternalCallAction nextExternalCall = PCMHelper.findNextExternalCall(m.getExpectedAction());
-				boolean match = isSameService(nextExternalCall, calledService);
-				if (!match) {
-					// no longer a candidate
-					candidatesMatcher.remove(m);
-					removedCandidates.add(m);
+			// logDebugInContext("Consuming external call by branch detection: "
+			// + calledService.toFQN(), context);
+			// List<DetectionContext> removedCandidates = new ArrayList<>();
+			// for (DetectionContext ctx : contextCandidates) {
+			// ExternalCallAction nextExternalCall =
+			// PCMHelper.findNextExternalCall(ctx.getExpectedAction());
+			// boolean match = isSameService(nextExternalCall, calledService);
+			// if (!match) {
+			// // no longer a candidate
+			// contextCandidates.remove(ctx);
+			// removedCandidates.add(ctx);
+			// }
+			// }
+			logDebugInContext("Dispatching external call to branch transition candidates: " + calledService.toFQN(),
+					context);
+
+			// delegate to all remaining candidates
+			List<DetectionContext> removedCandidates = new ArrayList<>();
+			for (DetectionContext ctx : contextCandidates) {
+				if (ctx.getDetector() != null) { // TODO check
+					ctx.getDetector().externalCallBegin(callingService, calledService, time);
+				} else {
+					contextCandidates.remove(ctx);
+					logDebugInContext("Removing context from candidates", ctx);
+					removedCandidates.add(ctx);
 				}
 			}
+			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
 
-			if (candidatesMatcher.isEmpty()) {
+			// if
+			// (finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates))
+			// {
+			// //
+			// context.expectNextAction(branch.getSuccessor_AbstractAction());
+			// // context.getDetector().externalCallBegin(callingService,
+			// // calledService, time); // TODO
+			// }
+			//
+			// // delegate to all remaining candidates
+			// for (DetectionContext ctx : contextCandidates) {
+			// ctx.getDetector().externalCallBegin(callingService,
+			// calledService, time);
+			// }
+		}
+
+		private void finalizeBranchDetection() {
+			if (contextCandidates.size() > 1) {
+				logWarnInContext("Could not decide which branch transition to follow "
+						+ "because more than one candidate is left. Choosing first candidate.", context);
+			}
+			finalizeBranchDetection(contextCandidates.get(0));
+		}
+
+		private void finalizeBranchDetection(DetectionContext chosenContext) {
+			context.getParametrization().mergeFrom(chosenContext.parametrization);
+			context.getParametrization().captureBranchTransition(transitionMap.get(chosenContext));
+			context.expectNextAction(branch.getSuccessor_AbstractAction());
+		}
+
+		private boolean finalizeBranchDetectionIfNoRemainingCandidates(List<DetectionContext> removedCandidates) {
+			if (contextCandidates.isEmpty()) {
+				logDebugInContext("Finalizing branch detection.", context);
 				if (removedCandidates.size() > 1) {
-					logger.warn("Could not decide which branch transition to follow "
-							+ "because more than one candidate is left. Choosing first candidate.");
+					logWarnInContext("Could not decide which branch transition to follow "
+							+ "because more than one candidate is left. Choosing first candidate.", context);
 				}
 
 				// finalize branch detection
-				InvocationTree2PCMMapper chosenMapper = removedCandidates.get(0);
-				parametrization.mergeFrom(chosenMapper.getParametrization());
-				parametrization.captureBranchTransition(transitionMap.get(chosenMapper));
-				expectNextAction(branch.getSuccessor_AbstractAction());
-			}
+				DetectionContext chosenMapper = removedCandidates.get(0);
+				finalizeBranchDetection(chosenMapper);
 
-			// delegate to all candidates
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				m.getScannerListener().externalCallBegin(callingService, calledService, time);
+				return true;
 			}
+			return false;
 		}
 
 		@Override
 		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-			// delegate to all candidates
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				m.getScannerListener().externalCallEnd(callingService, calledService, time);
+			// delegate to all remaining candidates
+			List<DetectionContext> removedCandidates = new ArrayList<>();
+			for (DetectionContext ctx : contextCandidates) {
+				if (ctx.getDetector() != null) { // TODO check
+					ctx.getDetector().externalCallEnd(callingService, calledService, time);
+				} else {
+					contextCandidates.remove(ctx);
+					logDebugInContext("Removing context from candidates", ctx);
+					removedCandidates.add(ctx);
+				}
 			}
-		}
-
-		private boolean isSameService(ExternalCallAction firstExternalCall, MethodIdent calledService) {
-			if (firstExternalCall == null) {
-				return false;
-			}
-			OperationSignature signature = firstExternalCall.getCalledService_ExternalService();
-			// TODO very hack solution right now!! check if interface/bean do
-			// match
-			if (calledService.getMethodName().equals(signature.getEntityName())) {
-				return true;
-			} else {
-				return false;
-			}
-
+			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
 		}
 
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
-			// delegate to all candidates
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				m.getScannerListener().internalActionBegin(callingService, time);
+			// delegate to all remaining candidates
+			List<DetectionContext> removedCandidates = new ArrayList<>();
+			for (DetectionContext ctx : contextCandidates) {
+				if (ctx.getDetector() != null) { // TODO check
+					ctx.getDetector().internalActionBegin(callingService, time);
+				} else {
+					contextCandidates.remove(ctx);
+					logDebugInContext("Removing context from candidates", ctx);
+					removedCandidates.add(ctx);
+				}
 			}
+			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
 		}
 
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
-			// delegate to all candidates
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				m.getScannerListener().internalActionEnd(callingService, time);
+			// delegate to all remaining candidates
+			List<DetectionContext> removedCandidates = new ArrayList<>();
+			for (DetectionContext ctx : contextCandidates) {
+				if (ctx.getDetector() != null) { // TODO check
+					ctx.getDetector().internalActionEnd(callingService, time);
+				} else {
+					contextCandidates.remove(ctx);
+					logDebugInContext("Removing context from candidates", ctx);
+					removedCandidates.add(ctx);
+				}
 			}
+			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
 		}
 
 		@Override
 		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
-			// delegate to all candidates
-			for (InvocationTree2PCMMapper m : candidatesMatcher) {
-				m.getScannerListener().sqlStatement(callingService, statement);
+			// delegate to all remaining candidates
+			List<DetectionContext> removedCandidates = new ArrayList<>();
+			for (DetectionContext ctx : contextCandidates) {
+				if (ctx.getDetector() != null) { // TODO check
+					ctx.getDetector().sqlStatement(callingService, statement);
+				} else {
+					contextCandidates.remove(ctx);
+					logDebugInContext("Removing context from candidates", ctx);
+					removedCandidates.add(ctx);
+				}
 			}
+			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
 		}
 
 	}
 
-	private class DetectInternalAction extends AbstractScannerListener {
+	private static class DetectInternalAction extends DefaultDetector {
 
 		private double timeBegin;
 
 		private SQLStatementSequence sqlStatements = new SQLStatementSequence();
 
+		/** the action to be detected */
+		private InternalAction action;
+
+		public DetectInternalAction(InternalAction action, DetectionContext context,
+				Map<ResourceDemandingSEFF, String> seffToFQNMap) {
+			super(context, seffToFQNMap);
+			this.action = action;
+		}
+
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
+			if (!isWithinSameService(action, callingService, context)) {
+				context.parent.leaveNestedContext();
+				context.parent.getDetector().internalActionBegin(callingService, time);
+				return;
+			}
+
 			if (timeBegin != 0) {
-				logger.warn("Encountered consecutive begins of internal action without a corresponding end action.");
+				logWarnInContext(
+						"Encountered consecutive begins of internal action without a corresponding end action.",
+						context);
 			}
 			timeBegin = time;
 		}
 
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
+			if (!isWithinSameService(action, callingService, context)) {
+				context.parent.leaveNestedContext();
+				context.parent.getDetector().internalActionEnd(callingService, time);
+				return;
+			}
+
 			if (timeBegin == 0) {
-				logger.warn("Encountered end of internal action, but did not find corresponding begin action.");
+				logWarnInContext("Encountered end of internal action, but did not find corresponding begin action.",
+						context);
 			}
 			double difference = time - timeBegin;
-			logger.info("Successfully detected internal action, execution time is " + difference);
+			logInfoInContext("Successfully detected internal action, execution time is " + difference, context);
 
-			parametrization.captureResourceDemand((InternalAction) expectedAction, difference);
+			context.getParametrization().captureResourceDemand((InternalAction) action, difference);
 
 			// capture SQL statements, if present
 			if (sqlStatements.size() > 0) {
-				parametrization.captureSQLStatementSequence((InternalAction) expectedAction, sqlStatements);
-				logger.info("Detected " + sqlStatements.size() + " SQL statements within internal action.");
+				context.getParametrization().captureSQLStatementSequence(action, sqlStatements);
+				logInfoInContext("Detected " + sqlStatements.size() + " SQL statements within internal action.",
+						context);
 			}
 
-			expectNextAction(expectedAction.getSuccessor_AbstractAction());
+			context.expectNextAction(action.getSuccessor_AbstractAction());
+		}
+
+		@Override
+		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
+			logWarnInContext("Encountered unexpected begin of external call, thus skipping internal action detection "
+					+ "and continuing with its successor (...that is hopefully an external action).", context);
+			context.expectNextAction(action.getSuccessor_AbstractAction());
 		}
 
 		@Override
 		public void sqlStatement(MethodIdent callingService, SQLStatement statement) {
 			sqlStatements.add(statement);
-		}
-
-	}
-
-	private class DetectStopAction extends AbstractScannerListener {
-
-		@Override
-		public void systemCallEnd(MethodIdent calledService, double time) {
-			logger.debug("Successfully detected end of invocation tree.");
-
-			// reset detection
-			detector.setDetectionType(new DetectSystemCall());
 		}
 
 	}

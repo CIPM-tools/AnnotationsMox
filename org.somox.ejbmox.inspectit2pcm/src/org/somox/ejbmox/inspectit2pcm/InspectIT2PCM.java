@@ -46,8 +46,8 @@ public class InspectIT2PCM {
 		InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(seffToFQNMap);
 		Set<String> externalServicesFQN = new HashSet<>(seffToFQNMap.values());
 		Set<String> interfacesFQN = new HashSet<>(ifaceToFQNMap.values());
-		InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScannerListener(), externalServicesFQN,
-				interfacesFQN, identService, invocationsService);
+		InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
+				externalServicesFQN, interfacesFQN, identService, invocationsService);
 
 		// scan all invocation trees available
 		List<Long> invocationIds = invocationsService.getInvocationSequencesId();
