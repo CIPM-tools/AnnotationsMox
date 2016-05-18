@@ -154,7 +154,7 @@ public class InvocationTree2PCMMapper {
 		@Override
 		public void systemCallBegin(MethodIdent calledService, double time) {
 			logger.debug("Dispatching begin of system call " + calledService.toFQN());
-			
+
 			if (rootContext != null) {
 				throw new IllegalStateException(
 						"Encountered begin of system call" + " although another system call is still being processed.");
@@ -163,13 +163,14 @@ public class InvocationTree2PCMMapper {
 			DetectionContext parent = null;
 			rootContext = new DetectionContext(calledService.toFQN(), parent, behaviour, parametrization, seffToFQNMap);
 
-			// TODO delegate to contexts?
+			// delegate to allow for setup operations
+			rootContext.getDetector().systemCallEnd(calledService, time);
 		}
 
 		@Override
 		public void systemCallEnd(MethodIdent calledService, double time) {
 			logger.debug("Dispatching end of system call " + calledService.toFQN());
-			
+
 			// delegate to allow for clean up operations
 			rootContext.getDetector().systemCallEnd(calledService, time);
 
@@ -241,11 +242,15 @@ public class InvocationTree2PCMMapper {
 			this.seffToFQNMap = seffToFQNMap;
 
 			// begin detection with Start action's successor
-			StartAction startAction = PCMHelper.findStartAction(behaviour);
-			expectNextAction(startAction.getSuccessor_AbstractAction());
+			expectedAction = PCMHelper.findStartAction(behaviour);
+			proceedWithNextAction();
 		}
 
-		public void expectNextAction(AbstractAction action) {
+		public void proceedWithNextAction() {
+			expectNextAction(expectedAction.getSuccessor_AbstractAction());
+		}
+
+		private void expectNextAction(AbstractAction action) {
 			logDebugInContext("Expecting next action " + PCMHelper.entityToString(action), this);
 			this.expectedAction = action;
 			if (SeffPackage.eINSTANCE.getExternalCallAction().isInstance(action)) {
@@ -267,7 +272,15 @@ public class InvocationTree2PCMMapper {
 		public void leaveNestedContext() {
 			logDebugInContext("Clearing nested context", this);
 			nestedContext = null;
-			expectNextAction(expectedAction.getSuccessor_AbstractAction());
+			proceedWithNextAction();
+		}
+
+		public void leaveContext() {
+			parent.leaveNestedContext();
+		}
+
+		public boolean reachedStop() {
+			return SeffPackage.eINSTANCE.getStopAction().isInstance(expectedAction);
 		}
 
 		public ScanningProgressListener getDetector() {
@@ -339,13 +352,12 @@ public class InvocationTree2PCMMapper {
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-
+			logWarnInContext("Encountered unexpected begin of external call.", context);
 		}
 
 		@Override
 		public void externalCallEnd(MethodIdent callingService, MethodIdent calledService, double time) {
-
-			// context.clearNestedDetector();
+			logWarnInContext("Encountered unexpected end of external call.", context);
 		}
 
 		@Override
@@ -454,26 +466,13 @@ public class InvocationTree2PCMMapper {
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
-			// logDebugInContext("Consuming external call by branch detection: "
-			// + calledService.toFQN(), context);
-			// List<DetectionContext> removedCandidates = new ArrayList<>();
-			// for (DetectionContext ctx : contextCandidates) {
-			// ExternalCallAction nextExternalCall =
-			// PCMHelper.findNextExternalCall(ctx.getExpectedAction());
-			// boolean match = isSameService(nextExternalCall, calledService);
-			// if (!match) {
-			// // no longer a candidate
-			// contextCandidates.remove(ctx);
-			// removedCandidates.add(ctx);
-			// }
-			// }
 			logDebugInContext("Dispatching external call to branch transition candidates: " + calledService.toFQN(),
 					context);
 
 			// delegate to all remaining candidates
 			List<DetectionContext> removedCandidates = new ArrayList<>();
 			for (DetectionContext ctx : contextCandidates) {
-				if (ctx.getDetector() != null) { // TODO check
+				if (!ctx.reachedStop()) {
 					ctx.getDetector().externalCallBegin(callingService, calledService, time);
 				} else {
 					contextCandidates.remove(ctx);
@@ -482,21 +481,6 @@ public class InvocationTree2PCMMapper {
 				}
 			}
 			finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates);
-
-			// if
-			// (finalizeBranchDetectionIfNoRemainingCandidates(removedCandidates))
-			// {
-			// //
-			// context.expectNextAction(branch.getSuccessor_AbstractAction());
-			// // context.getDetector().externalCallBegin(callingService,
-			// // calledService, time); // TODO
-			// }
-			//
-			// // delegate to all remaining candidates
-			// for (DetectionContext ctx : contextCandidates) {
-			// ctx.getDetector().externalCallBegin(callingService,
-			// calledService, time);
-			// }
 		}
 
 		private void finalizeBranchDetection() {
@@ -510,7 +494,7 @@ public class InvocationTree2PCMMapper {
 		private void finalizeBranchDetection(DetectionContext chosenContext) {
 			context.getParametrization().mergeFrom(chosenContext.parametrization);
 			context.getParametrization().captureBranchTransition(transitionMap.get(chosenContext));
-			context.expectNextAction(branch.getSuccessor_AbstractAction());
+			context.proceedWithNextAction();
 		}
 
 		private boolean finalizeBranchDetectionIfNoRemainingCandidates(List<DetectionContext> removedCandidates) {
@@ -535,7 +519,7 @@ public class InvocationTree2PCMMapper {
 			// delegate to all remaining candidates
 			List<DetectionContext> removedCandidates = new ArrayList<>();
 			for (DetectionContext ctx : contextCandidates) {
-				if (ctx.getDetector() != null) { // TODO check
+				if (!ctx.reachedStop()) {
 					ctx.getDetector().externalCallEnd(callingService, calledService, time);
 				} else {
 					contextCandidates.remove(ctx);
@@ -551,7 +535,7 @@ public class InvocationTree2PCMMapper {
 			// delegate to all remaining candidates
 			List<DetectionContext> removedCandidates = new ArrayList<>();
 			for (DetectionContext ctx : contextCandidates) {
-				if (ctx.getDetector() != null) { // TODO check
+				if (!ctx.reachedStop()) {
 					ctx.getDetector().internalActionBegin(callingService, time);
 				} else {
 					contextCandidates.remove(ctx);
@@ -567,7 +551,7 @@ public class InvocationTree2PCMMapper {
 			// delegate to all remaining candidates
 			List<DetectionContext> removedCandidates = new ArrayList<>();
 			for (DetectionContext ctx : contextCandidates) {
-				if (ctx.getDetector() != null) { // TODO check
+				if (!ctx.reachedStop()) {
 					ctx.getDetector().internalActionEnd(callingService, time);
 				} else {
 					contextCandidates.remove(ctx);
@@ -583,7 +567,7 @@ public class InvocationTree2PCMMapper {
 			// delegate to all remaining candidates
 			List<DetectionContext> removedCandidates = new ArrayList<>();
 			for (DetectionContext ctx : contextCandidates) {
-				if (ctx.getDetector() != null) { // TODO check
+				if (!ctx.reachedStop()) {
 					ctx.getDetector().sqlStatement(callingService, statement);
 				} else {
 					contextCandidates.remove(ctx);
@@ -614,7 +598,8 @@ public class InvocationTree2PCMMapper {
 		@Override
 		public void internalActionBegin(MethodIdent callingService, double time) {
 			if (!isWithinSameService(action, callingService, context)) {
-				context.parent.leaveNestedContext();
+				context.leaveContext();
+				// delegate to parent context
 				context.parent.getDetector().internalActionBegin(callingService, time);
 				return;
 			}
@@ -630,7 +615,8 @@ public class InvocationTree2PCMMapper {
 		@Override
 		public void internalActionEnd(MethodIdent callingService, double time) {
 			if (!isWithinSameService(action, callingService, context)) {
-				context.parent.leaveNestedContext();
+				context.leaveContext();
+				// delegate to parent context
 				context.parent.getDetector().internalActionEnd(callingService, time);
 				return;
 			}
@@ -651,14 +637,14 @@ public class InvocationTree2PCMMapper {
 						context);
 			}
 
-			context.expectNextAction(action.getSuccessor_AbstractAction());
+			context.proceedWithNextAction();
 		}
 
 		@Override
 		public void externalCallBegin(MethodIdent callingService, MethodIdent calledService, double time) {
 			logWarnInContext("Encountered unexpected begin of external call, thus skipping internal action detection "
 					+ "and continuing with its successor (...that is hopefully an external action).", context);
-			context.expectNextAction(action.getSuccessor_AbstractAction());
+			context.proceedWithNextAction();
 		}
 
 		@Override
