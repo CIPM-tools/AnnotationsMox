@@ -2,12 +2,17 @@ package org.somox.ejbmox.inspectit2pcm.util;
 
 import org.palladiosimulator.pcm.core.CoreFactory;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
+import org.palladiosimulator.pcm.core.entity.Entity;
 import org.palladiosimulator.pcm.resourcetype.ProcessingResourceType;
 import org.palladiosimulator.pcm.seff.AbstractAction;
+import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
+import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.ExternalCallAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
+import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffFactory;
+import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.palladiosimulator.pcm.seff.seff_performance.ParametricResourceDemand;
@@ -89,6 +94,27 @@ public class PCMHelper {
 		ia.setEntityName(name);
 		ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(0));
 		return ia;
+	}
+
+	public static String entityToString(Entity entity) {
+		return entity.eClass().getName() + ": " + entity.getEntityName() + " [" + entity.getId() + "]";
+	}
+
+	private static ResourceDemandingSEFF findSeffForBehaviour(ResourceDemandingBehaviour behaviour) {
+		if (SeffPackage.eINSTANCE.getResourceDemandingSEFF().isInstance(behaviour)) {
+			return (ResourceDemandingSEFF) behaviour;
+		} else if (behaviour.getAbstractBranchTransition_ResourceDemandingBehaviour() != null) {
+			AbstractBranchTransition transition = behaviour.getAbstractBranchTransition_ResourceDemandingBehaviour();
+			BranchAction branch = transition.getBranchAction_AbstractBranchTransition();
+			return findSeffForBehaviour(branch.getResourceDemandingBehaviour_AbstractAction()); 
+		} else {
+			throw new RuntimeException("Unexpected behaviour type: " + behaviour.eClass());
+		}
+	}
+
+	public static ResourceDemandingSEFF findSeffForInternalAction(InternalAction action) {
+		ResourceDemandingBehaviour behaviour = action.getResourceDemandingBehaviour_AbstractAction();
+		return findSeffForBehaviour(behaviour);
 	}
 
 }

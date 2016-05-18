@@ -68,7 +68,10 @@ public class PCMParametrization implements Cloneable {
 		if (demand < 0) {
 			throw new IllegalArgumentException("Demand may not be negative.");
 		}
-		resourceDemandMap.getOrDefault(action, new ArrayList<>()).add(demand);
+		if (!resourceDemandMap.containsKey(action)) {
+			resourceDemandMap.put(action, new ArrayList<>());
+		}
+		resourceDemandMap.get(action).add(demand);
 	}
 
 	public void captureBranchTransition(AbstractBranchTransition transition) {
