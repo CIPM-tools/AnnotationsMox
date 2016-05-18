@@ -18,7 +18,6 @@ import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffPackage;
-import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
@@ -415,8 +414,6 @@ public class InvocationTree2PCMMapper {
 			boolean match = isSameService(externalCall, calledService);
 			if (match) {
 				logDebugInContext("Detected end of external call " + calledService.toFQN(), context);
-
-				// super.externalCallEnd(callingService, calledService, time);
 				context.leaveNestedContext();
 			} else {
 				// TODO refine message
@@ -506,12 +503,12 @@ public class InvocationTree2PCMMapper {
 				}
 
 				// finalize branch detection
-				DetectionContext chosenMapper = removedCandidates.get(0);
-				finalizeBranchDetection(chosenMapper);
+				DetectionContext chosenContext = removedCandidates.get(0);
+				finalizeBranchDetection(chosenContext);
 
-				return true;
+				return true; // finalized
 			}
-			return false;
+			return false; // not yet finalized
 		}
 
 		@Override
