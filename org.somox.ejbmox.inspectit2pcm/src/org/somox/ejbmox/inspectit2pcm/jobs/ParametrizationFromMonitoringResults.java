@@ -22,14 +22,15 @@ public class ParametrizationFromMonitoringResults extends AbstractII2PCMJob {
 
 	@Override
 	public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
-
 		// instantiate REST service clients
 		RESTClient client = new RESTClient(getPartition().getConfiguration().getCmrUrl());
 		IdentsServiceClient identService = new IdentsServiceClient(client);
 		InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
 
-		// TODO: comment
+		// create mapper
 		InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(getPartition().getSeffToFQNMap());
+
+		// create scanner and connect to mapper via scanning progress listener
 		Set<String> externalServicesFQN = new HashSet<>(getPartition().getSeffToFQNMap().values());
 		Set<String> interfacesFQN = new HashSet<>(getPartition().getInterfaceToFQNMap().values());
 		InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
@@ -39,14 +40,16 @@ public class ParametrizationFromMonitoringResults extends AbstractII2PCMJob {
 		II2PCMConfiguration config = getPartition().getConfiguration();
 		List<Long> invocationIds = invocationsService.getInvocationSequencesId();
 		int i = 0;
+		logger.info("Skipping first " + config.getWarmupLength() + " invocation sequences treated as warmup phase");
+		monitor.beginTask(getName(), invocationIds.size());
 		for (long invocationId : invocationIds) {
 			if (++i < config.getWarmupLength()) {
 				continue;
 			}
 			InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
-			logger.info("Scanning invocation sequence " + (i - config.getWarmupLength()) + " out of "
-					+ (invocationIds.size() - config.getWarmupLength()) + "...");
+			logger.debug("Scanning invocation sequence " + i + " out of " + invocationIds.size() + "...");
 			scanner.scanInvocationTree(invocation);
+			monitor.worked(1);
 		}
 
 		// store resulting parametrization to blackboard
@@ -56,12 +59,12 @@ public class ParametrizationFromMonitoringResults extends AbstractII2PCMJob {
 
 	@Override
 	public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
-		// TODO Auto-generated method stub
+		// nothing to do
 	}
 
 	@Override
 	public String getName() {
-		return "Parse InspectIT Measurements";
+		return "Scan InspectIT invocation sequences";
 	}
 
 }
