@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.inspectit2pcm.jobs.II2PCMPartition;
 import org.somox.ejbmox.inspectit2pcm.jobs.ParametrizeModelJob;
-import org.somox.ejbmox.inspectit2pcm.jobs.ParametrizationFromMonitoringResults;
+import org.somox.ejbmox.inspectit2pcm.jobs.ParametrizationFromMonitoringResultsJob;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractWorkflowExtensionJob;
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
@@ -21,7 +21,7 @@ public class II2PCMJob extends AbstractWorkflowExtensionJob<SoMoXBlackboard> {
 
 	public II2PCMJob() {
 		// 1. Obtain PCM parametrization from InspectIT monitoring results 
-		addJob(new ParametrizationFromMonitoringResults());
+		addJob(new ParametrizationFromMonitoringResultsJob());
 		
 		// 2. Parametrize PCM model according to parametrization
 		addJob(new ParametrizeModelJob());

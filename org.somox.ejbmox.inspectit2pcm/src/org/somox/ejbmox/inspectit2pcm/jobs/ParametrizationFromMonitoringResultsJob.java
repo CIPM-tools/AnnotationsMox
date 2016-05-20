@@ -18,7 +18,7 @@ import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
 import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 
-public class ParametrizationFromMonitoringResults extends AbstractII2PCMJob {
+public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
 	@Override
 	public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
