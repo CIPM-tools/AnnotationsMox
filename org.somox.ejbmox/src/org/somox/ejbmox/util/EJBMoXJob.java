@@ -42,8 +42,6 @@ public class EJBMoXJob extends AbstractExtendableJob<SoMoXBlackboard> {
         add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
         
         handleJobExtensions(EJBMoXWorkflowHooks.POST_SAVE_MODELS, new Configuration());
-        
-        add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
 	}
 	
 	private class Configuration implements ExtendableJobConfiguration {
