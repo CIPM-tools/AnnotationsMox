@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Inspectit
+Bundle-Name: EJBMoX Performance Model Extractor (via InspectIT)
 Bundle-SymbolicName: org.somox.ejbmox.inspectit2pcm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
