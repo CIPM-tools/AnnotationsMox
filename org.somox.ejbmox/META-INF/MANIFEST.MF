@@ -16,10 +16,8 @@ Require-Bundle: org.somox.core,
  org.somox.sourcecodedecorator,
  org.somox.gast2seff,
  org.somox.kdmhelper,
- org.somox.util,
- org.somox.ejbmox.inspectit2pcm;bundle-version="1.0.0"
+ org.somox.util
 Export-Package: org.somox.ejbmox.analyzer,
  org.somox.ejbmox.commandline,
  org.somox.ejbmox.ejb.functionclassification,
- org.somox.ejbmox.performance.inspectit2pcm,
  org.somox.ejbmox.util

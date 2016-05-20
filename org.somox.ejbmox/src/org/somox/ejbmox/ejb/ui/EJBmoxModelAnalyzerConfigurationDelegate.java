@@ -7,6 +7,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
+import org.somox.ejbmox.util.EJBMoXJob;
 import org.somox.ejbmox.util.EJBmoxUtil;
 
 import de.uka.ipd.sdq.workflow.Workflow;
@@ -25,7 +26,7 @@ public class EJBmoxModelAnalyzerConfigurationDelegate
     @Override
     protected IJob createWorkflowJob(final EJBmoxAnalyzerConfiguration modelAnalyzerConfig, final ILaunch mode)
             throws CoreException {
-        return EJBmoxUtil.createEJBmoxWorkflowJobs(modelAnalyzerConfig);
+        return new EJBMoXJob(modelAnalyzerConfig);
     }
 
     @Override

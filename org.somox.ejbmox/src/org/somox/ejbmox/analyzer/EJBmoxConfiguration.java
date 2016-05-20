@@ -9,13 +9,18 @@ import java.util.Set;
 import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.configuration.SoMoXConfiguration;
 
-public class EJBmoxConfiguration extends AbstractMoxConfiguration {
+import de.uka.ipd.sdq.workflow.extension.ExtendableJobConfiguration;
+
+public class EJBmoxConfiguration extends AbstractMoxConfiguration implements ExtendableJobConfiguration {
 
     public static final String EJBMOX_INSPECTIT_FILE_PATHS = "inspectItFilePaths";
 
     private final Set<String> inspectITFilePaths = new HashSet<String>();
+    
+    private Map<String, Object> attributeMap;
 
     public EJBmoxConfiguration(final Map<String, Object> attributeMap) {
+    	this.attributeMap = attributeMap;
         this.applyAttributeMap(attributeMap);
     }
 
@@ -65,4 +70,9 @@ public class EJBmoxConfiguration extends AbstractMoxConfiguration {
         return result;
 
     }
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributeMap;
+	}
 }

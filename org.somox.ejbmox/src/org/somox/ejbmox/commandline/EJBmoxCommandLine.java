@@ -7,6 +7,7 @@ import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
+import org.somox.ejbmox.util.EJBMoXJob;
 import org.somox.ejbmox.util.EJBmoxUtil;
 
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
@@ -53,11 +54,11 @@ public class EJBmoxCommandLine {
         modelAnalyzerConfig.setMoxConfiguration(configuration);
         SequentialBlackboardInteractingJob<SoMoXBlackboard> ejbMoxWorkflow;
         try {
-            ejbMoxWorkflow = EJBmoxUtil.createEJBmoxWorkflowJobs(modelAnalyzerConfig);
+            ejbMoxWorkflow = new EJBMoXJob(modelAnalyzerConfig);
             ejbMoxWorkflow.execute(new NullProgressMonitor());
             logger.info("Finished EJBmox run in " + (System.nanoTime() - start) / 1000000000 + " seconds.");
             return ejbMoxWorkflow.getBlackboard().getAnalysisResult();
-        } catch (CoreException | JobFailedException | UserCanceledException e) {
+        } catch (JobFailedException | UserCanceledException e) {
             throw new RuntimeException("Could not create and execute EJBmox workflow.", e);
         }
     }
