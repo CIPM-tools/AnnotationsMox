@@ -112,106 +112,18 @@ public class PCMParametrization implements Cloneable {
 		return clone;
 	}
 
-	public void parametrize(AggregationStrategy aggregation) {
-		switch (aggregation) {
-		case HISTOGRAM:
-			throw new UnsupportedOperationException();
-			// break;
-		case MEAN:
-			parametrizeResourceDemandsWithMean();
-			parametrizeSQLStatementsWithMean();
-			parametrizeBranchingProbabilities();
-			break;
-		case MEDIAN:
-			throw new UnsupportedOperationException();
-			// break;
-		default:
-			throw new RuntimeException("Unknown aggregation strategy: " + aggregation);
-		}
-	}
-
-	private void resetBranchingProbabilities() {
-		// collect all branches for which there is at least one branching
-		// probability
-		Set<BranchAction> branches = new HashSet<>();
-		for (AbstractBranchTransition t : branchTransitionMap.keySet()) {
-			branches.add(t.getBranchAction_AbstractBranchTransition());
-		}
-
-		// reset branching probabilities
-		for (BranchAction branch : branches) {
-			for (AbstractBranchTransition t : branch.getBranches_Branch()) {
-				((ProbabilisticBranchTransition) t).setBranchProbability(0);
-			}
-		}
-	}
-
-	private void parametrizeBranchingProbabilities() {
-		resetBranchingProbabilities();
-		for (Entry<AbstractBranchTransition, Integer> e : branchTransitionMap.entrySet()) {
-			// summarize invocation count of this transition and all sibling
-			// transitions
-			List<AbstractBranchTransition> transitions = e.getKey().getBranchAction_AbstractBranchTransition()
-					.getBranches_Branch();
-			int totalCount = 0;
-			for (AbstractBranchTransition t : transitions) {
-				int count = branchTransitionMap.getOrDefault(t, 0);
-				totalCount += count;
-			}
-			double probability = branchTransitionMap.get(e.getKey()).doubleValue() / totalCount;
-			((ProbabilisticBranchTransition) e.getKey()).setBranchProbability(probability);
-			e.getKey().setEntityName("Measured branch probability");
-		}
-	}
-
-	private void parametrizeResourceDemandsWithMean() {
-		for (Entry<InternalAction, List<Double>> e : resourceDemandMap.entrySet()) {
-			InternalAction action = e.getKey();
-			List<Double> demands = e.getValue();
-
-			// calculate mean
-			double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
-			double mean = sum / demands.size();
-
-			// parametrize action
-			PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
-			action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
-		}
-	}
-
-	private void addPalladioTXProfile() {
-		InternalAction arbitraryRepositoryAction = resourceDemandMap.keySet().iterator().next();
-		Resource repositoryResource = arbitraryRepositoryAction.eResource();
-
-		ProfileAPI.applyProfile(repositoryResource, "PCMTransactional");
+	public Map<AbstractBranchTransition, Integer> getBranchTransitionMap() {
+		return branchTransitionMap;
 	}
 	
-	// TODO simplify whole method
-	private void parametrizeSQLStatementsWithMean() {
-		addPalladioTXProfile();
-		
-		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
-			SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
-
-			// learn graph from paths (SQL statement sequences)
-			InternalAction action = e.getKey();
-			List<SQLStatementSequence> sequences = e.getValue();
-			for (SQLStatementSequence s : sequences) {
-				sql2pcm.addStatementSequence(s);
-			}
-			SPGraph g = sql2pcm.getLearner().getGraph();
-
-			// create SEFF from graph (assumes "verbose" representation)
-			ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-			g.toVerboseRepresentation();
-			g.traverse(new InvocationProbabilityVisitor());
-			g.traverse(new Graph2SEFFVisitor(), rdb); // stores SEFF in rdb
-														// variable
-
-			PCMHelper.replaceAction(action, rdb);
-		}
-	}	
-
+	public Map<InternalAction, List<Double>> getResourceDemandMap() {
+		return resourceDemandMap;
+	}
+	
+	public Map<InternalAction, List<SQLStatementSequence>> getSqlStatementMap() {
+		return sqlStatementMap;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

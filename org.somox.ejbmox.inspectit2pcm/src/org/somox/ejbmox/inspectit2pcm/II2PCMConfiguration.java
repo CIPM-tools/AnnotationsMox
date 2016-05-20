@@ -7,7 +7,7 @@ import de.uka.ipd.sdq.workflow.extension.AbstractExtensionJobConfiguration;
  * @author Philipp Merkle
  *
  */
-public class InspectIT2PCMConfiguration extends AbstractExtensionJobConfiguration {
+public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
 
 	public static final String CMR_REST_API_DEFAULT = "http://localhost:8182/rest/";
 

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.somox.ejbmox.inspectit2pcm.InspectIT2PCMConfiguration;
+import org.somox.ejbmox.inspectit2pcm.II2PCMConfiguration;
 
 public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 
@@ -58,7 +58,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				txtCmrUrl.setText(InspectIT2PCMConfiguration.CMR_REST_API_DEFAULT);
+				txtCmrUrl.setText(II2PCMConfiguration.CMR_REST_API_DEFAULT);
 			}
 		});
 		btnNewButton.setText("Default");
@@ -84,18 +84,18 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
-				InspectIT2PCMConfiguration.CMR_REST_API_DEFAULT);
+				II2PCMConfiguration.CMR_REST_API_DEFAULT);
 		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
-				InspectIT2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
+				II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
 	}
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
 			txtCmrUrl.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
-					InspectIT2PCMConfiguration.CMR_REST_API_DEFAULT));
+					II2PCMConfiguration.CMR_REST_API_DEFAULT));
 			txtWarmup.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
-					InspectIT2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
+					II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

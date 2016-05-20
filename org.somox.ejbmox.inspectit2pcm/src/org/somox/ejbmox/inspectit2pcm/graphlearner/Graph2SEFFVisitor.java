@@ -1,11 +1,7 @@
 package org.somox.ejbmox.inspectit2pcm.graphlearner;
 
-import java.util.List;
 import java.util.Stack;
 
-import org.eclipse.emf.ecore.resource.Resource;
-import org.modelversioning.emfprofile.Profile;
-import org.palladiosimulator.mdsdprofiles.api.ProfileAPI;
 import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;

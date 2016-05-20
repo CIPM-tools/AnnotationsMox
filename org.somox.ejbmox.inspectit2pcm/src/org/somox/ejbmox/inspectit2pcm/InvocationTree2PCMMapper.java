@@ -77,11 +77,6 @@ public class InvocationTree2PCMMapper {
 		}
 	}
 
-	public void parametrize(AggregationStrategy aggregation) {
-		logger.info("Storing monitored runtime behaviour to PCM model...");
-		parametrization.parametrize(aggregation);
-	}
-
 	public ScanningProgressListener getScanningProgressDispatcher() {
 		return dispatcher;
 	}
