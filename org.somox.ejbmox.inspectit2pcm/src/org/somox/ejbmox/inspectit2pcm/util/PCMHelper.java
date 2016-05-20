@@ -1,5 +1,8 @@
 package org.somox.ejbmox.inspectit2pcm.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.palladiosimulator.pcm.core.CoreFactory;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.palladiosimulator.pcm.core.entity.Entity;
@@ -115,6 +118,29 @@ public class PCMHelper {
 	public static ResourceDemandingSEFF findSeffForInternalAction(InternalAction action) {
 		ResourceDemandingBehaviour behaviour = action.getResourceDemandingBehaviour_AbstractAction();
 		return findSeffForBehaviour(behaviour);
+	}
+	
+	public static void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour) {
+		// first collect all actions in a new ArrayList to avoid
+		// ConcurrentModificationException thrown by EMF
+		List<AbstractAction> insertActions = new ArrayList<>(behaviour.getSteps_Behaviour());
+		for (AbstractAction insertAction : insertActions) {
+			// ignore Start and Stop actions
+			if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
+				continue;
+			}
+			insertAction.setResourceDemandingBehaviour_AbstractAction(
+					replaceAction.getResourceDemandingBehaviour_AbstractAction());
+		}
+
+		AbstractAction predecessor = replaceAction.getPredecessor_AbstractAction();
+		predecessor.setSuccessor_AbstractAction(PCMHelper.findStartAction(behaviour).getSuccessor_AbstractAction());
+
+		AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
+		successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
+
+		// remove action that has been replaced
+		replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
 	}
 
 }

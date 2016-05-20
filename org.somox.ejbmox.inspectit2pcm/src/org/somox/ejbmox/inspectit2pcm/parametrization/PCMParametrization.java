@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.resource.Resource;
+import org.palladiosimulator.mdsdprofiles.api.ProfileAPI;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
@@ -177,9 +179,17 @@ public class PCMParametrization implements Cloneable {
 		}
 	}
 
+	private void addPalladioTXProfile() {
+		InternalAction arbitraryRepositoryAction = resourceDemandMap.keySet().iterator().next();
+		Resource repositoryResource = arbitraryRepositoryAction.eResource();
+
+		ProfileAPI.applyProfile(repositoryResource, "PCMTransactional");
+	}
+	
 	// TODO simplify whole method
 	private void parametrizeSQLStatementsWithMean() {
-
+		addPalladioTXProfile();
+		
 		for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
 			SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
 
@@ -198,32 +208,9 @@ public class PCMParametrization implements Cloneable {
 			g.traverse(new Graph2SEFFVisitor(), rdb); // stores SEFF in rdb
 														// variable
 
-			replaceAction(action, rdb);
+			PCMHelper.replaceAction(action, rdb);
 		}
-	}
-
-	private void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour) {
-		// first collect all actions in a new ArrayList to avoid
-		// ConcurrentModificationException thrown by EMF
-		List<AbstractAction> insertActions = new ArrayList<>(behaviour.getSteps_Behaviour());
-		for (AbstractAction insertAction : insertActions) {
-			// ignore Start and Stop actions
-			if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
-				continue;
-			}
-			insertAction.setResourceDemandingBehaviour_AbstractAction(
-					replaceAction.getResourceDemandingBehaviour_AbstractAction());
-		}
-
-		AbstractAction predecessor = replaceAction.getPredecessor_AbstractAction();
-		predecessor.setSuccessor_AbstractAction(PCMHelper.findStartAction(behaviour).getSuccessor_AbstractAction());
-
-		AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
-		successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
-
-		// remove action that has been replaced
-		replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
-	}
+	}	
 
 	@Override
 	public String toString() {

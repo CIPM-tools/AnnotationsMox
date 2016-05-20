@@ -39,7 +39,7 @@ public class InspectIT2PCM {
 		identService = new IdentsServiceClient(client);
 		invocationsService = new InvocationsServiceClient(client);
 	}
-
+	
 	public void parametrizeSEFFs(Map<ResourceDemandingSEFF, String> seffToFQNMap,
 			Map<Interface, String> ifaceToFQNMap) {
 
