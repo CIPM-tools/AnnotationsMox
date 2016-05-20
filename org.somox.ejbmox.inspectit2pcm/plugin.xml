@@ -4,9 +4,19 @@
    <extension
          point="de.uka.ipd.sdq.workflow.job">
       <workflow_job
+            extension_configurationbuilder="org.somox.ejbmox.inspectit2pcm.jobs.InspectIT2PCMConfigurationBuilder"
             extension_job="org.somox.ejbmox.inspectit2pcm.jobs.AnnotatePCMWithInspectITResults"
             workflow_id="post_save_models">
       </workflow_job>
+   </extension>
+   <extension
+         name="name"
+         point="de.uka.ipd.sdq.workflow.tab.extension">
+      <workflow_extension
+            name="org.somox.ejbmox.inspectit2pcm.workflow_extension1"
+            runconfig_tab="org.somox.ejbmox.inspectit2pcm.launch.InspectIT2PCMTab"
+            workflow_id="post_save_models">
+      </workflow_extension>
    </extension>
 
 </plugin>

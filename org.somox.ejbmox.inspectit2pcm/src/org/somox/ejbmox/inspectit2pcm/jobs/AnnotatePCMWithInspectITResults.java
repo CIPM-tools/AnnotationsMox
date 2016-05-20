@@ -47,7 +47,7 @@ public class AnnotatePCMWithInspectITResults extends AbstractWorkflowExtensionJo
 		}
 
 		// parametrize SEFFs
-		InspectIT2PCMConfiguration config = new InspectIT2PCMConfiguration();
+		InspectIT2PCMConfiguration config = (InspectIT2PCMConfiguration) getJobConfiguration();
 		InspectIT2PCM iit2pcm = new InspectIT2PCM(config);
 		iit2pcm.parametrizeSEFFs(seffToFQNMap, ifaceToFQNMap);
 	}

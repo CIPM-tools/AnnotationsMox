@@ -35,7 +35,7 @@ public class InspectIT2PCM {
 		this.config = config;
 
 		// instantiate REST service clients
-		RESTClient client = new RESTClient(config.getRestUrl());
+		RESTClient client = new RESTClient(config.getCmrUrl());
 		identService = new IdentsServiceClient(client);
 		invocationsService = new InvocationsServiceClient(client);
 	}

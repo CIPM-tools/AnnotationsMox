@@ -16,7 +16,10 @@ Require-Bundle: com.google.gson;bundle-version="2.3.0",
  org.somox.ejbmox;bundle-version="1.0.0",
  org.emftext.language.java;bundle-version="1.4.1",
  org.somox.sourcecodedecorator;bundle-version="1.0.1",
- org.somox.core
+ org.somox.core,
+ org.eclipse.debug.ui;bundle-version="3.11.100",
+ org.eclipse.swt;bundle-version="3.104.1",
+ de.uka.ipd.sdq.workflow.launchconfig
 Export-Package: org.somox.ejbmox.inspectit2pcm,
  org.somox.ejbmox.inspectit2pcm.model,
  org.somox.ejbmox.inspectit2pcm.parametrization,
