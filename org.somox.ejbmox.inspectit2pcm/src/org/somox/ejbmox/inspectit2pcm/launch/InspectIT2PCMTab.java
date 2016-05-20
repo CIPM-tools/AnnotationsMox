@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.somox.ejbmox.inspectit2pcm.InspectIT2PCMConfiguration;
-import org.somox.ejbmox.inspectit2pcm.jobs.InspectIT2PCMConfigurationAttributes;
 
 public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 

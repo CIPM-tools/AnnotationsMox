@@ -3,6 +3,7 @@ package org.somox.ejbmox.inspectit2pcm.jobs;
 import java.util.Map;
 
 import org.somox.ejbmox.inspectit2pcm.InspectIT2PCMConfiguration;
+import org.somox.ejbmox.inspectit2pcm.launch.InspectIT2PCMConfigurationAttributes;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractWorkflowExtensionConfigurationBuilder;
 
