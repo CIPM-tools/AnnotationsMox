@@ -6,6 +6,7 @@
       <workflow_job
             extension_configurationbuilder="org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfigurationBuilder"
             extension_job="org.somox.ejbmox.inspectit2pcm.II2PCMJob"
+            priority="10"
             workflow_id="post_save_models">
       </workflow_job>
    </extension>

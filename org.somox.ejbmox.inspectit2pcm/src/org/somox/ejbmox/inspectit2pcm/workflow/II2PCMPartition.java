@@ -11,6 +11,7 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.inspectit2pcm.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
+import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
 import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.sourcecodedecorator.SEFF2MethodMapping;
 import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
@@ -28,9 +29,12 @@ public class II2PCMPartition {
 	private II2PCMConfiguration configuration;
 	
 	private PCMParametrization parametrization;
+	
+	private ParametrizationTrace trace;
 
 	private II2PCMPartition(Map<ResourceDemandingSEFF, String> seffToFQNMap,
 			Map<Interface, String> ifaceToFQNMap, II2PCMConfiguration configuration) {
+	    this.trace = new ParametrizationTrace();
 		this.seffToFQNMap = seffToFQNMap;
 		this.ifaceToFQNMap = ifaceToFQNMap;
 		this.configuration = configuration;
@@ -87,5 +91,9 @@ public class II2PCMPartition {
 	public void setParametrization(PCMParametrization parametrization) {
 		this.parametrization = parametrization;
 	}
+	
+	public ParametrizationTrace getTrace() {
+        return trace;
+    }
 
 }

@@ -10,7 +10,7 @@ public class II2PCMConfigurationBuilder extends AbstractWorkflowExtensionConfigu
 
 	@Override
 	public II2PCMConfiguration buildConfiguration(Map<String, Object> attributes) {
-		II2PCMConfiguration config = new II2PCMConfiguration();
+		II2PCMConfiguration config = new II2PCMConfiguration(attributes);
 		config.setCmrUrl((String) attributes.get(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL));
 		config.setWarmupLength(Integer.valueOf((String) attributes.get(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS)));
 		return config;
