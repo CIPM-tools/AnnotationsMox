@@ -2,29 +2,14 @@ package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import org.eclipse.emf.ecore.resource.Resource;
-import org.palladiosimulator.mdsdprofiles.api.ProfileAPI;
-import org.palladiosimulator.pcm.core.PCMRandomVariable;
-import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
-import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
-import org.palladiosimulator.pcm.seff.ProbabilisticBranchTransition;
-import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
-import org.palladiosimulator.pcm.seff.SeffFactory;
-import org.palladiosimulator.pcm.seff.StartAction;
-import org.palladiosimulator.pcm.seff.StopAction;
-import org.somox.ejbmox.graphlearner.SPGraph;
-import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
-import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
-import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
 /**
  * Container that allows to collect various information required to parametrize

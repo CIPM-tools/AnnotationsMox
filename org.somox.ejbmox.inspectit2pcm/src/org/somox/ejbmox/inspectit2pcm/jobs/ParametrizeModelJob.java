@@ -18,9 +18,9 @@ import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
-import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementSequence;
 import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementsToPCM;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 

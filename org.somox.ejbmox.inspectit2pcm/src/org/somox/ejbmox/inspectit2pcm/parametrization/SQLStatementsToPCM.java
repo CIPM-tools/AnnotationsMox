@@ -10,6 +10,7 @@ import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
 public class SQLStatementsToPCM {
 
