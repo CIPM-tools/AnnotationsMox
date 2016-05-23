@@ -1,4 +1,4 @@
-package org.somox.ejbmox.inspectit2pcm.jobs;
+package org.somox.ejbmox.inspectit2pcm.workflow;
 
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 

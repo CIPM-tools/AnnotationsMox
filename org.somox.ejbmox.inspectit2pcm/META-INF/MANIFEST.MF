@@ -7,7 +7,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.google.gson;bundle-version="2.3.0",
  org.apache.log4j;bundle-version="1.2.15",
  org.palladiosimulator.pcm;bundle-version="4.0.0",
- net.sf.jsqlparser;bundle-version="0.9.5",
  org.somox.ejbmox.graphlearner,
  org.somox.analyzer.simplemodelanalyzer;bundle-version="1.0.0",
  org.palladiosimulator.mdsdprofiles.api;bundle-version="1.0.0",
@@ -19,7 +18,8 @@ Require-Bundle: com.google.gson;bundle-version="2.3.0",
  org.somox.core,
  org.eclipse.debug.ui;bundle-version="3.11.100",
  org.eclipse.swt;bundle-version="3.104.1",
- de.uka.ipd.sdq.workflow.launchconfig
+ de.uka.ipd.sdq.workflow.launchconfig,
+ org.palladiosimulator.pcmtx;bundle-version="0.1.0"
 Export-Package: org.somox.ejbmox.inspectit2pcm,
  org.somox.ejbmox.inspectit2pcm.model,
  org.somox.ejbmox.inspectit2pcm.parametrization,

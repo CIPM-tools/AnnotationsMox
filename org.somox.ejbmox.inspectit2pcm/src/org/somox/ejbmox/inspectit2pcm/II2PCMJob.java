@@ -2,10 +2,10 @@ package org.somox.ejbmox.inspectit2pcm;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
-import org.somox.ejbmox.inspectit2pcm.jobs.II2PCMPartition;
-import org.somox.ejbmox.inspectit2pcm.jobs.ParametrizationFromMonitoringResultsJob;
-import org.somox.ejbmox.inspectit2pcm.jobs.ParametrizeModelJob;
-import org.somox.ejbmox.inspectit2pcm.jobs.SaveModifiedModelJob;
+import org.somox.ejbmox.inspectit2pcm.workflow.II2PCMPartition;
+import org.somox.ejbmox.inspectit2pcm.workflow.ParametrizationFromMonitoringResultsJob;
+import org.somox.ejbmox.inspectit2pcm.workflow.ParametrizeModelJob;
+import org.somox.ejbmox.inspectit2pcm.workflow.SaveModifiedModelJob;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractWorkflowExtensionJob;
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
