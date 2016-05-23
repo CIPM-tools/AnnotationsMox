@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Pcmtx
+Bundle-SymbolicName: org.somox.ejbmox.pcmtx;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.somox.ejbmox.inspectit2pcm;bundle-version="1.0.0",
+ org.somox.ejbmox;bundle-version="1.0.0",
+ net.sf.jsqlparser;bundle-version="0.9.5",
+ de.uka.ipd.sdq.workflow,
+ org.somox.core;bundle-version="1.0.0",
+ org.somox.analyzer.simplemodelanalyzer,
+ org.palladiosimulator.pcm;bundle-version="4.0.0",
+ org.palladiosimulator.pcmtx.api;bundle-version="1.0.0",
+ org.palladiosimulator.pcmtx;bundle-version="0.1.0",
+ com.google.guava;bundle-version="15.0.0"
