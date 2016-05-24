@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.palladiosimulator.pcmtx.EntityType;
+import org.palladiosimulator.pcmtx.Table;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.pcmtx.PCMTXConfiguration;
 import org.somox.ejbmox.pcmtx.model.ParsedSQLStatement;
@@ -23,11 +24,14 @@ public class PCMTXPartition {
 
     private Set<EntityType> entityTypes;
 
+    private Set<Table> tables;
+
     public PCMTXPartition(PCMTXConfiguration configuration) {
         this.configuration = configuration;
         parsedStatementsMap = new HashMap<>();
         tableNameToEntityTypeMap = new HashMap<>();
         entityTypes = new HashSet<>();
+        tables = new HashSet<>();
     }
 
     public PCMTXConfiguration getConfiguration() {
@@ -56,6 +60,14 @@ public class PCMTXPartition {
 
     public Map<String, EntityType> getTableNameToEntityTypeMap() {
         return Collections.unmodifiableMap(tableNameToEntityTypeMap);
+    }
+
+    public void addTable(Table table) {
+        tables.add(table);
+    }
+
+    public Set<Table> getTables() {
+        return Collections.unmodifiableSet(tables);
     }
 
 }

@@ -5,6 +5,7 @@ import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.pcmtx.workflow.CreateDatabaseWithTablesJob;
 import org.somox.ejbmox.pcmtx.workflow.CreateEntityAccessesJob;
 import org.somox.ejbmox.pcmtx.workflow.CreateEntityTypesJob;
+import org.somox.ejbmox.pcmtx.workflow.CreateTableDeploymentJob;
 import org.somox.ejbmox.pcmtx.workflow.PCMTXPartition;
 import org.somox.ejbmox.pcmtx.workflow.ParseSQLJob;
 
@@ -27,6 +28,9 @@ public class PCMTXJob extends AbstractWorkflowExtensionJob<SoMoXBlackboard> {
 
         // 4. Annotate internal actions with entity accesses
         addJob(new CreateEntityAccessesJob());
+
+        // 5. Deploy tables to (default) resource container acting as database server
+        addJob(new CreateTableDeploymentJob());
     }
 
     @Override
