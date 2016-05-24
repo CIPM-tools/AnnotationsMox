@@ -40,7 +40,7 @@ public class CreateEntityTypesJob extends AbstractPCMTXJob {
 
         // save to XMI file
         FileLocationConfiguration locations = getEJBMoXConfiguration().getFileLocations();
-        EMFHelper.saveAsXMI(repository, FILENAME_ENTITY_TYPES_REPOSITORY, locations, logger);
+        EMFHelper.createResourceAndSave(repository, FILENAME_ENTITY_TYPES_REPOSITORY, locations, logger);
     }
 
     public String tableNameToCamelCase(String tableName) {

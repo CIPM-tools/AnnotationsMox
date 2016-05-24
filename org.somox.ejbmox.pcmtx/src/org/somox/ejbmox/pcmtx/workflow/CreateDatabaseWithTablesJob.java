@@ -41,7 +41,7 @@ public class CreateDatabaseWithTablesJob extends AbstractPCMTXJob {
 
         // save to XMI file
         FileLocationConfiguration locations = getEJBMoXConfiguration().getFileLocations();
-        EMFHelper.saveAsXMI(repository, FILENAME_DATA_REPOSITORY, locations, logger);
+        EMFHelper.createResourceAndSave(repository, FILENAME_DATA_REPOSITORY, locations, logger);
     }
 
     @Override
