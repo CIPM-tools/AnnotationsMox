@@ -35,6 +35,7 @@ public class CreateEntityTypesJob extends AbstractPCMTXJob {
             String entityName = tableNameToCamelCase(tableName);
             EntityType entityType = EntityTypesAPI.createEntityType(repository, entityName);
             getPCMTXPartition().addEntityType(entityType);
+            getPCMTXPartition().addTableNameToEntityTypeMapping(tableName, entityType);
         }
 
         // save to XMI file

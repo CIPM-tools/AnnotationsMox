@@ -24,4 +24,5 @@ Export-Package: org.somox.ejbmox.inspectit2pcm,
  org.somox.ejbmox.inspectit2pcm.model,
  org.somox.ejbmox.inspectit2pcm.parametrization,
  org.somox.ejbmox.inspectit2pcm.rest,
+ org.somox.ejbmox.inspectit2pcm.util,
  org.somox.ejbmox.inspectit2pcm.workflow

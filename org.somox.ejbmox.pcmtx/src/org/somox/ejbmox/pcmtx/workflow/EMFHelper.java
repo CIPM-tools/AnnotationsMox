@@ -9,7 +9,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.somox.configuration.FileLocationConfiguration;
 
@@ -35,6 +37,16 @@ public class EMFHelper {
         saveOptions.put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_DISCARD);
 
         try {
+            resource.save(saveOptions);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
+    
+    public static void save(Resource resource, Logger logger) {
+        try {
+            final HashMap<Object, Object> saveOptions = new HashMap<>();
+            saveOptions.put(XMIResource.OPTION_URI_HANDLER, new URIHandlerImpl.PlatformSchemeAware());
             resource.save(saveOptions);
         } catch (IOException e) {
             logger.error(e);

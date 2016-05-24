@@ -19,11 +19,14 @@ public class PCMTXPartition {
 
     private Map<SQLStatement, ParsedSQLStatement> parsedStatementsMap;
 
+    private Map<String, EntityType> tableNameToEntityTypeMap;
+
     private Set<EntityType> entityTypes;
 
     public PCMTXPartition(PCMTXConfiguration configuration) {
         this.configuration = configuration;
         parsedStatementsMap = new HashMap<>();
+        tableNameToEntityTypeMap = new HashMap<>();
         entityTypes = new HashSet<>();
     }
 
@@ -45,6 +48,14 @@ public class PCMTXPartition {
 
     public Set<EntityType> getEntityTypes() {
         return Collections.unmodifiableSet(entityTypes);
+    }
+
+    public void addTableNameToEntityTypeMapping(String tableName, EntityType entityType) {
+        tableNameToEntityTypeMap.put(tableName, entityType);
+    }
+
+    public Map<String, EntityType> getTableNameToEntityTypeMap() {
+        return Collections.unmodifiableMap(tableNameToEntityTypeMap);
     }
 
 }

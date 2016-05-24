@@ -3,6 +3,7 @@ package org.somox.ejbmox.pcmtx;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.pcmtx.workflow.CreateDatabaseWithTablesJob;
+import org.somox.ejbmox.pcmtx.workflow.CreateEntityAccessesJob;
 import org.somox.ejbmox.pcmtx.workflow.CreateEntityTypesJob;
 import org.somox.ejbmox.pcmtx.workflow.PCMTXPartition;
 import org.somox.ejbmox.pcmtx.workflow.ParseSQLJob;
@@ -23,6 +24,9 @@ public class PCMTXJob extends AbstractWorkflowExtensionJob<SoMoXBlackboard> {
 
         // 3. Create pcmtx model describing the database schema
         addJob(new CreateDatabaseWithTablesJob());
+
+        // 4. Annotate internal actions with entity accesses
+        addJob(new CreateEntityAccessesJob());
     }
 
     @Override
