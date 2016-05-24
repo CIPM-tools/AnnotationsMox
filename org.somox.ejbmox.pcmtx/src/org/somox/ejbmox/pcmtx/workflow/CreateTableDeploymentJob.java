@@ -11,6 +11,7 @@ import org.palladiosimulator.pcm.resourceenvironment.ResourceContainer;
 import org.palladiosimulator.pcm.resourceenvironment.ResourceEnvironment;
 import org.palladiosimulator.pcmtx.Table;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
+import org.somox.ejbmox.util.EMFHelper;
 
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;

@@ -20,6 +20,7 @@ import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 import org.somox.ejbmox.pcmtx.model.ParsedSQLStatement;
 import org.somox.ejbmox.pcmtx.model.StatementType;
+import org.somox.ejbmox.util.EMFHelper;
 
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;

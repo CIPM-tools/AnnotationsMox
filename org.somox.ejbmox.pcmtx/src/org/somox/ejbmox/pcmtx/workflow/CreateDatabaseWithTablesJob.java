@@ -7,6 +7,7 @@ import org.palladiosimulator.pcmtx.EntityType;
 import org.palladiosimulator.pcmtx.PcmtxFactory;
 import org.palladiosimulator.pcmtx.Table;
 import org.somox.configuration.FileLocationConfiguration;
+import org.somox.ejbmox.util.EMFHelper;
 
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
 import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
