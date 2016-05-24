@@ -1,4 +1,4 @@
-package org.somox.ejbmox.util;
+package org.somox.ejbmox.workflow;
 
 public class EJBMoXWorkflowHooks {
 

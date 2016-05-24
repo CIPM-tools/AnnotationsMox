@@ -7,8 +7,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
-import org.somox.ejbmox.util.EJBMoXJob;
-import org.somox.ejbmox.util.EJBmoxUtil;
+import org.somox.ejbmox.workflow.EJBMoXJob;
 
 import de.uka.ipd.sdq.workflow.Workflow;
 import de.uka.ipd.sdq.workflow.jobs.IJob;

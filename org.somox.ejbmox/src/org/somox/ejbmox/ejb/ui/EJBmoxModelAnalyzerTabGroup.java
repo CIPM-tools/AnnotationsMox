@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
-import org.somox.ejbmox.util.EJBMoXWorkflowHooks;
+import org.somox.ejbmox.workflow.EJBMoXWorkflowHooks;
 import org.somox.ui.runconfig.ModelAnalyzerTabGroup;
 
 import de.uka.ipd.sdq.workflow.launchconfig.extension.ExtendableTabGroup;

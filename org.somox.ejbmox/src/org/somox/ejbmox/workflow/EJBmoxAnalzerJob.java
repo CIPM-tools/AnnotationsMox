@@ -1,4 +1,4 @@
-package org.somox.ejbmox.ejb.ui;
+package org.somox.ejbmox.workflow;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;

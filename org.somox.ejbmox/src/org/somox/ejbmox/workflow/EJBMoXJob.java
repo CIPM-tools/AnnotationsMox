@@ -1,4 +1,4 @@
-package org.somox.ejbmox.util;
+package org.somox.ejbmox.workflow;
 
 import java.util.Map;
 
@@ -7,7 +7,6 @@ import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
 import org.somox.ejbmox.ejb.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
-import org.somox.ejbmox.ejb.ui.EJBmoxAnalzerJob;
 import org.somox.gast2seff.jobs.GAST2SEFFJob;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractExtendableJob;
