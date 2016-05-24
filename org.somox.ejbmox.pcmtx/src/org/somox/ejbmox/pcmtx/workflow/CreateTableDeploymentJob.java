@@ -50,14 +50,12 @@ public class CreateTableDeploymentJob extends AbstractPCMTXJob {
 
     @Override
     public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
-        // TODO Auto-generated method stub
-
+        // nothing to do
     }
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Deploy tables to default resource container";
     }
 
 }
