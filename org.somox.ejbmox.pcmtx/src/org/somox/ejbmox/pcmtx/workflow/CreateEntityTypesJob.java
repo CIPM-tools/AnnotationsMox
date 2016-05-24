@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.palladiosimulator.pcm.resourcetype.ResourceRepository;
+import org.palladiosimulator.pcmtx.EntityType;
 import org.palladiosimulator.pcmtx.api.EntityTypesAPI;
 import org.somox.configuration.FileLocationConfiguration;
 import org.somox.ejbmox.pcmtx.model.ParsedSQLStatement;
@@ -15,10 +16,11 @@ import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 
 public class CreateEntityTypesJob extends AbstractPCMTXJob {
 
-    private static final String PATH_ENTITY_TYPES_REPOSITORY = "entitytypes.resourcetype";
+    private static final String FILENAME_ENTITY_TYPES_REPOSITORY = "entitytypes.resourcetype";
 
     @Override
     public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
+        // create repository
         ResourceRepository repository = EntityTypesAPI.createEmptyRepository();
 
         // calculate set of distinct table names
@@ -31,12 +33,13 @@ public class CreateEntityTypesJob extends AbstractPCMTXJob {
         // create entity types from table names, assuming a 1:1 relationship
         for (String tableName : tableNames) {
             String entityName = tableNameToCamelCase(tableName);
-            EntityTypesAPI.createEntityType(repository, entityName);
+            EntityType entityType = EntityTypesAPI.createEntityType(repository, entityName);
+            getPCMTXPartition().addEntityType(entityType);
         }
 
         // save to XMI file
         FileLocationConfiguration locations = getEJBMoXConfiguration().getFileLocations();
-        EMFHelper.saveAsXMI(repository, PATH_ENTITY_TYPES_REPOSITORY, locations, logger);
+        EMFHelper.saveAsXMI(repository, FILENAME_ENTITY_TYPES_REPOSITORY, locations, logger);
     }
 
     public String tableNameToCamelCase(String tableName) {
