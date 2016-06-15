@@ -2,6 +2,7 @@ package org.somox.ejbmox.analyzer;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.AnalysisResult;
@@ -55,11 +56,11 @@ public class EJBmoxAnalyzer implements ModelAnalyzer<EJBmoxConfiguration> {
     private void analyzeProjectWithJaMoPP(final AbstractMoxConfiguration moxConfiguration,
             final AnalysisResult analysisResult) throws ModelAnalyzerException {
         final KDMReader jaMoPPReader = new KDMReader();
-        final String projectName = moxConfiguration.getFileLocations().getProjectName();
+        final Set<String> projectNames = moxConfiguration.getFileLocations().getProjectNames();
         try {
-            jaMoPPReader.loadProject(projectName);
+            jaMoPPReader.loadProject(projectNames.toArray(new String[projectNames.size()]));
         } catch (final IOException e) {
-            throw new ModelAnalyzerException("Error: Could not load project " + projectName, e);
+            throw new ModelAnalyzerException("Error: Could not load projects " + projectNames, e);
         }
         analysisResult.setRoot(jaMoPPReader.getRoot());
     }

@@ -17,7 +17,7 @@ import org.somox.configuration.FileLocationConfiguration;
 
 /**
  * Utility methods for storing EMF model elements into XMI files.
- * 
+ *
  * @author Philipp Merkle
  *
  */
@@ -30,7 +30,7 @@ public class EMFHelper {
     /**
      * Creates a new {@link Resource} for {@code root} and stores it as XMI file to the location
      * derived from the {@code locationConfiguration}.
-     * 
+     *
      * @param root
      *            the element to be stored
      * @param filename
@@ -39,13 +39,13 @@ public class EMFHelper {
      *            the location configuration
      * @param logger
      */
-    public static void createResourceAndSave(EObject root, String filename,
-            FileLocationConfiguration locationConfiguration, Logger logger) {
-        String projectIdentifier = locationConfiguration.getProjectName();
-        String outputFolder = locationConfiguration.getOutputFolder();
-        URI uri = createURI(projectIdentifier, outputFolder, filename);
+    public static void createResourceAndSave(final EObject root, final String filename,
+            final FileLocationConfiguration locationConfiguration, final Logger logger) {
+        final String projectIdentifier = locationConfiguration.getProjectNames().iterator().next();
+        final String outputFolder = locationConfiguration.getOutputFolder();
+        final URI uri = createURI(projectIdentifier, outputFolder, filename);
 
-        ResourceSet resourceSet = new ResourceSetImpl();
+        final ResourceSet resourceSet = new ResourceSetImpl();
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
                 .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
 
@@ -57,39 +57,39 @@ public class EMFHelper {
 
         try {
             resource.save(saveOptions);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error(e);
         }
     }
 
     /**
      * Saves a modified resource.
-     * 
+     *
      * @param resource
      *            the resource to be saved
      * @param logger
      */
-    public static void save(Resource resource, Logger logger) {
+    public static void save(final Resource resource, final Logger logger) {
         try {
             final HashMap<Object, Object> saveOptions = new HashMap<>();
             saveOptions.put(XMIResource.OPTION_URI_HANDLER, new URIHandlerImpl.PlatformSchemeAware());
             resource.save(saveOptions);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error(e);
         }
     }
 
-    private static URI createURI(String projectIdentifier, String outputFolder, String fileName) {
-        String[] segments = new String[] { projectIdentifier, outputFolder, fileName };
+    private static URI createURI(final String projectIdentifier, final String outputFolder, final String fileName) {
+        final String[] segments = new String[] { projectIdentifier, outputFolder, fileName };
         URI uri = URI.createPlatformResourceURI(stripLeadingOrTrailingSlashes(segments[0]), true);
         for (int i = 1; i < segments.length; i++) {
-            String normalizedSegment = stripLeadingOrTrailingSlashes(segments[i]);
+            final String normalizedSegment = stripLeadingOrTrailingSlashes(segments[i]);
             uri = uri.appendSegment(normalizedSegment);
         }
         return uri;
     }
 
-    private static String stripLeadingOrTrailingSlashes(String original) {
+    private static String stripLeadingOrTrailingSlashes(final String original) {
         return original.replaceAll("^/+", "").replaceAll("/+$", "");
     }
 

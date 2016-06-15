@@ -1,7 +1,9 @@
 package org.somox.ejbmox.commandline;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
@@ -47,7 +49,7 @@ public class EJBmoxCommandLine {
         final EJBmoxAnalyzerConfiguration modelAnalyzerConfig = new EJBmoxAnalyzerConfiguration();
         final EJBmoxConfiguration configuration = new EJBmoxConfiguration();
         configuration.getFileLocations().setAnalyserInputFile(this.inputPath);
-        configuration.getFileLocations().setProjectName(this.inputPath);
+        configuration.getFileLocations().setProjectNames(new HashSet<String>(Arrays.asList(this.inputPath)));
         configuration.getFileLocations().setOutputFolder(this.outputPath);
         configuration.setReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour(
                 this.reverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour);

@@ -1,5 +1,8 @@
 package org.somox.ejbmox.test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.palladiosimulator.pcm.system.System;
 import org.somox.analyzer.AnalysisResult;
@@ -20,8 +23,8 @@ public class EJBmoxAnalyzerTest extends EJBmoxAbstractTest<System> {
     @Override
     protected System executeTest(final String testMethodName) {
         final EJBmoxConfiguration ejbmoxConfiguration = new EJBmoxConfiguration();
-        ejbmoxConfiguration.getFileLocations()
-                .setProjectName(EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName);
+        ejbmoxConfiguration.getFileLocations().setProjectNames(
+                new HashSet<String>(Arrays.asList(EJBmoxTestUtil.TEST_CODE_FOLDER_NAME + "/" + testMethodName)));
         try {
             final AnalysisResult analysisResult = this.ejbMoxAnalyzer.analyze(ejbmoxConfiguration, null,
                     new NullProgressMonitor());
