@@ -4,7 +4,7 @@ Bundle-Name: EJBMoX Performance Model Extractor (via InspectIT)
 Bundle-SymbolicName: org.somox.ejbmox.inspectit2pcm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: com.google.gson;bundle-version="2.3.0",
+Require-Bundle: com.google.gson,
  org.apache.log4j;bundle-version="1.2.15",
  org.palladiosimulator.pcm;bundle-version="4.0.0",
  org.somox.ejbmox.graphlearner,
@@ -13,11 +13,11 @@ Require-Bundle: com.google.gson;bundle-version="2.3.0",
  org.modelversioning.emfprofile;bundle-version="1.1.0",
  de.uka.ipd.sdq.workflow,
  org.somox.ejbmox;bundle-version="1.0.0",
- org.emftext.language.java;bundle-version="1.4.1",
+ org.emftext.language.java,
  org.somox.sourcecodedecorator;bundle-version="1.0.1",
- org.somox.core,
- org.eclipse.debug.ui;bundle-version="3.11.100",
- org.eclipse.swt;bundle-version="3.104.1",
+ org.somox.core, 
+ org.eclipse.debug.ui,
+ org.eclipse.swt,
  de.uka.ipd.sdq.workflow.launchconfig,
  org.palladiosimulator.pcmtx;bundle-version="0.1.0"
 Export-Package: org.somox.ejbmox.inspectit2pcm,
