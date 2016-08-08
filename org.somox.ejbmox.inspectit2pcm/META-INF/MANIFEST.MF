@@ -18,8 +18,7 @@ Require-Bundle: com.google.gson,
  org.somox.core, 
  org.eclipse.debug.ui,
  org.eclipse.swt,
- de.uka.ipd.sdq.workflow.launchconfig,
- org.palladiosimulator.pcmtx;bundle-version="0.1.0"
+ de.uka.ipd.sdq.workflow.launchconfig
 Export-Package: org.somox.ejbmox.inspectit2pcm,
  org.somox.ejbmox.inspectit2pcm.model,
  org.somox.ejbmox.inspectit2pcm.parametrization,
