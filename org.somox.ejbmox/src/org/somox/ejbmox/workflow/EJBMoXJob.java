@@ -14,42 +14,37 @@ import de.uka.ipd.sdq.workflow.extension.ExtendableJobConfiguration;
 
 public class EJBMoXJob extends AbstractExtendableJob<SoMoXBlackboard> {
 
-	private EJBmoxAnalyzerConfiguration modelAnalyzerConfig; 
-	
-	public EJBMoXJob(final EJBmoxAnalyzerConfiguration modelAnalyzerConfig) {
-		this.modelAnalyzerConfig = modelAnalyzerConfig;
+    private final EJBmoxAnalyzerConfiguration modelAnalyzerConfig;
+
+    public EJBMoXJob(final EJBmoxAnalyzerConfiguration modelAnalyzerConfig) {
+        this.modelAnalyzerConfig = modelAnalyzerConfig;
         final SoMoXBlackboard soMoXBlackboard = new SoMoXBlackboard();
-        setBlackboard(soMoXBlackboard);
+        this.setBlackboard(soMoXBlackboard);
         final EJBmoxConfiguration ejbmoxConfiguration = modelAnalyzerConfig.getMoxConfiguration();
         soMoXBlackboard.addPartition(EJBmoxConfiguration.EJBMOX_INSPECTIT_FILE_PATHS,
                 ejbmoxConfiguration.getInspectITFilePaths());
 
-        add(new EJBmoxAnalzerJob(modelAnalyzerConfig));
+        this.add(new EJBmoxAnalzerJob(modelAnalyzerConfig));
 
         final boolean reverseEngineerResourceDemandingInternalBehaviour = ejbmoxConfiguration
                 .isReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour();
-        add(new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
+        this.add(new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
                 new EJBmoxFunctionClassificationStrategyFactory()));
 
-        if (null != ejbmoxConfiguration.getInspectITFilePaths()
-                && 0 < ejbmoxConfiguration.getInspectITFilePaths().size()) {
-        	// TODO
+        this.handleJobExtensions(EJBMoXWorkflowHooks.PRE_SAVE_MODELS, new Configuration());
+
+        this.add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
+
+        this.handleJobExtensions(EJBMoXWorkflowHooks.POST_SAVE_MODELS, new Configuration());
+    }
+
+    private class Configuration implements ExtendableJobConfiguration {
+
+        @Override
+        public Map<String, Object> getAttributes() {
+            return EJBMoXJob.this.modelAnalyzerConfig.getMoxConfiguration().getAttributes();
         }
-        
-        handleJobExtensions(EJBMoXWorkflowHooks.PRE_SAVE_MODELS, new Configuration());
 
-        add(new SaveSoMoXModelsJob(modelAnalyzerConfig.getMoxConfiguration()));
-        
-        handleJobExtensions(EJBMoXWorkflowHooks.POST_SAVE_MODELS, new Configuration());
-	}
-	
-	private class Configuration implements ExtendableJobConfiguration {
+    }
 
-		@Override
-		public Map<String, Object> getAttributes() {
-			return modelAnalyzerConfig.getMoxConfiguration().getAttributes();
-		}
-		
-	}
-	
 }
