@@ -31,19 +31,19 @@ import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 public class ParametrizeModelJob extends AbstractII2PCMJob {
 
     @Override
-    public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
-        logger.info("Storing monitored runtime behaviour to PCM model...");
+    public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
+        this.logger.info("Storing monitored runtime behaviour to PCM model...");
 
         // TODO make configurable;
-        AggregationStrategy aggregation = AggregationStrategy.MEAN;
+        final AggregationStrategy aggregation = AggregationStrategy.MEAN;
         switch (aggregation) {
         case HISTOGRAM:
             throw new UnsupportedOperationException();
             // break;
         case MEAN:
-            parametrizeResourceDemandsWithMean(getPartition().getParametrization());
-            parametrizeSQLStatementsWithMean(getPartition().getParametrization());
-            parametrizeBranchingProbabilities(getPartition().getParametrization());
+            this.parametrizeResourceDemandsWithMean(this.getPartition().getParametrization());
+            this.parametrizeSQLStatementsWithMean(this.getPartition().getParametrization());
+            this.parametrizeBranchingProbabilities(this.getPartition().getParametrization());
             break;
         case MEDIAN:
             throw new UnsupportedOperationException();
@@ -54,7 +54,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
     }
 
     @Override
-    public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
+    public void cleanup(final IProgressMonitor monitor) throws CleanupFailedException {
         // nothing to do
     }
 
@@ -63,82 +63,97 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         return "Parametrize PCM Model";
     }
 
-    private void resetBranchingProbabilities(PCMParametrization parametrization) {
+    private void resetBranchingProbabilities(final PCMParametrization parametrization) {
         // collect all branches for which there is at least one branching
         // probability
-        Set<BranchAction> branches = new HashSet<>();
-        for (AbstractBranchTransition t : parametrization.getBranchTransitionMap().keySet()) {
+        final Set<BranchAction> branches = new HashSet<>();
+        for (final AbstractBranchTransition t : parametrization.getBranchTransitionMap().keySet()) {
             branches.add(t.getBranchAction_AbstractBranchTransition());
         }
 
         // reset branching probabilities
-        for (BranchAction branch : branches) {
-            for (AbstractBranchTransition t : branch.getBranches_Branch()) {
+        for (final BranchAction branch : branches) {
+            for (final AbstractBranchTransition t : branch.getBranches_Branch()) {
                 ((ProbabilisticBranchTransition) t).setBranchProbability(0);
             }
         }
     }
 
-    private void parametrizeBranchingProbabilities(PCMParametrization parametrization) {
-        resetBranchingProbabilities(parametrization);
-        for (Entry<AbstractBranchTransition, Integer> e : parametrization.getBranchTransitionMap().entrySet()) {
+    private void parametrizeBranchingProbabilities(final PCMParametrization parametrization) {
+        this.resetBranchingProbabilities(parametrization);
+        for (final Entry<AbstractBranchTransition, Integer> e : parametrization.getBranchTransitionMap().entrySet()) {
             // summarize invocation count of this transition and all sibling
             // transitions
-            List<AbstractBranchTransition> transitions = e.getKey().getBranchAction_AbstractBranchTransition()
+            final List<AbstractBranchTransition> transitions = e.getKey().getBranchAction_AbstractBranchTransition()
                     .getBranches_Branch();
             int totalCount = 0;
-            for (AbstractBranchTransition t : transitions) {
-                int count = parametrization.getBranchTransitionMap().getOrDefault(t, 0);
+            for (final AbstractBranchTransition t : transitions) {
+                final int count = parametrization.getBranchTransitionMap().getOrDefault(t, 0);
                 totalCount += count;
             }
-            double probability = parametrization.getBranchTransitionMap().get(e.getKey()).doubleValue() / totalCount;
+            final double probability = parametrization.getBranchTransitionMap().get(e.getKey()).doubleValue()
+                    / totalCount;
             ((ProbabilisticBranchTransition) e.getKey()).setBranchProbability(probability);
             e.getKey().setEntityName("Measured branch probability");
         }
     }
 
-    private void parametrizeResourceDemandsWithMean(PCMParametrization parametrization) {
-        for (Entry<InternalAction, List<Double>> e : parametrization.getResourceDemandMap().entrySet()) {
-            InternalAction action = e.getKey();
-            List<Double> demands = e.getValue();
+    private void parametrizeResourceDemandsWithMean(final PCMParametrization parametrization) {
+        for (final Entry<InternalAction, List<Double>> e : parametrization.getResourceDemandMap().entrySet()) {
+            final InternalAction action = e.getKey();
+            final List<Double> demands = e.getValue();
 
             // calculate mean
-            double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
-            double mean = sum / demands.size();
+            final double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
+            final double mean = sum / demands.size();
 
             // parametrize action
-            PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
+            final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
             action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
         }
     }
 
-    private void addPalladioTXProfile(PCMParametrization parametrization) {
-        InternalAction arbitraryRepositoryAction = parametrization.getResourceDemandMap().keySet().iterator().next();
-        Resource repositoryResource = arbitraryRepositoryAction.eResource();
+    private boolean addPalladioTXProfile(final PCMParametrization parametrization) {
+        final InternalAction arbitraryRepositoryAction = parametrization.getResourceDemandMap().keySet().iterator()
+                .next();
+        final Resource repositoryResource = arbitraryRepositoryAction.eResource();
 
-        ProfileAPI.applyProfile(repositoryResource, "PCMTransactional");
+        boolean sucess = false;
+        try {
+            ProfileAPI.applyProfile(repositoryResource, "PCMTransactional");
+            sucess = true;
+        } catch (final RuntimeException e) {
+            this.logger.info("Failed to apply PCMTransactional profile. Can not parameterize SQL statements. Reason: "
+                    + e.toString(), e);
+        }
+        return sucess;
     }
 
     // TODO simplify whole method
-    private void parametrizeSQLStatementsWithMean(PCMParametrization parametrization) {
-        addPalladioTXProfile(parametrization);
+    private void parametrizeSQLStatementsWithMean(final PCMParametrization parametrization) {
+        if (parametrization.getSqlStatementMap().size() == 0 || !this.addPalladioTXProfile(parametrization)) {
+            this.logger.warn("Can not parametrize SQL statements with mean.");
+            return;
+        }
 
-        for (Entry<InternalAction, List<SQLStatementSequence>> e : parametrization.getSqlStatementMap().entrySet()) {
-            SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
+        for (final Entry<InternalAction, List<SQLStatementSequence>> e : parametrization.getSqlStatementMap()
+                .entrySet()) {
+            final SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
 
             // learn graph from paths (SQL statement sequences)
-            InternalAction action = e.getKey();
-            List<SQLStatementSequence> sequences = e.getValue();
-            for (SQLStatementSequence s : sequences) {
+            final InternalAction action = e.getKey();
+            final List<SQLStatementSequence> sequences = e.getValue();
+            for (final SQLStatementSequence s : sequences) {
                 sql2pcm.addStatementSequence(s);
             }
-            SPGraph g = sql2pcm.getLearner().getGraph();
+            final SPGraph g = sql2pcm.getLearner().getGraph();
 
             // create SEFF from graph (assumes "verbose" representation)
-            ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+            final ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
             g.toVerboseRepresentation();
             g.traverse(new InvocationProbabilityVisitor());
-            g.traverse(new Graph2SEFFVisitor(getPartition().getTrace()), rdb); // stores SEFF in rdb
+            g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb); // stores SEFF
+                                                                                    // in rdb
             // variable
 
             // store trace as new blackboard partition

@@ -9,6 +9,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -17,98 +18,132 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.somox.ejbmox.inspectit2pcm.II2PCMConfiguration;
+import org.somox.ui.runconfig.tabs.ModelAnalyzerStrategySelectionTab;
 
 public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 
-	private Text txtCmrUrl;
-	private Text txtWarmup;
+    private Text txtCmrUrl;
+    private Text txtWarmup;
+    private Button ensureInternalActionsBeforeStopAction;
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
-	@Override
-	public void createControl(Composite parent) {
-		final ModifyListener modifyListener = new ModifyListener() {
+    /**
+     * @wbp.parser.entryPoint
+     */
+    @Override
+    public void createControl(final Composite parent) {
+        final ModifyListener modifyListener = new ModifyListener() {
 
-			@Override
-			public void modifyText(final ModifyEvent e) {
-				setDirty(true);
-				updateLaunchConfigurationDialog();
-			}
-		};
+            @Override
+            public void modifyText(final ModifyEvent e) {
+                InspectIT2PCMTab.this.setDirty(true);
+                InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
+            }
+        };
 
-		final Composite container = new Composite(parent, SWT.NONE);
-		this.setControl(container);
-		container.setLayout(new GridLayout());
+        final Composite container = new Composite(parent, SWT.NONE);
+        this.setControl(container);
+        container.setLayout(new GridLayout());
 
-		Group grpInspectitCmr = new Group(container, SWT.NONE);
-		grpInspectitCmr.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		grpInspectitCmr.setText("InspectIT CMR");
-		grpInspectitCmr.setLayout(new GridLayout(3, false));
+        final Group grpInspectitCmr = new Group(container, SWT.NONE);
+        grpInspectitCmr.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        grpInspectitCmr.setText("InspectIT CMR");
+        grpInspectitCmr.setLayout(new GridLayout(3, false));
 
-		Label lblNewLabel = new Label(grpInspectitCmr, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("URL to CMR REST API:");
+        final Label lblNewLabel = new Label(grpInspectitCmr, SWT.NONE);
+        lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        lblNewLabel.setText("URL to CMR REST API:");
 
-		txtCmrUrl = new Text(grpInspectitCmr, SWT.BORDER);
-		txtCmrUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtCmrUrl.addModifyListener(modifyListener);
+        this.txtCmrUrl = new Text(grpInspectitCmr, SWT.BORDER);
+        this.txtCmrUrl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        this.txtCmrUrl.addModifyListener(modifyListener);
 
-		Button btnNewButton = new Button(grpInspectitCmr, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				txtCmrUrl.setText(II2PCMConfiguration.CMR_REST_API_DEFAULT);
-			}
-		});
-		btnNewButton.setText("Default");
+        final Button btnNewButton = new Button(grpInspectitCmr, SWT.NONE);
+        btnNewButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                InspectIT2PCMTab.this.txtCmrUrl.setText(II2PCMConfiguration.CMR_REST_API_DEFAULT);
+            }
+        });
+        btnNewButton.setText("Default");
 
-		Group grpSeffParametrization = new Group(container, SWT.NONE);
-		grpSeffParametrization.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		grpSeffParametrization.setText("SEFF Parametrization");
-		grpSeffParametrization.setLayout(new GridLayout(3, false));
+        final Group grpSeffParametrization = new Group(container, SWT.NONE);
+        grpSeffParametrization.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        grpSeffParametrization.setText("SEFF Parametrization");
+        grpSeffParametrization.setLayout(new GridLayout(3, false));
 
-		Label lblWarmupPhase = new Label(grpSeffParametrization, SWT.NONE);
-		lblWarmupPhase.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblWarmupPhase.setText("Discard initial measurements (warmup phase):");
+        final Label lblWarmupPhase = new Label(grpSeffParametrization, SWT.NONE);
+        lblWarmupPhase.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        lblWarmupPhase.setText("Discard initial measurements (warmup phase):");
 
-		txtWarmup = new Text(grpSeffParametrization, SWT.BORDER);
-		txtWarmup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtWarmup.addModifyListener(modifyListener);
+        this.txtWarmup = new Text(grpSeffParametrization, SWT.BORDER);
+        this.txtWarmup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        this.txtWarmup.addModifyListener(modifyListener);
 
-		Label lblMeasurements = new Label(grpSeffParametrization, SWT.NONE);
-		lblMeasurements.setText("measurements");
+        final Label lblMeasurements = new Label(grpSeffParametrization, SWT.NONE);
+        lblMeasurements.setText("measurements");
 
-	}
+        final Group miscellaneousGroup = new Group(container, SWT.None);
+        miscellaneousGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        miscellaneousGroup.setText("Miscellaneous");
+        final GridLayout miscellaneousGroupLayout = new GridLayout();
+        miscellaneousGroupLayout.numColumns = 1;
+        miscellaneousGroup.setLayout(miscellaneousGroupLayout);
 
-	@Override
-	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
-				II2PCMConfiguration.CMR_REST_API_DEFAULT);
-		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
-				II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
-	}
+        this.ensureInternalActionsBeforeStopAction = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(
+                miscellaneousGroup, "Ensure InternalAction before StopAction",
+                "If set, we create one InternalAction before each StopAction in the SEFFs. This is necessary if SQL injection is used.",
+                new SelectionListener() {
 
-	@Override
-	public void initializeFrom(ILaunchConfiguration configuration) {
-		try {
-			txtCmrUrl.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
-					II2PCMConfiguration.CMR_REST_API_DEFAULT));
-			txtWarmup.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
-					II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
+                    @Override
+                    public void widgetDefaultSelected(final SelectionEvent e) {
+                        InspectIT2PCMTab.this.setDirty(true);
+                        InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
+                    }
 
-	@Override
-	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL, txtCmrUrl.getText());
-		configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS, txtWarmup.getText());
-	}
+                    @Override
+                    public void widgetSelected(final SelectionEvent e) {
+                        InspectIT2PCMTab.this.setDirty(true);
+                        InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
+                    }
+                });
+    }
 
-	@Override
-	public String getName() {
-		return "InspectIT-2-PCM";
-	}
+    @Override
+    public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
+                II2PCMConfiguration.CMR_REST_API_DEFAULT);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
+                II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
+                II2PCMConfiguration.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT);
+    }
+
+    @Override
+    public void initializeFrom(final ILaunchConfiguration configuration) {
+        try {
+            this.txtCmrUrl.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
+                    II2PCMConfiguration.CMR_REST_API_DEFAULT));
+            this.txtWarmup.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
+                    II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
+            this.ensureInternalActionsBeforeStopAction.setSelection(configuration.getAttribute(
+                    InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION, true));
+        } catch (final CoreException e) {
+            this.ensureInternalActionsBeforeStopAction.setSelection(true);
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL, this.txtCmrUrl.getText());
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS, this.txtWarmup.getText());
+        final boolean ensureInternalActions = this.ensureInternalActionsBeforeStopAction.getSelection();
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
+                ensureInternalActions);
+    }
+
+    @Override
+    public String getName() {
+        return "InspectIT-2-PCM";
+    }
 }

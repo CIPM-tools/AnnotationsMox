@@ -20,51 +20,55 @@ import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 
 public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
-	@Override
-	public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
-		// instantiate REST service clients
-		RESTClient client = new RESTClient(getPartition().getConfiguration().getCmrUrl());
-		IdentsServiceClient identService = new IdentsServiceClient(client);
-		InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
+    @Override
+    public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
+        // instantiate REST service clients
+        final RESTClient client = new RESTClient(this.getPartition().getConfiguration().getCmrUrl());
+        final IdentsServiceClient identService = new IdentsServiceClient(client);
+        final InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
+        final boolean ensureInternalActionsBeforeSTOPAction = this.getPartition().getConfiguration()
+                .isEnsureInternalActionsBeforeSTOPAction();
 
-		// create mapper
-		InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(getPartition().getSeffToFQNMap());
+        // create mapper
+        final InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(this.getPartition().getSeffToFQNMap(),
+                ensureInternalActionsBeforeSTOPAction);
 
-		// create scanner and connect to mapper via scanning progress listener
-		Set<String> externalServicesFQN = new HashSet<>(getPartition().getSeffToFQNMap().values());
-		Set<String> interfacesFQN = new HashSet<>(getPartition().getInterfaceToFQNMap().values());
-		InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
-				externalServicesFQN, interfacesFQN, identService, invocationsService);
+        // create scanner and connect to mapper via scanning progress listener
+        final Set<String> externalServicesFQN = new HashSet<>(this.getPartition().getSeffToFQNMap().values());
+        final Set<String> interfacesFQN = new HashSet<>(this.getPartition().getInterfaceToFQNMap().values());
+        final InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
+                externalServicesFQN, interfacesFQN, identService, invocationsService);
 
-		// scan all invocation trees available
-		II2PCMConfiguration config = getPartition().getConfiguration();
-		List<Long> invocationIds = invocationsService.getInvocationSequencesId();
-		int i = 0;
-		logger.info("Skipping first " + config.getWarmupLength() + " invocation sequences treated as warmup phase");
-		monitor.beginTask(getName(), invocationIds.size());
-		for (long invocationId : invocationIds) {
-			if (++i < config.getWarmupLength()) {
-				continue;
-			}
-			InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
-			logger.debug("Scanning invocation sequence " + i + " out of " + invocationIds.size() + "...");
-			scanner.scanInvocationTree(invocation);
-			monitor.worked(1);
-		}
+        // scan all invocation trees available
+        final II2PCMConfiguration config = this.getPartition().getConfiguration();
+        final List<Long> invocationIds = invocationsService.getInvocationSequencesId();
+        int i = 0;
+        this.logger
+                .info("Skipping first " + config.getWarmupLength() + " invocation sequences treated as warmup phase");
+        monitor.beginTask(this.getName(), invocationIds.size());
+        for (final long invocationId : invocationIds) {
+            if (++i < config.getWarmupLength()) {
+                continue;
+            }
+            final InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
+            this.logger.debug("Scanning invocation sequence " + i + " out of " + invocationIds.size() + "...");
+            scanner.scanInvocationTree(invocation);
+            monitor.worked(1);
+        }
 
-		// store resulting parametrization to blackboard
-		PCMParametrization parametrization = mapper.getParametrization();
-		getPartition().setParametrization(parametrization);
-	}
+        // store resulting parametrization to blackboard
+        final PCMParametrization parametrization = mapper.getParametrization();
+        this.getPartition().setParametrization(parametrization);
+    }
 
-	@Override
-	public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
-		// nothing to do
-	}
+    @Override
+    public void cleanup(final IProgressMonitor monitor) throws CleanupFailedException {
+        // nothing to do
+    }
 
-	@Override
-	public String getName() {
-		return "Scan InspectIT invocation sequences";
-	}
+    @Override
+    public String getName() {
+        return "Scan InspectIT invocation sequences";
+    }
 
 }
