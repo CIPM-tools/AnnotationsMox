@@ -1,7 +1,7 @@
 package org.somox.ejbmox.analyzer;
 
 import org.emftext.language.java.classifiers.Class;
-import org.emftext.language.java.classifiers.Interface;
+import org.emftext.language.java.classifiers.ConcreteClassifier;
 import org.emftext.language.java.types.Type;
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.palladiosimulator.pcm.repository.OperationInterface;
@@ -26,7 +26,7 @@ public class SourceCodeDecoratorHelper {
         this.sourceCodeDecorator.getComponentImplementingClassesLink().add(componentImplementingClassLink);
     }
 
-    public void createInterfaceSourceCodeLink(final OperationInterface opInterface, final Interface jaMoPPInterface) {
+    public void createInterfaceSourceCodeLink(final OperationInterface opInterface, final ConcreteClassifier jaMoPPInterface) {
         final InterfaceSourceCodeLink interfaceSourceCodeLink = SourcecodedecoratorFactory.eINSTANCE
                 .createInterfaceSourceCodeLink();
         interfaceSourceCodeLink.setInterface(opInterface);
