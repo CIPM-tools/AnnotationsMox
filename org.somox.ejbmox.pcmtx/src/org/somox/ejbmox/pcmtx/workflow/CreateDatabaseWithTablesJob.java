@@ -24,7 +24,7 @@ public class CreateDatabaseWithTablesJob extends AbstractPCMTXJob {
 
         // create database
         Database database = PcmtxFactory.eINSTANCE.createDatabase();
-        database.setEntityName(getEJBMoXConfiguration().getFileLocations().getProjectName()); // TODO
+        database.setEntityName("Default Database"); // TODO
         repository.getDatabases().add(database);
 
         // create table for each entity type, assuming 1:1 relationship
