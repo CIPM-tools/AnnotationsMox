@@ -157,8 +157,6 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             // visitor stores resulting SEFF in rdb variable as side effect
             g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
 
-            // store trace as new blackboard partition
-
             PCMHelper.replaceAction(action, rdb);
         }
     }
