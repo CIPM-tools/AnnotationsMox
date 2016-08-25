@@ -177,7 +177,9 @@ public class InvocationTree2PCMMapper {
             logger.debug("Dispatching end of system call " + calledService.toFQN());
 
             // delegate to allow for clean up operations
-            this.rootContext.getDetector().systemCallEnd(calledService, time);
+            if (this.rootContext.getDetector() != null) {
+                this.rootContext.getDetector().systemCallEnd(calledService, time);
+            }
 
             if (this.rootContext == null) {
                 throw new IllegalStateException(
