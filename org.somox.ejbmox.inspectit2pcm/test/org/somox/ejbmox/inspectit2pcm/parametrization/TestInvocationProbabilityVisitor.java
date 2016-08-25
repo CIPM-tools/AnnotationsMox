@@ -12,38 +12,38 @@ import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 
 public class TestInvocationProbabilityVisitor {
 
-	private static final double DELTA = 1.0 / 1_000_000;
+    private static final double DELTA = 1.0 / 1_000_000;
 
-	private GraphLearner learner;
+    private GraphLearner learner;
 
-	@BeforeClass
-	public static void setup() {
-		// log4j basic setup
-		BasicConfigurator.configure();
-	}
+    @BeforeClass
+    public static void setup() {
+        // log4j basic setup
+        BasicConfigurator.configure();
+    }
 
-	@Before
-	public void beforeTest() {
-		learner = new InvocationGraphLearner();
-	}
+    @Before
+    public void beforeTest() {
+        learner = new InvocationGraphLearner();
+    }
 
-	@Test
-	public void testComplex() {
-		learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-		learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-		learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-		learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
-		learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
-		learner.integratePath(PathBuilder.path("A", "B", "X", "Z"));
+    @Test
+    public void testComplex() {
+        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
+        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
+        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
+        learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
+        learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
+        learner.integratePath(PathBuilder.path("A", "B", "X", "Z"));
 
-		Assert.assertEquals("AB[CD|X[Y|Z]]", learner.getGraph().toString());
+        Assert.assertEquals("AB[CD|X[Y|Z]]", learner.getGraph().toString());
 
-		learner.getGraph().traverse(new InvocationProbabilityVisitor());
+        learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
-		Assert.assertArrayEquals(
-				new double[] { /* root */1.0, /* s */1.0, /* A */1.0, /* B */1.0, /* p */1.0, /* s */ 0.5, /* C */1.0,
-						/* D */1.0 },
-				PathUtils.probabilities(PathBuilder.path("A", "B", "C", "D").toString(), learner), DELTA);
-	}
+        Assert.assertArrayEquals(
+                new double[] { /* root */1.0, /* s */1.0, /* A */1.0, /* B */1.0, /* p */1.0, /* s */ 0.5, /* C */1.0,
+                        /* D */1.0 },
+                PathUtils.probabilities(PathBuilder.path("A", "B", "C", "D").toString(), learner), DELTA);
+    }
 
 }

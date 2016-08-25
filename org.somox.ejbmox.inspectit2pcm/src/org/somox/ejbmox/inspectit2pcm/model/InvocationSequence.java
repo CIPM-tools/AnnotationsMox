@@ -4,95 +4,93 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * An invocation tree, formed by a parent-child-relationship via nested
- * {@link InvocationSequence}s.
+ * An invocation tree, formed by a parent-child-relationship via nested {@link InvocationSequence}s.
  * 
- * @author Patrice Bouillet (parts of this class have been copied from
- *         InspectIT)
+ * @author Patrice Bouillet (parts of this class have been copied from InspectIT)
  * @author Philipp Merkle
  *
  */
 public class InvocationSequence {
 
-	/**
-	 * The unique identifier of the method.
-	 */
-	private long methodIdent;
+    /**
+     * The unique identifier of the method.
+     */
+    private long methodIdent;
 
-	/**
-	 * The nested invocation traces are stored in this list.
-	 */
-	private List<InvocationSequence> nestedSequences;
+    /**
+     * The nested invocation traces are stored in this list.
+     */
+    private List<InvocationSequence> nestedSequences;
 
-	/**
-	 * The parent sequence of this sequence if there is any.
-	 */
-	private InvocationSequence parentSequence;
+    /**
+     * The parent sequence of this sequence if there is any.
+     */
+    private InvocationSequence parentSequence;
 
-	/**
-	 * The associated sql statement data object. Can be <code>null</code>.
-	 */
-	private SQLStatement sqlStatementData;
-	
-	/**
-	 * The position if parent sequence is not <code>null</code>.
-	 */
-	private long position;
+    /**
+     * The associated sql statement data object. Can be <code>null</code>.
+     */
+    private SQLStatement sqlStatementData;
 
-	/**
-	 * The duration of this invocation sequence.
-	 */
-	private double duration;
+    /**
+     * The position if parent sequence is not <code>null</code>.
+     */
+    private long position;
 
-	/**
-	 * The start time of this invocation sequence.
-	 */
-	private double start;
+    /**
+     * The duration of this invocation sequence.
+     */
+    private double duration;
 
-	/**
-	 * The end time of this invocation sequence.
-	 */
-	private double end;
+    /**
+     * The start time of this invocation sequence.
+     */
+    private double start;
 
-	/**
-	 * The timestamp which shows when this information was created on the Agent.
-	 */
-	private Timestamp timeStamp;
+    /**
+     * The end time of this invocation sequence.
+     */
+    private double end;
 
-	public long getMethodId() {
-		return methodIdent;
-	}
+    /**
+     * The timestamp which shows when this information was created on the Agent.
+     */
+    private Timestamp timeStamp;
 
-	public List<InvocationSequence> getNestedSequences() {
-		return nestedSequences;
-	}
+    public long getMethodId() {
+        return methodIdent;
+    }
 
-	public InvocationSequence getParentSequence() {
-		return parentSequence;
-	}
-	
-	public SQLStatement getSqlStatement() {
-		return sqlStatementData;
-	}
+    public List<InvocationSequence> getNestedSequences() {
+        return nestedSequences;
+    }
 
-	public long getPosition() {
-		return position;
-	}
+    public InvocationSequence getParentSequence() {
+        return parentSequence;
+    }
 
-	public double getDuration() {
-		return duration;
-	}
+    public SQLStatement getSqlStatement() {
+        return sqlStatementData;
+    }
 
-	public double getStart() {
-		return start;
-	}
+    public long getPosition() {
+        return position;
+    }
 
-	public double getEnd() {
-		return end;
-	}
+    public double getDuration() {
+        return duration;
+    }
 
-	public Timestamp getTimeStamp() {
-		return timeStamp;
-	}
+    public double getStart() {
+        return start;
+    }
+
+    public double getEnd() {
+        return end;
+    }
+
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
 
 }

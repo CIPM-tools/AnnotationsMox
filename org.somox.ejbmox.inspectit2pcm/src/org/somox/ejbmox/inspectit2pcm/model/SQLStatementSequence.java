@@ -7,26 +7,26 @@ import java.util.List;
 
 public class SQLStatementSequence {
 
-	private List<SQLStatement> statements;
+    private List<SQLStatement> statements;
 
-	public SQLStatementSequence() {
-		statements = new ArrayList<>();
-	}
+    public SQLStatementSequence() {
+        statements = new ArrayList<>();
+    }
 
-	public void addAll(Collection<SQLStatement> statements) {
-		this.statements.addAll(statements);
-	}
+    public void addAll(Collection<SQLStatement> statements) {
+        this.statements.addAll(statements);
+    }
 
-	public void add(SQLStatement statement) {
-		statements.add(statement);
-	}
+    public void add(SQLStatement statement) {
+        statements.add(statement);
+    }
 
-	public int size() {
-		return statements.size();
-	}
+    public int size() {
+        return statements.size();
+    }
 
-	public List<SQLStatement> getSequence() {
-		return Collections.unmodifiableList(statements);
-	}
+    public List<SQLStatement> getSequence() {
+        return Collections.unmodifiableList(statements);
+    }
 
 }

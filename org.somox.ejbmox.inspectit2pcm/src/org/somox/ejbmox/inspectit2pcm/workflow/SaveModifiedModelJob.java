@@ -14,26 +14,26 @@ import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 
 public class SaveModifiedModelJob extends AbstractII2PCMJob {
 
-	@Override
-	public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
-		Resource repositoryResource = getBlackboard().getAnalysisResult().getInternalArchitectureModel().eResource();
-		try {
-			final HashMap<Object, Object> saveOptions = new HashMap<>();
-			saveOptions.put(XMIResource.OPTION_URI_HANDLER, new URIHandlerImpl.PlatformSchemeAware());
-			repositoryResource.save(saveOptions);
-		} catch (IOException e) {
-			logger.error(e);
-		}
-	}
+    @Override
+    public void execute(IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
+        Resource repositoryResource = getBlackboard().getAnalysisResult().getInternalArchitectureModel().eResource();
+        try {
+            final HashMap<Object, Object> saveOptions = new HashMap<>();
+            saveOptions.put(XMIResource.OPTION_URI_HANDLER, new URIHandlerImpl.PlatformSchemeAware());
+            repositoryResource.save(saveOptions);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
 
-	@Override
-	public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
-		// nothing to do
-	}
+    @Override
+    public void cleanup(IProgressMonitor monitor) throws CleanupFailedException {
+        // nothing to do
+    }
 
-	@Override
-	public String getName() {
-		return "Save parametrized PCM model";
-	}
+    @Override
+    public String getName() {
+        return "Save parametrized PCM model";
+    }
 
 }

@@ -9,12 +9,12 @@ import org.somox.ejbmox.graphlearner.node.Node;
 
 public class PathBuilder {
 
-	public static Path path(String... nodeNames) {
-		List<Node> nodes = new ArrayList<>();
-		for(String name : nodeNames) {
-			nodes.add(new LeafNode(name));
-		}
-		return Path.fromNodes(nodes);
-	}
-	
+    public static Path path(String... nodeNames) {
+        List<Node> nodes = new ArrayList<>();
+        for (String name : nodeNames) {
+            nodes.add(new LeafNode(name));
+        }
+        return Path.fromNodes(nodes);
+    }
+
 }

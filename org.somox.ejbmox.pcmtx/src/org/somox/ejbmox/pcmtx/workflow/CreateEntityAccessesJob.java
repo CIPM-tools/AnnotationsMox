@@ -56,7 +56,7 @@ public class CreateEntityAccessesJob extends AbstractPCMTXJob {
                 resourceCall.setSignature__ResourceCall(
                         EntityTypesAPI.findSignatureByAccessType(requiredInterface, accessType));
                 action.getResourceCall__Action().add(resourceCall);
-                
+
                 // apply "EntityAccess" stereotype to resource call
                 StereotypeAPI.applyStereotype(resourceCall, "EntityAccess");
             }

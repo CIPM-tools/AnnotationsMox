@@ -20,82 +20,82 @@ import org.somox.ejbmox.graphlearner.visitor.VerboseGraphVisitor;
  */
 public class SPGraph {
 
-	private RootNode root;
+    private RootNode root;
 
-	public SPGraph() {
-		this.root = new RootNode();
-	}
+    public SPGraph() {
+        this.root = new RootNode();
+    }
 
-	public static SPGraph fromPath(Path path) {
-		if (path.isEmpty()) {
-			throw new RuntimeException("Path may not be empty");
-		}
-		SPGraph graph = new SPGraph();
-		Node lastNode = graph.root;
-		for (Node node : path.getNodes()) {
-			lastNode.insertSeriesSuccessor(node);
-			lastNode = node;
-		}
-		return graph;
-	}
+    public static SPGraph fromPath(Path path) {
+        if (path.isEmpty()) {
+            throw new RuntimeException("Path may not be empty");
+        }
+        SPGraph graph = new SPGraph();
+        Node lastNode = graph.root;
+        for (Node node : path.getNodes()) {
+            lastNode.insertSeriesSuccessor(node);
+            lastNode = node;
+        }
+        return graph;
+    }
 
-	public RootNode getRoot() {
-		return root;
-	}
+    public RootNode getRoot() {
+        return root;
+    }
 
-	public Node getSource() {
-		return allNodesDepthFirst().get(0);
-	}
+    public Node getSource() {
+        return allNodesDepthFirst().get(0);
+    }
 
-	public Node getSink() {
-		List<Node> nodes = allNodesDepthFirst();
-		// return last node
-		return nodes.get(nodes.size() - 1);
-	}
+    public Node getSink() {
+        List<Node> nodes = allNodesDepthFirst();
+        // return last node
+        return nodes.get(nodes.size() - 1);
+    }
 
-	public void traverse(Visitor<Void> visitor) {
-		getRoot().accept(visitor, null);
-	}
+    public void traverse(Visitor<Void> visitor) {
+        getRoot().accept(visitor, null);
+    }
 
-	public <R> void traverse(Visitor<R> visitor, R arg) {
-		getRoot().accept(visitor, arg);
-	}
-	
-	public List<Path> allPaths() {
-		List<Path> paths = new ArrayList<>();
-		paths.add(Path.emptyPath());
-		getRoot().accept(new AllPathsVisitor(), paths);
-		return paths;
-	}
+    public <R> void traverse(Visitor<R> visitor, R arg) {
+        getRoot().accept(visitor, arg);
+    }
 
-	public List<Node> allNodesDepthFirst() {
-		DepthFirstVisitor visitor = new DepthFirstVisitor();
-		getRoot().accept(visitor, null);
-		return visitor.getNodes();
-	}
+    public List<Path> allPaths() {
+        List<Path> paths = new ArrayList<>();
+        paths.add(Path.emptyPath());
+        getRoot().accept(new AllPathsVisitor(), paths);
+        return paths;
+    }
 
-	public void toVerboseRepresentation() {
-		VerboseGraphVisitor v = new VerboseGraphVisitor();
-		getRoot().accept(v, null);
-	}
+    public List<Node> allNodesDepthFirst() {
+        DepthFirstVisitor visitor = new DepthFirstVisitor();
+        getRoot().accept(visitor, null);
+        return visitor.getNodes();
+    }
 
-	public static void insertSeriesSuccessor(Node node, Node successor) {
-		node.insertSeriesSuccessor(successor);
-	}
+    public void toVerboseRepresentation() {
+        VerboseGraphVisitor v = new VerboseGraphVisitor();
+        getRoot().accept(v, null);
+    }
 
-	public static void insertSeriesPredecessor(Node node, Node predecessor) {
-		node.insertSeriesPredecessor(predecessor);
-	}
-	
-	public static void insertParallel(Node node, Node parallel) {
-		node.insertParallel(parallel);
-	}
+    public static void insertSeriesSuccessor(Node node, Node successor) {
+        node.insertSeriesSuccessor(successor);
+    }
 
-	@Override
-	public String toString() {
-		StringifyVisitor visitor = new StringifyVisitor();
-		getRoot().accept(visitor, null);
-		return visitor.asString();
-	}
+    public static void insertSeriesPredecessor(Node node, Node predecessor) {
+        node.insertSeriesPredecessor(predecessor);
+    }
+
+    public static void insertParallel(Node node, Node parallel) {
+        node.insertParallel(parallel);
+    }
+
+    @Override
+    public String toString() {
+        StringifyVisitor visitor = new StringifyVisitor();
+        getRoot().accept(visitor, null);
+        return visitor.asString();
+    }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class ParsedSQLStatement {
 
     private StatementType type;
-    
+
     private List<String> tableNames;
 
     public ParsedSQLStatement(StatementType type, List<String> tableNames) {
@@ -20,5 +20,5 @@ public class ParsedSQLStatement {
     public List<String> getTableNames() {
         return tableNames;
     }
-    
+
 }

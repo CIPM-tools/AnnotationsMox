@@ -16,48 +16,48 @@ import org.somox.ejbmox.graphlearner.node.SeriesNode;
  */
 public class InvocationProbabilityVisitor implements Visitor<Void> {
 
-	@Override
-	public void visit(LeafNode n, Void arg) {
-		calculateRelativeInvocationProbability(n);
-	}
+    @Override
+    public void visit(LeafNode n, Void arg) {
+        calculateRelativeInvocationProbability(n);
+    }
 
-	@Override
-	public void visit(EpsilonLeafNode n, Void arg) {
-		calculateRelativeInvocationProbability(n);
-	}
+    @Override
+    public void visit(EpsilonLeafNode n, Void arg) {
+        calculateRelativeInvocationProbability(n);
+    }
 
-	@Override
-	public void visit(ParallelNode n, Void arg) {
-		calculateRelativeInvocationProbability(n);
-		for (Node child : n.getChildren()) {
-			child.accept(this, null);
-		}
-	}
+    @Override
+    public void visit(ParallelNode n, Void arg) {
+        calculateRelativeInvocationProbability(n);
+        for (Node child : n.getChildren()) {
+            child.accept(this, null);
+        }
+    }
 
-	@Override
-	public void visit(SeriesNode n, Void arg) {
-		calculateRelativeInvocationProbability(n);
-		for (Node child : n.getChildren()) {
-			child.accept(this, null);
-		}
-	}
+    @Override
+    public void visit(SeriesNode n, Void arg) {
+        calculateRelativeInvocationProbability(n);
+        for (Node child : n.getChildren()) {
+            child.accept(this, null);
+        }
+    }
 
-	@Override
-	public void visit(RootNode n, Void arg) {
-		n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, 1.0);
-		n.getChild().accept(this, null);
-	}
+    @Override
+    public void visit(RootNode n, Void arg) {
+        n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, 1.0);
+        n.getChild().accept(this, null);
+    }
 
-	private void calculateRelativeInvocationProbability(Node n) {
-		int parentInvocations = (int) n.getParent().getAttribute(NodeAttribute.INVOCATION_COUNT);
-		if (n.getAttribute(NodeAttribute.INVOCATION_COUNT) != null) {
-			int invocations = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
-			n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, invocations / (double) parentInvocations);
-		} else {
-			// TODO log error / warning!
-			n.setAttribute(NodeAttribute.INVOCATION_COUNT, 0);
-			n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, 0.0);
-		}
-	}
+    private void calculateRelativeInvocationProbability(Node n) {
+        int parentInvocations = (int) n.getParent().getAttribute(NodeAttribute.INVOCATION_COUNT);
+        if (n.getAttribute(NodeAttribute.INVOCATION_COUNT) != null) {
+            int invocations = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
+            n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, invocations / (double) parentInvocations);
+        } else {
+            // TODO log error / warning!
+            n.setAttribute(NodeAttribute.INVOCATION_COUNT, 0);
+            n.setAttribute(NodeAttribute.INVOCATION_PROBABILITY, 0.0);
+        }
+    }
 
 }

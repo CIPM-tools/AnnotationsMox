@@ -5,14 +5,14 @@ import org.somox.ejbmox.graphlearner.Visitor;
 
 public class SeriesNode extends NestableNode {
 
-	@Override
-	public <R> void accept(Visitor<R> v, R arg) {
-		v.visit(this, arg);
-	}
-	
-	@Override
-	public <R> R accept(ReturnOrientedVisitor<R> v) {
-		return v.visit(this);
-	}
-	
+    @Override
+    public <R> void accept(Visitor<R> v, R arg) {
+        v.visit(this, arg);
+    }
+
+    @Override
+    public <R> R accept(ReturnOrientedVisitor<R> v) {
+        return v.visit(this);
+    }
+
 }

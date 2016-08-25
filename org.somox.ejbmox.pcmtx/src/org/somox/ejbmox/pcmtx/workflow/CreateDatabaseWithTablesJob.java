@@ -35,7 +35,7 @@ public class CreateDatabaseWithTablesJob extends AbstractPCMTXJob {
             table.setDatabase(database);
             table.setRows(0); // TODO
             repository.getTable().add(table); // TODO getTable --> getTables
-            
+
             // add table to blackboard partition
             getPCMTXPartition().addTable(table);
         }

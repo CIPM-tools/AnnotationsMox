@@ -7,6 +7,6 @@ package org.somox.ejbmox.inspectit2pcm.parametrization;
  */
 public enum AggregationStrategy {
 
-	HISTOGRAM, MEAN, MEDIAN;
-	
+    HISTOGRAM, MEAN, MEDIAN;
+
 }

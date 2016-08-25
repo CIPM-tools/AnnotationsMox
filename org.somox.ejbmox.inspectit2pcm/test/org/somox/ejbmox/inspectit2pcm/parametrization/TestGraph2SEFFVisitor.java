@@ -21,90 +21,90 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class TestGraph2SEFFVisitor {
 
-	private InvocationGraphLearner learner;
-	
-	@BeforeClass
-	public static void setup() {
-		// log4j basic setup
-		BasicConfigurator.configure();
-	}
-	
-	@Before
-	public void beforeTest() {
-		learner = new InvocationGraphLearner();
-	}
+    private InvocationGraphLearner learner;
 
-	@Test
-	public void testSingleNode() {
-		learner.integratePath(PathBuilder.path("A"));
+    @BeforeClass
+    public static void setup() {
+        // log4j basic setup
+        BasicConfigurator.configure();
+    }
 
-		SPGraph learnedGraph = learner.getGraph();
-		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-		learnedGraph.toVerboseRepresentation();
-		learnedGraph.traverse(new InvocationProbabilityVisitor());
-		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+    @Before
+    public void beforeTest() {
+        learner = new InvocationGraphLearner();
+    }
 
-		Assert.assertEquals(3, behaviour.getSteps_Behaviour().size());
+    @Test
+    public void testSingleNode() {
+        learner.integratePath(PathBuilder.path("A"));
 
-		StartAction start = PCMHelper.findStartAction(behaviour);
-		StopAction stop = PCMHelper.findStopAction(behaviour);
-		Assert.assertTrue(start.getSuccessor_AbstractAction().equals(stop.getPredecessor_AbstractAction()));
-	}
+        SPGraph learnedGraph = learner.getGraph();
+        ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+        learnedGraph.toVerboseRepresentation();
+        learnedGraph.traverse(new InvocationProbabilityVisitor());
+        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
-	@Test
-	public void testTwoNodes() {
-		learner.integratePath(PathBuilder.path("A", "B"));
+        Assert.assertEquals(3, behaviour.getSteps_Behaviour().size());
 
-		SPGraph learnedGraph = learner.getGraph();
-		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-		learnedGraph.toVerboseRepresentation();
-		learnedGraph.traverse(new InvocationProbabilityVisitor());
-		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+        StartAction start = PCMHelper.findStartAction(behaviour);
+        StopAction stop = PCMHelper.findStopAction(behaviour);
+        Assert.assertTrue(start.getSuccessor_AbstractAction().equals(stop.getPredecessor_AbstractAction()));
+    }
 
-		Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
+    @Test
+    public void testTwoNodes() {
+        learner.integratePath(PathBuilder.path("A", "B"));
 
-		StartAction start = PCMHelper.findStartAction(behaviour);
-		StopAction stop = PCMHelper.findStopAction(behaviour);
-		Assert.assertTrue(start.getSuccessor_AbstractAction().getSuccessor_AbstractAction()
-				.equals(stop.getPredecessor_AbstractAction()));
-	}
+        SPGraph learnedGraph = learner.getGraph();
+        ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+        learnedGraph.toVerboseRepresentation();
+        learnedGraph.traverse(new InvocationProbabilityVisitor());
+        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
-	@Test
-	public void testTwoNodes_oneParallel() {
-		learner.integratePath(PathBuilder.path("A", "B"));
-		learner.integratePath(PathBuilder.path("A", "C"));
+        Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
 
-		SPGraph learnedGraph = learner.getGraph();
-		ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-		learnedGraph.toVerboseRepresentation();
-		learnedGraph.traverse(new InvocationProbabilityVisitor());
-		learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+        StartAction start = PCMHelper.findStartAction(behaviour);
+        StopAction stop = PCMHelper.findStopAction(behaviour);
+        Assert.assertTrue(start.getSuccessor_AbstractAction().getSuccessor_AbstractAction()
+                .equals(stop.getPredecessor_AbstractAction()));
+    }
 
-		Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
+    @Test
+    public void testTwoNodes_oneParallel() {
+        learner.integratePath(PathBuilder.path("A", "B"));
+        learner.integratePath(PathBuilder.path("A", "C"));
 
-		// Stop must be reachable from Start: Start -> ... -> ... -> Stop with 2
-		// actions in between
-		StartAction start = PCMHelper.findStartAction(behaviour);
-		StopAction stop = PCMHelper.findStopAction(behaviour);
-		Assert.assertTrue(start.getSuccessor_AbstractAction().getSuccessor_AbstractAction()
-				.getSuccessor_AbstractAction().equals(stop));
+        SPGraph learnedGraph = learner.getGraph();
+        ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+        learnedGraph.toVerboseRepresentation();
+        learnedGraph.traverse(new InvocationProbabilityVisitor());
+        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
 
-		// predecessor of Stop must be a BranchAction
-		Assert.assertTrue(SeffPackage.eINSTANCE.getBranchAction().isInstance(stop.getPredecessor_AbstractAction()));
+        Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
 
-		// Branch must contain two branch transitions
-		BranchAction branch = (BranchAction) stop.getPredecessor_AbstractAction();
-		Assert.assertEquals(2, branch.getBranches_Branch().size());
+        // Stop must be reachable from Start: Start -> ... -> ... -> Stop with 2
+        // actions in between
+        StartAction start = PCMHelper.findStartAction(behaviour);
+        StopAction stop = PCMHelper.findStopAction(behaviour);
+        Assert.assertTrue(start.getSuccessor_AbstractAction().getSuccessor_AbstractAction()
+                .getSuccessor_AbstractAction().equals(stop));
 
-		// each Branch transition must contain a sequence Start -> ... -> Stop
-		// with 1 action in between
-		for (AbstractBranchTransition transition : branch.getBranches_Branch()) {
-			ResourceDemandingBehaviour transitionBehaviour = transition.getBranchBehaviour_BranchTransition();
-			StartAction transitionStart = PCMHelper.findStartAction(transitionBehaviour);
-			StopAction transitionStop = PCMHelper.findStopAction(transitionBehaviour);
-			Assert.assertTrue(
-					transitionStart.getSuccessor_AbstractAction().getSuccessor_AbstractAction().equals(transitionStop));
-		}
-	}
+        // predecessor of Stop must be a BranchAction
+        Assert.assertTrue(SeffPackage.eINSTANCE.getBranchAction().isInstance(stop.getPredecessor_AbstractAction()));
+
+        // Branch must contain two branch transitions
+        BranchAction branch = (BranchAction) stop.getPredecessor_AbstractAction();
+        Assert.assertEquals(2, branch.getBranches_Branch().size());
+
+        // each Branch transition must contain a sequence Start -> ... -> Stop
+        // with 1 action in between
+        for (AbstractBranchTransition transition : branch.getBranches_Branch()) {
+            ResourceDemandingBehaviour transitionBehaviour = transition.getBranchBehaviour_BranchTransition();
+            StartAction transitionStart = PCMHelper.findStartAction(transitionBehaviour);
+            StopAction transitionStop = PCMHelper.findStopAction(transitionBehaviour);
+            Assert.assertTrue(
+                    transitionStart.getSuccessor_AbstractAction().getSuccessor_AbstractAction().equals(transitionStop));
+        }
+    }
 
 }

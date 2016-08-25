@@ -9,13 +9,13 @@ import de.uka.ipd.sdq.workflow.extension.AbstractExtensionJobConfiguration;
 public class PCMTXConfiguration extends AbstractExtensionJobConfiguration {
 
     private EJBmoxConfiguration ejbMoXConfiguration;
-    
+
     private Map<String, Object> attributes;
-    
+
     public PCMTXConfiguration(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
-    
+
     public EJBmoxConfiguration getEjbMoXConfiguration() {
         return ejbMoXConfiguration;
     }

@@ -15,14 +15,14 @@ import org.somox.ejbmox.graphlearner.node.SeriesNode;
  */
 public interface ReturnOrientedVisitor<R> {
 
-	R visit(LeafNode n);
+    R visit(LeafNode n);
 
-	R visit(EpsilonLeafNode n);
+    R visit(EpsilonLeafNode n);
 
-	R visit(ParallelNode n);
+    R visit(ParallelNode n);
 
-	R visit(SeriesNode n);
-	
-	R visit(RootNode n);
+    R visit(SeriesNode n);
+
+    R visit(RootNode n);
 
 }

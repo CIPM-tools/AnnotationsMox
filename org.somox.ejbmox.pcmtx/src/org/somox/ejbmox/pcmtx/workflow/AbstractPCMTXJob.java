@@ -12,17 +12,17 @@ public abstract class AbstractPCMTXJob extends AbstractBlackboardInteractingJob<
     public PCMTXPartition getPCMTXPartition() {
         return (PCMTXPartition) getBlackboard().getPartition(PCMTXPartition.PARTITION_ID);
     }
-    
+
     public II2PCMPartition getII2PCMPartition() {
         return (II2PCMPartition) getBlackboard().getPartition(II2PCMPartition.PARTITION_ID);
     }
-    
+
     public PCMTXConfiguration getPCMTXConfiguration() {
         return getPCMTXPartition().getConfiguration();
     }
-    
+
     public EJBmoxConfiguration getEJBMoXConfiguration() {
         return getPCMTXConfiguration().getEjbMoXConfiguration();
     }
-    
+
 }

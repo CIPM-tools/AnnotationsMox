@@ -5,20 +5,20 @@ import org.somox.ejbmox.graphlearner.Visitor;
 
 public class EpsilonLeafNode extends LeafNode {
 
-	public static String EPSILON_CONTENT = "";
+    public static String EPSILON_CONTENT = "";
 
-	public EpsilonLeafNode() {
-		super(EPSILON_CONTENT);
-	}
+    public EpsilonLeafNode() {
+        super(EPSILON_CONTENT);
+    }
 
-	@Override
-	public <R> R accept(ReturnOrientedVisitor<R> v) {
-		return v.visit(this);
-	}
+    @Override
+    public <R> R accept(ReturnOrientedVisitor<R> v) {
+        return v.visit(this);
+    }
 
-	@Override
-	public <R> void accept(Visitor<R> v, R arg) {
-		v.visit(this, arg);
-	}
+    @Override
+    public <R> void accept(Visitor<R> v, R arg) {
+        v.visit(this, arg);
+    }
 
 }

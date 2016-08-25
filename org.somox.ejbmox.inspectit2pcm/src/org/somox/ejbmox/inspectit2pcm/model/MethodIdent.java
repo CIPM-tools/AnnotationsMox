@@ -3,63 +3,62 @@ package org.somox.ejbmox.inspectit2pcm.model;
 /**
  * Represenation of a method (i.e., method metadata).
  * 
- * @author Patrice Bouillet (parts of this class have been copied from
- *         InspectIT)
+ * @author Patrice Bouillet (parts of this class have been copied from InspectIT)
  * @author Philipp Merkle
  *
  */
 public class MethodIdent {
 
-	private Long id;
+    private Long id;
 
-	private String packageName;
+    private String packageName;
 
-	private String className;
+    private String className;
 
-	private String methodName;
+    private String methodName;
 
-	private String returnType;
+    private String returnType;
 
-	private int modifiers;
+    private int modifiers;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getMethodName() {
-		return methodName;
-	}
+    public String getMethodName() {
+        return methodName;
+    }
 
-	public String getPackageName() {
-		return packageName;
-	}
+    public String getPackageName() {
+        return packageName;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public String getClassName() {
+        return className;
+    }
 
-	public String getReturnType() {
-		return returnType;
-	}
+    public String getReturnType() {
+        return returnType;
+    }
 
-	public int getModifiers() {
-		return modifiers;
-	}
+    public int getModifiers() {
+        return modifiers;
+    }
 
-	public String toFQN() {
-		return toFQN(false);
-	}
+    public String toFQN() {
+        return toFQN(false);
+    }
 
-	public String toFQN(boolean excludeMethodName) {
-		if (excludeMethodName) {
-			return getPackageName() + "." + getClassName();
-		} else {
-			return getPackageName() + "." + getClassName() + "." + getMethodName();
-		}
-	}
+    public String toFQN(boolean excludeMethodName) {
+        if (excludeMethodName) {
+            return getPackageName() + "." + getClassName();
+        } else {
+            return getPackageName() + "." + getClassName() + "." + getMethodName();
+        }
+    }
 
-	public boolean isWrapper() {
-		return false;
-	}
+    public boolean isWrapper() {
+        return false;
+    }
 
 }

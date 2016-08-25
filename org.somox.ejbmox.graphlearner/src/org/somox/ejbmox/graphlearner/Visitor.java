@@ -15,14 +15,14 @@ import org.somox.ejbmox.graphlearner.node.SeriesNode;
  */
 public interface Visitor<T> {
 
-	void visit(LeafNode n, T arg);
-	
-	void visit(EpsilonLeafNode n, T arg);
+    void visit(LeafNode n, T arg);
 
-	void visit(ParallelNode n, T arg);
+    void visit(EpsilonLeafNode n, T arg);
 
-	void visit(SeriesNode n, T arg);
-	
-	void visit(RootNode n, T arg);
+    void visit(ParallelNode n, T arg);
+
+    void visit(SeriesNode n, T arg);
+
+    void visit(RootNode n, T arg);
 
 }

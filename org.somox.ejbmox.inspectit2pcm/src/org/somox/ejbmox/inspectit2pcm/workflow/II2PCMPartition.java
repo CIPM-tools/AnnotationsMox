@@ -18,81 +18,80 @@ import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
 
 public class II2PCMPartition {
 
-	private static final Logger logger = Logger.getLogger(II2PCMPartition.class);
+    private static final Logger logger = Logger.getLogger(II2PCMPartition.class);
 
-	public static final String PARTITION_ID = "org.somox.ejbmox.inspectit2pcm.partition";
+    public static final String PARTITION_ID = "org.somox.ejbmox.inspectit2pcm.partition";
 
-	private Map<ResourceDemandingSEFF, String> seffToFQNMap;
+    private Map<ResourceDemandingSEFF, String> seffToFQNMap;
 
-	private Map<Interface, String> ifaceToFQNMap;
+    private Map<Interface, String> ifaceToFQNMap;
 
-	private II2PCMConfiguration configuration;
-	
-	private PCMParametrization parametrization;
-	
-	private ParametrizationTrace trace;
+    private II2PCMConfiguration configuration;
 
-	private II2PCMPartition(Map<ResourceDemandingSEFF, String> seffToFQNMap,
-			Map<Interface, String> ifaceToFQNMap, II2PCMConfiguration configuration) {
-	    this.trace = new ParametrizationTrace();
-		this.seffToFQNMap = seffToFQNMap;
-		this.ifaceToFQNMap = ifaceToFQNMap;
-		this.configuration = configuration;
-	}
+    private PCMParametrization parametrization;
 
-	public static II2PCMPartition createFrom(SoMoXBlackboard blackboard,
-			II2PCMConfiguration configuration) {
-		SourceCodeDecoratorRepository sourceDecorator = blackboard.getAnalysisResult()
-				.getSourceCodeDecoratorRepository();
+    private ParametrizationTrace trace;
 
-		// build list of external services, together with their fully qualified
-		// name (FQN)
-		Map<ResourceDemandingSEFF, String> seffToFQNMap = new HashMap<>();
-		for (SEFF2MethodMapping m : sourceDecorator.getSeff2MethodMappings()) {
-			String fqn = fullyQualifiedName((ClassMethod) m.getStatementListContainer());
-			seffToFQNMap.put((ResourceDemandingSEFF) m.getSeff(), fqn);
-			logger.debug("Adding SEFF with FQN " + fqn);
-		}
+    private II2PCMPartition(Map<ResourceDemandingSEFF, String> seffToFQNMap, Map<Interface, String> ifaceToFQNMap,
+            II2PCMConfiguration configuration) {
+        this.trace = new ParametrizationTrace();
+        this.seffToFQNMap = seffToFQNMap;
+        this.ifaceToFQNMap = ifaceToFQNMap;
+        this.configuration = configuration;
+    }
 
-		Map<Interface, String> ifaceToFQNMap = new HashMap<>();
-		for (InterfaceSourceCodeLink link : sourceDecorator.getInterfaceSourceCodeLink()) {
-			String fqn = fullyQualifiedName(link.getGastClass());
-			ifaceToFQNMap.put(link.getInterface(), fqn);
-			logger.debug("Adding Interface with FQN " + fqn);
-		}
+    public static II2PCMPartition createFrom(SoMoXBlackboard blackboard, II2PCMConfiguration configuration) {
+        SourceCodeDecoratorRepository sourceDecorator = blackboard.getAnalysisResult()
+                .getSourceCodeDecoratorRepository();
 
-		return new II2PCMPartition(seffToFQNMap, ifaceToFQNMap, configuration);
-	}
+        // build list of external services, together with their fully qualified
+        // name (FQN)
+        Map<ResourceDemandingSEFF, String> seffToFQNMap = new HashMap<>();
+        for (SEFF2MethodMapping m : sourceDecorator.getSeff2MethodMappings()) {
+            String fqn = fullyQualifiedName((ClassMethod) m.getStatementListContainer());
+            seffToFQNMap.put((ResourceDemandingSEFF) m.getSeff(), fqn);
+            logger.debug("Adding SEFF with FQN " + fqn);
+        }
 
-	public Map<ResourceDemandingSEFF, String> getSeffToFQNMap() {
-		return seffToFQNMap;
-	}
+        Map<Interface, String> ifaceToFQNMap = new HashMap<>();
+        for (InterfaceSourceCodeLink link : sourceDecorator.getInterfaceSourceCodeLink()) {
+            String fqn = fullyQualifiedName(link.getGastClass());
+            ifaceToFQNMap.put(link.getInterface(), fqn);
+            logger.debug("Adding Interface with FQN " + fqn);
+        }
 
-	public Map<Interface, String> getInterfaceToFQNMap() {
-		return ifaceToFQNMap;
-	}
+        return new II2PCMPartition(seffToFQNMap, ifaceToFQNMap, configuration);
+    }
 
-	public II2PCMConfiguration getConfiguration() {
-		return configuration;
-	}
+    public Map<ResourceDemandingSEFF, String> getSeffToFQNMap() {
+        return seffToFQNMap;
+    }
 
-	private static String fullyQualifiedName(ConcreteClassifier classifier) {
-		return classifier.getQualifiedName();
-	}
+    public Map<Interface, String> getInterfaceToFQNMap() {
+        return ifaceToFQNMap;
+    }
 
-	private static String fullyQualifiedName(ClassMethod method) {
-		return method.getContainingCompilationUnit().getContainedClass().getQualifiedName() + "." + method.getName();
-	}
-	
-	public PCMParametrization getParametrization() {
-		return parametrization;
-	}
-	
-	public void setParametrization(PCMParametrization parametrization) {
-		this.parametrization = parametrization;
-	}
-	
-	public ParametrizationTrace getTrace() {
+    public II2PCMConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    private static String fullyQualifiedName(ConcreteClassifier classifier) {
+        return classifier.getQualifiedName();
+    }
+
+    private static String fullyQualifiedName(ClassMethod method) {
+        return method.getContainingCompilationUnit().getContainedClass().getQualifiedName() + "." + method.getName();
+    }
+
+    public PCMParametrization getParametrization() {
+        return parametrization;
+    }
+
+    public void setParametrization(PCMParametrization parametrization) {
+        this.parametrization = parametrization;
+    }
+
+    public ParametrizationTrace getTrace() {
         return trace;
     }
 
