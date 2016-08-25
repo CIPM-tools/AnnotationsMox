@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.palladiosimulator.mdsdprofiles.api.StereotypeAPI;
 import org.palladiosimulator.pcm.core.entity.EntityFactory;
 import org.palladiosimulator.pcm.core.entity.ResourceRequiredRole;
 import org.palladiosimulator.pcm.repository.BasicComponent;
@@ -55,6 +56,9 @@ public class CreateEntityAccessesJob extends AbstractPCMTXJob {
                 resourceCall.setSignature__ResourceCall(
                         EntityTypesAPI.findSignatureByAccessType(requiredInterface, accessType));
                 action.getResourceCall__Action().add(resourceCall);
+                
+                // apply "EntityAccess" stereotype to resource call
+                StereotypeAPI.applyStereotype(resourceCall, "EntityAccess");
             }
         }
 
