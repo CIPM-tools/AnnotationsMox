@@ -131,7 +131,8 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
     // TODO simplify whole method
     private void parametrizeSQLStatementsWithMean(final PCMParametrization parametrization) {
-        if (parametrization.getSqlStatementMap().size() == 0 || !this.addPalladioTXProfile(parametrization)) {
+        boolean profileAddedSuccessfully = this.addPalladioTXProfile(parametrization);
+        if (parametrization.getSqlStatementMap().size() == 0 || !profileAddedSuccessfully) {
             this.logger.warn("Can not parametrize SQL statements with mean.");
             return;
         }
@@ -152,9 +153,9 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             final ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
             g.toVerboseRepresentation();
             g.traverse(new InvocationProbabilityVisitor());
-            g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb); // stores SEFF
-                                                                                    // in rdb
-            // variable
+
+            // visitor stores resulting SEFF in rdb variable as side effect
+            g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
 
             // store trace as new blackboard partition
 
