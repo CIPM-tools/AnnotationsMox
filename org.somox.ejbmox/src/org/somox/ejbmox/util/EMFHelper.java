@@ -41,9 +41,8 @@ public class EMFHelper {
      */
     public static void createResourceAndSave(final EObject root, final String filename,
             final FileLocationConfiguration locationConfiguration, final Logger logger) {
-        final String projectIdentifier = locationConfiguration.getProjectNames().iterator().next();
         final String outputFolder = locationConfiguration.getOutputFolder();
-        final URI uri = createURI(projectIdentifier, outputFolder, filename);
+        final URI uri = createURI(outputFolder, filename);
 
         final ResourceSet resourceSet = new ResourceSetImpl();
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -79,13 +78,9 @@ public class EMFHelper {
         }
     }
 
-    private static URI createURI(final String projectIdentifier, final String outputFolder, final String fileName) {
-        final String[] segments = new String[] { projectIdentifier, outputFolder, fileName };
-        URI uri = URI.createPlatformResourceURI(stripLeadingOrTrailingSlashes(segments[0]), true);
-        for (int i = 1; i < segments.length; i++) {
-            final String normalizedSegment = stripLeadingOrTrailingSlashes(segments[i]);
-            uri = uri.appendSegment(normalizedSegment);
-        }
+    private static URI createURI(final String outputFolder, final String fileName) {
+        URI uri = URI.createPlatformResourceURI(outputFolder, true);
+        uri = uri.appendSegment(stripLeadingOrTrailingSlashes(fileName));
         return uri;
     }
 
