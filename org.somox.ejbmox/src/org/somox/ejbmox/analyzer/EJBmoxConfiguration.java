@@ -16,11 +16,11 @@ public class EJBmoxConfiguration extends AbstractMoxConfiguration implements Ext
     public static final String EJBMOX_INSPECTIT_FILE_PATHS = "inspectItFilePaths";
 
     private final Set<String> inspectITFilePaths = new HashSet<String>();
-    
+
     private Map<String, Object> attributeMap;
 
     public EJBmoxConfiguration(final Map<String, Object> attributeMap) {
-    	this.attributeMap = attributeMap;
+        this.attributeMap = attributeMap;
         this.applyAttributeMap(attributeMap);
     }
 
@@ -71,8 +71,8 @@ public class EJBmoxConfiguration extends AbstractMoxConfiguration implements Ext
 
     }
 
-	@Override
-	public Map<String, Object> getAttributes() {
-		return attributeMap;
-	}
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributeMap;
+    }
 }

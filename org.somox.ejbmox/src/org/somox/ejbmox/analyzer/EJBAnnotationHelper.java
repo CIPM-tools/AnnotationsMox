@@ -2,6 +2,7 @@ package org.somox.ejbmox.analyzer;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,9 +56,25 @@ public final class EJBAnnotationHelper {
             final Set<String> annotationClassifiersToCheck) {
         return annotableAndModifiable.getAnnotationsAndModifiers().stream()
                 .filter(annotationOrModifier -> annotationOrModifier instanceof AnnotationInstance)
-                .map(annotation -> (AnnotationInstance) annotation)
-                .filter(annotation -> EJBAnnotationHelper.filterAnnotationName(annotation, annotationClassifiersToCheck))
+                .map(annotation -> (AnnotationInstance) annotation).filter(annotation -> EJBAnnotationHelper
+                        .filterAnnotationName(annotation, annotationClassifiersToCheck))
                 .collect(Collectors.toList()).size() > 0;
+    }
+
+    public static List<AnnotationInstance> getAnnotations(final AnnotableAndModifiable annotableAndModifiable,
+            final String annotationClassifierToCheck) {
+        Set<String> classifierSet = new HashSet<>();
+        classifierSet.add(annotationClassifierToCheck);
+        return getAnnotations(annotableAndModifiable, classifierSet);
+    }
+
+    public static List<AnnotationInstance> getAnnotations(final AnnotableAndModifiable annotableAndModifiable,
+            final Set<String> annotationClassifiersToCheck) {
+        return annotableAndModifiable.getAnnotationsAndModifiers().stream()
+                .filter(annotationOrModifier -> annotationOrModifier instanceof AnnotationInstance)
+                .map(annotation -> (AnnotationInstance) annotation).filter(annotation -> EJBAnnotationHelper
+                        .filterAnnotationName(annotation, annotationClassifiersToCheck))
+                .collect(Collectors.toList());
     }
 
     public static boolean isEJBBuisnessInterface(final Interface implemententedInterface) {

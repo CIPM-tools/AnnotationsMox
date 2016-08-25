@@ -26,7 +26,8 @@ public class SourceCodeDecoratorHelper {
         this.sourceCodeDecorator.getComponentImplementingClassesLink().add(componentImplementingClassLink);
     }
 
-    public void createInterfaceSourceCodeLink(final OperationInterface opInterface, final ConcreteClassifier jaMoPPInterface) {
+    public void createInterfaceSourceCodeLink(final OperationInterface opInterface,
+            final ConcreteClassifier jaMoPPInterface) {
         final InterfaceSourceCodeLink interfaceSourceCodeLink = SourcecodedecoratorFactory.eINSTANCE
                 .createInterfaceSourceCodeLink();
         interfaceSourceCodeLink.setInterface(opInterface);

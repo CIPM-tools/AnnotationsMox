@@ -19,26 +19,26 @@ import de.uka.ipd.sdq.workflow.launchconfig.tabs.DebugEnabledCommonTab;
  */
 public class EJBmoxModelAnalyzerTabGroup extends ModelAnalyzerTabGroup {
 
-	@Override
-	public void createTabs(final ILaunchConfigurationDialog dialog, final String mode) {
-		final ArrayList<ILaunchConfigurationTab> tabList = this.getCoreAnalyzerTabs();
+    @Override
+    public void createTabs(final ILaunchConfigurationDialog dialog, final String mode) {
+        final ArrayList<ILaunchConfigurationTab> tabList = this.getCoreAnalyzerTabs();
 
-		WorkflowExtensionsTabGroup workflowTabGroup = new WorkflowExtensionsTabGroup();
-		List<ILaunchConfigurationTab> tabs = workflowTabGroup.createExtensionTabs(dialog, mode,
-				EJBMoXWorkflowHooks.POST_SAVE_MODELS);
-		tabList.addAll(tabs);
+        WorkflowExtensionsTabGroup workflowTabGroup = new WorkflowExtensionsTabGroup();
+        List<ILaunchConfigurationTab> tabs = workflowTabGroup.createExtensionTabs(dialog, mode,
+                EJBMoXWorkflowHooks.POST_SAVE_MODELS);
+        tabList.addAll(tabs);
 
-		tabList.add(new DebugEnabledCommonTab());
-		this.setTabs(tabList.toArray(new ILaunchConfigurationTab[0]));
-	}
+        tabList.add(new DebugEnabledCommonTab());
+        this.setTabs(tabList.toArray(new ILaunchConfigurationTab[0]));
+    }
 
-	private class WorkflowExtensionsTabGroup extends ExtendableTabGroup {
+    private class WorkflowExtensionsTabGroup extends ExtendableTabGroup {
 
-		@Override
-		public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-			// nothing to do
-		}
+        @Override
+        public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
+            // nothing to do
+        }
 
-	}
+    }
 
 }
