@@ -45,8 +45,14 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
         ia.setEntityName(n.getContent().toString());
         if (n.getContent() instanceof SQLStatement) {
             SQLStatement stmt = (SQLStatement) n.getContent();
-            double duration = stmt.getExclusiveDuration(); // TODO use another kind of duration?
-            ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(duration));
+
+            // calculate mean duration
+            int invocationCount = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
+            double durationTotal = (double) n.getAttribute(NodeAttribute.DURATION_TOTAL);
+            double durationMean = durationTotal / invocationCount;
+
+            // store mean duration into model
+            ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(durationMean));
             trace.addInternalActionToSQLStatementLink(ia, stmt);
         }
 
