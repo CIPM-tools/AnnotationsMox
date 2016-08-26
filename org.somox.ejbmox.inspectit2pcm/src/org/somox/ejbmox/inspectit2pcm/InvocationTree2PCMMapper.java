@@ -169,22 +169,23 @@ public class InvocationTree2PCMMapper {
                     InvocationTree2PCMMapper.this.parametrization, InvocationTree2PCMMapper.this.seffToFQNMap);
 
             // delegate to allow for setup operations
-            this.rootContext.getDetector().systemCallEnd(calledService, time);
+            this.rootContext.getDetector().systemCallBegin(calledService, time);
         }
 
         @Override
         public void systemCallEnd(final MethodIdent calledService, final double time) {
             logger.debug("Dispatching end of system call " + calledService.toFQN());
 
+            if (this.rootContext == null) {
+                throw new IllegalStateException(
+                        "Encountered end of system call, but there is no system call being processed.");
+            }
+
             // delegate to allow for clean up operations
             if (this.rootContext.getDetector() != null) {
                 this.rootContext.getDetector().systemCallEnd(calledService, time);
             }
 
-            if (this.rootContext == null) {
-                throw new IllegalStateException(
-                        "Encountered end of system call, but there is no system call being processed.");
-            }
             this.rootContext = null;
         }
 
