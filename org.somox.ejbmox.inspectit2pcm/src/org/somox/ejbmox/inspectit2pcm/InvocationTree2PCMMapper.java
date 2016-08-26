@@ -264,21 +264,37 @@ public class InvocationTree2PCMMapper {
         private void expectNextAction(final AbstractAction action) {
             logDebugInContext("Expecting next action " + PCMHelper.entityToString(action), this);
             this.expectedAction = action;
-            if (SeffPackage.eINSTANCE.getExternalCallAction().isInstance(action)) {
+            if (isExternalCallAction(action)) {
                 this.currentDetector = new DetectExternalCallAction((ExternalCallAction) action, this,
                         this.seffToFQNMap);
-            } else if (SeffPackage.eINSTANCE.getInternalAction().isInstance(action)) {
+            } else if (isInternalAction(action)) {
                 this.currentDetector = new DetectInternalAction((InternalAction) action, this, this.seffToFQNMap);
-            } else if (SeffPackage.eINSTANCE.getStopAction().isInstance(action)) {
+            } else if (isStopAction(action)) {
                 this.currentDetector = null;
                 // currentDetector = new StopDetector(this);
-            } else if (SeffPackage.eINSTANCE.getBranchAction().isInstance(action)) {
+            } else if (isBranchAction(action)) {
                 this.currentDetector = new DetectBranchAction((BranchAction) action, this, this.seffToFQNMap);
             } else {
                 logWarnInContext("Could not find extractor for AbstractActions of type " + action.getClass()
                         + ". Continuing with successor...", this);
                 this.expectNextAction(action.getSuccessor_AbstractAction());
             }
+        }
+
+        private boolean isBranchAction(final AbstractAction action) {
+            return SeffPackage.eINSTANCE.getBranchAction().isInstance(action);
+        }
+
+        private boolean isStopAction(final AbstractAction action) {
+            return SeffPackage.eINSTANCE.getStopAction().isInstance(action);
+        }
+
+        private boolean isInternalAction(final AbstractAction action) {
+            return SeffPackage.eINSTANCE.getInternalAction().isInstance(action);
+        }
+
+        private boolean isExternalCallAction(final AbstractAction action) {
+            return SeffPackage.eINSTANCE.getExternalCallAction().isInstance(action);
         }
 
         public void leaveNestedContext() {
