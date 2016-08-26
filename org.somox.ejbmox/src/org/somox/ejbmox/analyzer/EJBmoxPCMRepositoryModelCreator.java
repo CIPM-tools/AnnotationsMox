@@ -96,7 +96,7 @@ public class EJBmoxPCMRepositoryModelCreator {
         this.basicComponent2EJBClassMap.put(basicComponent, ejbClass);
 
         // TODO
-        findTransactionAttributesForEJBMethods(ejbClass);
+//        findTransactionAttributesForEJBMethods(ejbClass);
     }
 
     private void findTransactionAttributesForEJBMethods(Class ejbClass) {
