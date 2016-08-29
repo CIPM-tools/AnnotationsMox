@@ -1,5 +1,6 @@
 package org.somox.ejbmox.inspectit2pcm.util;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,8 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.palladiosimulator.pcm.seff.seff_performance.ParametricResourceDemand;
 import org.palladiosimulator.pcm.seff.seff_performance.ResourceCall;
 import org.palladiosimulator.pcm.seff.seff_performance.SeffPerformanceFactory;
+import org.palladiosimulator.pcm.usagemodel.Start;
+import org.palladiosimulator.pcm.usagemodel.Stop;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 
@@ -125,38 +128,52 @@ public class PCMHelper {
 
     public static void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour,
             boolean keepReplaceAction) {
-        // first collect all actions in a new ArrayList to avoid
-        // ConcurrentModificationException thrown by EMF
+        // first collect all actions in a new ArrayList to avoid ConcurrentModificationException
+        // thrown by EMF
         List<AbstractAction> insertActions = new ArrayList<>(behaviour.getSteps_Behaviour());
 
         // adjust container (ResourceDemandingBehaviour) for all actions to be inserted
-        for (AbstractAction insertAction : insertActions) {
-            // ignore Start and Stop actions
-            if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
-                continue;
-            }
-            insertAction.setResourceDemandingBehaviour_AbstractAction(
-                    replaceAction.getResourceDemandingBehaviour_AbstractAction());
-        }
+        ResourceDemandingBehaviour container = replaceAction.getResourceDemandingBehaviour_AbstractAction();
+        moveToResourceDemandingBehaviour(insertActions, container);
 
-        AbstractAction predecessor = replaceAction.getPredecessor_AbstractAction();
-        predecessor.setSuccessor_AbstractAction(PCMHelper.findStartAction(behaviour).getSuccessor_AbstractAction());
+        AbstractAction actionBeforeReplace = replaceAction.getPredecessor_AbstractAction();
+        AbstractAction firstInsertedAction = PCMHelper.findStartAction(behaviour).getSuccessor_AbstractAction();
+        actionBeforeReplace.setSuccessor_AbstractAction(firstInsertedAction);
 
-        AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
-        successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
+        AbstractAction actionAfterReplace = replaceAction.getSuccessor_AbstractAction();
+        AbstractAction lastInsertedAction = PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction();
+        actionAfterReplace.setPredecessor_AbstractAction(lastInsertedAction);
 
         if (!keepReplaceAction) {
             // remove action that has been replaced
             replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
         } else {
-            AbstractAction stopAction = PCMHelper
-                    .findStopAction(replaceAction.getResourceDemandingBehaviour_AbstractAction());
-            insertBefore(replaceAction, stopAction);
+            insertAfter(replaceAction, lastInsertedAction);
         }
     }
 
     /**
-     * Inserts the specified action as a predecessor of {@code reference} action.
+     * Moves the actions in {@code insertActions} to the ResourceDemandingBehaviour identified by
+     * {@code behaviour}.
+     * <p>
+     * Actions of the types {@link StartAction} and {@link StopAction} are ignored.
+     * 
+     * @param insertActions
+     * @param behaviour
+     */
+    private static void moveToResourceDemandingBehaviour(List<AbstractAction> insertActions,
+            ResourceDemandingBehaviour behaviour) {
+        for (AbstractAction insertAction : insertActions) {
+            // ignore Start and Stop actions
+            if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
+                continue;
+            }
+            insertAction.setResourceDemandingBehaviour_AbstractAction(behaviour);
+        }
+    }
+
+    /**
+     * Inserts the specified action as the predecessor of {@code reference} action.
      * 
      * @param insert
      *            the action to be inserted
@@ -167,6 +184,20 @@ public class PCMHelper {
         AbstractAction oldPredecessorOfReference = reference.getPredecessor_AbstractAction();
         insert.setPredecessor_AbstractAction(oldPredecessorOfReference);
         reference.setPredecessor_AbstractAction(insert);
+    }
+
+    /**
+     * Inserts the specified action as the successor of {@code reference} action.
+     * 
+     * @param insert
+     *            the action to be inserted
+     * @param reference
+     *            the reference action
+     */
+    public static void insertAfter(AbstractAction insert, AbstractAction reference) {
+        AbstractAction oldSuccessorOfReference = reference.getSuccessor_AbstractAction();
+        reference.setSuccessor_AbstractAction(insert);
+        insert.setSuccessor_AbstractAction(oldSuccessorOfReference);
     }
 
     public static void ensureUniqueKeys(Map<? extends Entity, ?> map) {
