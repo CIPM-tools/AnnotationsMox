@@ -72,7 +72,10 @@ public class PCMParametrization implements Cloneable {
     public void mergeFrom(PCMParametrization other) {
         // merge resource demands
         for (Entry<InternalAction, List<Double>> entry : other.resourceDemandMap.entrySet()) {
-            resourceDemandMap.getOrDefault(entry.getKey(), new ArrayList<>()).addAll(entry.getValue());
+            InternalAction internalAction = entry.getKey();
+            List<Double> resourceDemands = entry.getValue();
+            resourceDemandMap.putIfAbsent(internalAction, new ArrayList<>());
+            resourceDemandMap.get(internalAction).addAll(resourceDemands);
         }
 
         // merge SQL statements
@@ -130,5 +133,22 @@ public class PCMParametrization implements Cloneable {
 
         return builder.toString();
     }
+
+//    public void saveToFile() {
+//        Writer fw = null;
+//        try {
+//            fw = new FileWriter("D:/debug.txt");
+//            fw.write(toString());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            if (fw != null)
+//                try {
+//                    fw.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//        }
+//    }
 
 }

@@ -1,7 +1,10 @@
 package org.somox.ejbmox.inspectit2pcm.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.palladiosimulator.pcm.core.CoreFactory;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
@@ -120,10 +123,13 @@ public class PCMHelper {
         return findSeffForBehaviour(behaviour);
     }
 
-    public static void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour) {
+    public static void replaceAction(AbstractAction replaceAction, ResourceDemandingBehaviour behaviour,
+            boolean keepReplaceAction) {
         // first collect all actions in a new ArrayList to avoid
         // ConcurrentModificationException thrown by EMF
         List<AbstractAction> insertActions = new ArrayList<>(behaviour.getSteps_Behaviour());
+
+        // adjust container (ResourceDemandingBehaviour) for all actions to be inserted
         for (AbstractAction insertAction : insertActions) {
             // ignore Start and Stop actions
             if (insertAction instanceof StartAction || insertAction instanceof StopAction) {
@@ -139,8 +145,40 @@ public class PCMHelper {
         AbstractAction successor = replaceAction.getSuccessor_AbstractAction();
         successor.setPredecessor_AbstractAction(PCMHelper.findStopAction(behaviour).getPredecessor_AbstractAction());
 
-        // remove action that has been replaced
-        replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
+        if (!keepReplaceAction) {
+            // remove action that has been replaced
+            replaceAction.setResourceDemandingBehaviour_AbstractAction(null);
+        } else {
+            AbstractAction stopAction = PCMHelper
+                    .findStopAction(replaceAction.getResourceDemandingBehaviour_AbstractAction());
+            insertBefore(replaceAction, stopAction);
+        }
+    }
+
+    /**
+     * Inserts the specified action as a predecessor of {@code reference} action.
+     * 
+     * @param insert
+     *            the action to be inserted
+     * @param reference
+     *            the reference action
+     */
+    public static void insertBefore(AbstractAction insert, AbstractAction reference) {
+        AbstractAction oldPredecessorOfReference = reference.getPredecessor_AbstractAction();
+        insert.setPredecessor_AbstractAction(oldPredecessorOfReference);
+        reference.setPredecessor_AbstractAction(insert);
+    }
+
+    public static void ensureUniqueKeys(Map<? extends Entity, ?> map) {
+        Set<String> seenKeys = new HashSet<>();
+        for (Entity key : map.keySet()) {
+            boolean added = seenKeys.add(key.getId());
+            // if key was contained already
+            if (!added) {
+                throw new RuntimeException("Entity " + entityToString(key)
+                        + " is contained more than once as a key because there are multiple objects for the same entity");
+            }
+        }
     }
 
 }

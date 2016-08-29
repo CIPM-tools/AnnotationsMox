@@ -24,7 +24,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 
     private Text txtCmrUrl;
     private Text txtWarmup;
-    private Button ensureInternalActionsBeforeStopAction;
+    private Button btnInternalActionsBeforeStop;
+    private Button btnSQLRefinement;
 
     /**
      * @wbp.parser.entryPoint
@@ -86,26 +87,33 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
         miscellaneousGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         miscellaneousGroup.setText("Miscellaneous");
         final GridLayout miscellaneousGroupLayout = new GridLayout();
-        miscellaneousGroupLayout.numColumns = 1;
         miscellaneousGroup.setLayout(miscellaneousGroupLayout);
 
-        this.ensureInternalActionsBeforeStopAction = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(
+        SelectionListener selectionListener = new SelectionListener() {
+
+            @Override
+            public void widgetDefaultSelected(final SelectionEvent e) {
+                InspectIT2PCMTab.this.setDirty(true);
+                InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
+            }
+
+            @Override
+            public void widgetSelected(final SelectionEvent e) {
+                InspectIT2PCMTab.this.setDirty(true);
+                InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
+            }
+
+        };
+
+        this.btnInternalActionsBeforeStop = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(
                 miscellaneousGroup, "Ensure InternalAction before StopAction",
                 "If set, we create one InternalAction before each StopAction in the SEFFs. This is necessary if SQL injection is used.",
-                new SelectionListener() {
+                selectionListener);
 
-                    @Override
-                    public void widgetDefaultSelected(final SelectionEvent e) {
-                        InspectIT2PCMTab.this.setDirty(true);
-                        InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
-                    }
-
-                    @Override
-                    public void widgetSelected(final SelectionEvent e) {
-                        InspectIT2PCMTab.this.setDirty(true);
-                        InspectIT2PCMTab.this.updateLaunchConfigurationDialog();
-                    }
-                });
+        this.btnSQLRefinement = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(miscellaneousGroup,
+                "Create Internal Action for each SQL statement",
+                "Refines coarse-grained Internal Actions with a sequence of one more fine-grained internal action, each representing an SQL statement; coarse-grained Internal Actions without SQL statements in their scope remain unchanged",
+                selectionListener);
     }
 
     @Override
@@ -116,6 +124,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
                 II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
                 II2PCMConfiguration.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
+                II2PCMConfiguration.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT);
     }
 
     @Override
@@ -125,10 +135,13 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
                     II2PCMConfiguration.CMR_REST_API_DEFAULT));
             this.txtWarmup.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
                     II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
-            this.ensureInternalActionsBeforeStopAction.setSelection(configuration.getAttribute(
-                    InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION, true));
+            this.btnInternalActionsBeforeStop.setSelection(configuration.getAttribute(
+                    InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
+                    II2PCMConfiguration.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT));
+            this.btnSQLRefinement.setSelection(configuration.getAttribute(
+                    InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
+                    II2PCMConfiguration.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT));
         } catch (final CoreException e) {
-            this.ensureInternalActionsBeforeStopAction.setSelection(true);
             e.printStackTrace();
         }
     }
@@ -137,9 +150,11 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL, this.txtCmrUrl.getText());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS, this.txtWarmup.getText());
-        final boolean ensureInternalActions = this.ensureInternalActionsBeforeStopAction.getSelection();
+        final boolean ensureInternalActions = this.btnInternalActionsBeforeStop.getSelection();
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
                 ensureInternalActions);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
+                btnSQLRefinement.getSelection());
     }
 
     @Override

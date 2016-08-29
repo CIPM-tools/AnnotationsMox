@@ -8,4 +8,6 @@ public class InspectIT2PCMConfigurationAttributes {
 
     public static final String ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION = "org.somox.ejbmox.inspectit2pcm.ensureInternalActionsBeforeSTOPAction";
 
+    public static final String REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS = "org.somox.ejbmox.inspectit2pcm.sql_refinement";
+
 }

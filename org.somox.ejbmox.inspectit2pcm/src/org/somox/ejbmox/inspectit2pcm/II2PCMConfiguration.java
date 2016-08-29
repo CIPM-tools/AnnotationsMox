@@ -16,6 +16,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     public static final Integer WARMUP_MEASUREMENTS_DEFAULT = 10;
 
     public static final Boolean ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT = true;
+    
+    public static final Boolean REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT = true;
 
     private final Map<String, Object> attributes;
 
@@ -25,6 +27,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     private Integer warmupLength = WARMUP_MEASUREMENTS_DEFAULT;
 
     private boolean ensureInternalActionsBeforeSTOPAction;
+    
+    private boolean refineSQLStatements;
 
     public II2PCMConfiguration(final Map<String, Object> attributes) {
         this.attributes = attributes;
@@ -56,6 +60,14 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
 
     public boolean isEnsureInternalActionsBeforeSTOPAction() {
         return this.ensureInternalActionsBeforeSTOPAction;
+    }
+    
+    public boolean isRefineSQLStatements() {
+        return refineSQLStatements;
+    }
+
+    public void setRefineSQLStatements(boolean refineSQLStatements) {
+        this.refineSQLStatements = refineSQLStatements;
     }
 
     @Override

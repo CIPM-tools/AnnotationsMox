@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
@@ -47,7 +48,7 @@ public class InvocationTree2PCMMapper {
 
     static {
         // TODO use config file
-        // Logger.getRootLogger().setLevel(Level.INFO);
+        // Logger.getRootLogger().setLevel(Level.DEBUG);
     }
 
     /**
@@ -107,8 +108,7 @@ public class InvocationTree2PCMMapper {
             return false;
         }
         final OperationSignature signature = firstExternalCall.getCalledService_ExternalService();
-        // TODO very hack solution right now!! check if interface/bean do
-        // match
+        // TODO very hacky solution right now!! check if interface/bean do match
         if (calledService.getMethodName().equals(signature.getEntityName())) {
             return true;
         } else {
@@ -123,7 +123,7 @@ public class InvocationTree2PCMMapper {
 
         final boolean isSame = callingService.toFQN().equals(seffFQN);
         if (!isSame) {
-            logErrorInContext("Expected internal action within SEFF " + seffFQN
+            logWarnInContext("Expected internal action within SEFF " + seffFQN
                     + ", but encountered internal action in scope of " + callingService.toFQN(), context);
         }
 
@@ -297,14 +297,14 @@ public class InvocationTree2PCMMapper {
             return SeffPackage.eINSTANCE.getExternalCallAction().isInstance(action);
         }
 
-        public void leaveNestedContext() {
-            logDebugInContext("Clearing nested context", this);
-            this.nestedContext = null;
-            this.proceedWithNextAction();
-        }
-
-        public void leaveContext() {
-            this.parent.leaveNestedContext();
+        public DetectionContext leave() {
+            if (parent == null) {
+                throw new RuntimeException("Cannot leave root context. Seems like a progamming error.");
+            }
+            logDebugInContext("Leaving context " + name, this);
+            parent.nestedContext = null;
+            parent.proceedWithNextAction();
+            return parent;
         }
 
         public boolean reachedStop() {
@@ -312,7 +312,8 @@ public class InvocationTree2PCMMapper {
         }
 
         public ScanningProgressListener getDetector() {
-            if (this.nestedContext != null && this.nestedContext.getDetector() != null) {
+            if (this.nestedContext != null && this.nestedContext
+                    .getDetector() != null) /* && !this.nestedContext.reachedStop() */ {
                 return this.nestedContext.getDetector();
             } else {
                 return this.currentDetector;
@@ -445,11 +446,11 @@ public class InvocationTree2PCMMapper {
         @Override
         public void externalCallEnd(final MethodIdent callingService, final MethodIdent calledService,
                 final double time) {
-            // TODO check if this is the expected call
-            final boolean match = isSameService(this.externalCall, calledService);
-            if (match) {
+            final boolean isExpectedServiceCall = isSameService(this.externalCall, calledService);
+            if (isExpectedServiceCall) {
                 logDebugInContext("Detected end of external call " + calledService.toFQN(), this.context);
-                this.context.leaveNestedContext();
+                // TODO improve following statement
+                this.context.nestedContext.leave();
             } else {
                 // TODO refine message
                 final String interfaceMethodFQN = this.externalCall.getCalledService_ExternalService()
@@ -527,14 +528,19 @@ public class InvocationTree2PCMMapper {
         }
 
         private void finalizeBranchDetection(final DetectionContext chosenContext) {
+            AbstractBranchTransition chosenTransition = this.transitionMap.get(chosenContext);
+
+            logDebugInContext("Detected branch transition " + PCMHelper.entityToString(chosenTransition)
+                    + " identified by context \"" + chosenContext.getName() + "\"", this.context);
+
             this.context.getParametrization().mergeFrom(chosenContext.parametrization);
-            this.context.getParametrization().captureBranchTransition(this.transitionMap.get(chosenContext));
+            this.context.getParametrization().captureBranchTransition(chosenTransition);
             this.context.proceedWithNextAction();
         }
 
         private boolean finalizeBranchDetectionIfNoRemainingCandidates(final List<DetectionContext> removedCandidates) {
             if (this.contextCandidates.isEmpty()) {
-                logDebugInContext("Finalizing branch detection.", this.context);
+                logDebugInContext("Finalizing branch detection...", this.context);
                 if (removedCandidates.size() > 1) {
                     logWarnInContext(
                             "Could not decide which branch transition to follow "
@@ -636,9 +642,9 @@ public class InvocationTree2PCMMapper {
         @Override
         public void internalActionBegin(final MethodIdent callingService, final double time) {
             if (!isWithinSameService(this.action, callingService, this.context)) {
-                this.context.leaveContext();
-                // delegate to parent context
-                this.context.parent.getDetector().internalActionBegin(callingService, time);
+                DetectionContext outerContext = this.context.leave();
+                // delegate to outer context
+                outerContext.getDetector().internalActionBegin(callingService, time);
                 return;
             }
 
@@ -653,9 +659,9 @@ public class InvocationTree2PCMMapper {
         @Override
         public void internalActionEnd(final MethodIdent callingService, final double time) {
             if (!isWithinSameService(this.action, callingService, this.context)) {
-                this.context.leaveContext();
-                // delegate to parent context
-                this.context.parent.getDetector().internalActionEnd(callingService, time);
+                DetectionContext outerContext = this.context.leave();
+                // delegate to outer context
+                outerContext.getDetector().internalActionEnd(callingService, time);
                 return;
             }
 
@@ -681,8 +687,16 @@ public class InvocationTree2PCMMapper {
         @Override
         public void externalCallBegin(final MethodIdent callingService, final MethodIdent calledService,
                 final double time) {
+            if (!isWithinSameService(this.action, callingService, this.context)) {
+                DetectionContext outerContext = this.context.leave();
+                // delegate to outer context
+                outerContext.getDetector().externalCallBegin(callingService, calledService, time);
+                return;
+            }
+
             logWarnInContext(
-                    "Encountered unexpected begin of external call, thus skipping internal action detection "
+                    "Encountered unexpected begin of external call, thus skipping detection of internal action "
+                            + PCMHelper.entityToString(action)
                             + "and continuing with its successor (...that is hopefully an external action).",
                     this.context);
             this.context.proceedWithNextAction();

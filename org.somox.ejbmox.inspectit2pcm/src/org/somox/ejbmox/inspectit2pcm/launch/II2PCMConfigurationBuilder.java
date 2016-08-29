@@ -17,6 +17,8 @@ public class II2PCMConfigurationBuilder extends AbstractWorkflowExtensionConfigu
         config.setWarmupLength(Integer.valueOf(warmUpAsString));
         config.setEnsureInternalActionsBeforeSTOPAction((boolean) attributes
                 .get(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION));
+        config.setRefineSQLStatements((boolean) attributes
+                .get(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS));
         return config;
     }
 

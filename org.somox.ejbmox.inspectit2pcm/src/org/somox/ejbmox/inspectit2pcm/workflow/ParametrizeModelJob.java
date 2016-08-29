@@ -1,5 +1,6 @@
 package org.somox.ejbmox.inspectit2pcm.workflow;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -18,6 +19,7 @@ import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
@@ -42,7 +44,11 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             // break;
         case MEAN:
             this.parametrizeResourceDemandsWithMean(this.getPartition().getParametrization());
-            this.parametrizeSQLStatementsWithMean(this.getPartition().getParametrization());
+            if (this.getPartition().getConfiguration().isRefineSQLStatements()) {
+                this.parametrizeSQLStatementsWithMean(this.getPartition().getParametrization());
+            } else {
+                logger.info("Skipping extraction of SQL statements");
+            }
             this.parametrizeBranchingProbabilities(this.getPartition().getParametrization());
             break;
         case MEDIAN:
@@ -63,15 +69,20 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         return "Parametrize PCM Model";
     }
 
+    /**
+     * Sets branching probabilities to "0" for all branches that are logged in the given
+     * parametrization and contain at least one branch transition.
+     * 
+     * @param parametrization
+     */
     private void resetBranchingProbabilities(final PCMParametrization parametrization) {
-        // collect all branches for which there is at least one branching
-        // probability
+        // collect all branches with at least one branch transition
         final Set<BranchAction> branches = new HashSet<>();
         for (final AbstractBranchTransition t : parametrization.getBranchTransitionMap().keySet()) {
             branches.add(t.getBranchAction_AbstractBranchTransition());
         }
 
-        // reset branching probabilities
+        // reset branching probabilities to "0"
         for (final BranchAction branch : branches) {
             for (final AbstractBranchTransition t : branch.getBranches_Branch()) {
                 ((ProbabilisticBranchTransition) t).setBranchProbability(0);
@@ -80,7 +91,9 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
     }
 
     private void parametrizeBranchingProbabilities(final PCMParametrization parametrization) {
+        // set branching probabilities to "0"
         this.resetBranchingProbabilities(parametrization);
+
         for (final Entry<AbstractBranchTransition, Integer> e : parametrization.getBranchTransitionMap().entrySet()) {
             // summarize invocation count of this transition and all sibling
             // transitions
@@ -99,13 +112,25 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
     }
 
     private void parametrizeResourceDemandsWithMean(final PCMParametrization parametrization) {
+//        parametrization.saveToFile();
+
+        // check assumption used below
+        PCMHelper.ensureUniqueKeys(parametrization.getResourceDemandMap());
+
         for (final Entry<InternalAction, List<Double>> e : parametrization.getResourceDemandMap().entrySet()) {
             final InternalAction action = e.getKey();
             final List<Double> demands = e.getValue();
 
             // calculate mean
-            final double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
-            final double mean = sum / demands.size();
+            final double mean = calculateMean(demands);
+
+            // if there is a demand > 0 already, something went wrong
+            String existingDemand = action.getResourceDemand_Action().get(0)
+                    .getSpecification_ParametericResourceDemand().getSpecification();
+            if (!(existingDemand.equals("0") || existingDemand.equals("0.0"))) {
+                throw new RuntimeException("Expecting demand '0' or '0.0'  for " + PCMHelper.entityToString(action)
+                        + ", but demand is " + existingDemand);
+            }
 
             // parametrize action
             final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
@@ -113,7 +138,13 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         }
     }
 
-    private boolean addPalladioTXProfile(final PCMParametrization parametrization) {
+    private double calculateMean(List<Double> demands) {
+        double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
+        double mean = sum / demands.size();
+        return mean;
+    }
+
+    private boolean addPalladioTXProfileToRepositoryModel(final PCMParametrization parametrization) {
         final InternalAction arbitraryRepositoryAction = parametrization.getResourceDemandMap().keySet().iterator()
                 .next();
         final Resource repositoryResource = arbitraryRepositoryAction.eResource();
@@ -131,9 +162,14 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
     // TODO simplify whole method
     private void parametrizeSQLStatementsWithMean(final PCMParametrization parametrization) {
-        boolean profileAddedSuccessfully = this.addPalladioTXProfile(parametrization);
-        if (parametrization.getSqlStatementMap().size() == 0 || !profileAddedSuccessfully) {
-            this.logger.warn("Can not parametrize SQL statements with mean.");
+        boolean profileAddedSuccessfully = this.addPalladioTXProfileToRepositoryModel(parametrization);
+        if (parametrization.getSqlStatementMap().size() == 0) {
+            this.logger.warn("Did not encounter any SQL statements while extracting SQL statements");
+            return;
+        }
+        if (!profileAddedSuccessfully) {
+            this.logger.warn(
+                    "Could not add Palladio.TX profile to repository model, skipping extraction of SQL statements");
             return;
         }
 
@@ -157,8 +193,37 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             // visitor stores resulting SEFF in rdb variable as side effect
             g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
 
-            PCMHelper.replaceAction(action, rdb);
+            boolean keepReplaceAction = true;
+            PCMHelper.replaceAction(action, rdb, keepReplaceAction);
+            
+            if (keepReplaceAction) {
+                // calculate adjusted resource demand of replace action
+                double unadjustedMeanDemand = calculateMean(parametrization.getResourceDemandMap().get(action));
+                double meanDemandCausedBySQLs = calculateMeanDemandOfSQLStatementSequence(sequences);
+                double adjustedDemand = unadjustedMeanDemand - meanDemandCausedBySQLs; // should be
+                                                                                       // > 0
+
+                // adjust resource demand of replace action
+                final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(adjustedDemand);
+                action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
+            }
         }
+    }
+
+    private double calculateMeanDemandOfSQLStatementSequence(List<SQLStatementSequence> sequences) {
+        // contains the cumulative demand ("duration") for each SQLStatementSequence contained in
+        // sequences
+        List<Double> demands = new ArrayList<>();
+        for (SQLStatementSequence sequence : sequences) {
+            // TODO move to class SQLStatementSequence?
+            double sumOfDuration = 0;
+            for (SQLStatement stmt : sequence.getSequence()) {
+                sumOfDuration += stmt.getDuration();
+            }
+            demands.add(sumOfDuration);
+        }
+        double mean = calculateMean(demands);
+        return mean;
     }
 
 }
