@@ -19,7 +19,7 @@ import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
  * @author Philipp Merkle
  *
  */
-public class PCMParametrization implements Cloneable {
+public class PCMParametrization {
 
     private Map<InternalAction, List<Double>> resourceDemandMap;
 
@@ -91,13 +91,6 @@ public class PCMParametrization implements Cloneable {
                 captureBranchTransition(entry.getKey());
             }
         }
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        PCMParametrization clone = new PCMParametrization();
-        clone.mergeFrom(this);
-        return clone;
     }
 
     public Map<AbstractBranchTransition, Integer> getBranchTransitionMap() {
