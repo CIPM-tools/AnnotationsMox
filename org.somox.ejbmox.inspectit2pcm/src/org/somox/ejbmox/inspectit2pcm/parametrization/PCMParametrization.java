@@ -1,5 +1,9 @@
 package org.somox.ejbmox.inspectit2pcm.parametrization;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,21 +131,21 @@ public class PCMParametrization {
         return builder.toString();
     }
 
-//    public void saveToFile() {
-//        Writer fw = null;
-//        try {
-//            fw = new FileWriter("D:/debug.txt");
-//            fw.write(toString());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            if (fw != null)
-//                try {
-//                    fw.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//        }
-//    }
+    public void saveToFile(File file) {
+        Writer fw = null;
+        try {
+            fw = new FileWriter(file);
+            fw.write(toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (fw != null)
+                try {
+                    fw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
 
 }

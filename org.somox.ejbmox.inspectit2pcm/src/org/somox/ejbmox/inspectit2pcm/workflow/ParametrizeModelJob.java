@@ -1,12 +1,17 @@
 package org.somox.ejbmox.inspectit2pcm.workflow;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.palladiosimulator.mdsdprofiles.api.ProfileAPI;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
@@ -16,6 +21,7 @@ import org.palladiosimulator.pcm.seff.InternalAction;
 import org.palladiosimulator.pcm.seff.ProbabilisticBranchTransition;
 import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
+import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
@@ -31,6 +37,9 @@ import de.uka.ipd.sdq.workflow.jobs.JobFailedException;
 import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 
 public class ParametrizeModelJob extends AbstractII2PCMJob {
+
+    // TODO make configurable via launch configuration
+    private final static boolean SAVE_DEBUG_OUTPUT = true;
 
     @Override
     public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
@@ -112,8 +121,6 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
     }
 
     private void parametrizeResourceDemandsWithMean(final PCMParametrization parametrization) {
-//        parametrization.saveToFile();
-
         // check assumption used below
         PCMHelper.ensureUniqueKeys(parametrization.getResourceDemandMap());
 
@@ -136,6 +143,28 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
             action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
         }
+
+        if (SAVE_DEBUG_OUTPUT) {
+            dumpParametrizationToFile(parametrization);
+        }
+    }
+
+    private void dumpParametrizationToFile(final PCMParametrization parametrization) {
+        String outputFolder = (String) getPartition().getConfiguration().getAttributes()
+                .get(AbstractMoxConfiguration.SOMOX_OUTPUT_FOLDER);
+        URI outputFolderUri = URI.createPlatformResourceURI(outputFolder, true);
+        URI debugFileUri = outputFolderUri.appendSegment("ejbmox.ii2pcm.parametrization.txt");
+        URL resolvedUrl = null;
+        try {
+            URL url = new URL(debugFileUri.toString());
+            resolvedUrl = FileLocator.resolve(url);
+
+        } catch (IOException e) {
+            logger.error("Error while saving debug output", e);
+        }
+
+        File f = new File(resolvedUrl.getFile());
+        parametrization.saveToFile(f);
     }
 
     private double calculateMean(List<Double> demands) {
@@ -195,7 +224,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
             boolean keepReplaceAction = true;
             PCMHelper.replaceAction(action, rdb, keepReplaceAction);
-            
+
             if (keepReplaceAction) {
                 // calculate adjusted resource demand of replace action
                 double unadjustedMeanDemand = calculateMean(parametrization.getResourceDemandMap().get(action));
