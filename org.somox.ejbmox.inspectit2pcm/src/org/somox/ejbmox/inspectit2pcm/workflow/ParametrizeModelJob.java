@@ -3,7 +3,6 @@ package org.somox.ejbmox.inspectit2pcm.workflow;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,9 +24,10 @@ import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
-import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.parametrization.DistributionAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.parametrization.InternalActionInvocation;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementsToPCM;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
@@ -45,27 +45,27 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
     public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
         this.logger.info("Storing monitored runtime behaviour to PCM model...");
 
-        // TODO make configurable;
-        final AggregationStrategy aggregation = AggregationStrategy.MEAN;
-        switch (aggregation) {
-        case HISTOGRAM:
-            throw new UnsupportedOperationException();
-            // break;
-        case MEAN:
-            this.parametrizeResourceDemandsWithMean(this.getPartition().getParametrization());
-            if (this.getPartition().getConfiguration().isRefineSQLStatements()) {
-                this.parametrizeSQLStatementsWithMean(this.getPartition().getParametrization());
-            } else {
-                logger.info("Skipping extraction of SQL statements");
+        final PCMParametrization parametrization = this.getPartition().getParametrization();
+        // TODO make configurable
+        final AggregationStrategy aggregation = new DistributionAggregationStrategy(); // MeanAggregationStrategy();
+        boolean refineSQL = this.getPartition().getConfiguration().isRefineSQLStatements();
+
+        if (refineSQL) {
+            // try adding Palladio.TX profile to PCM Repository
+            InternalAction arbitraryInternalAction = parametrization.getInternalActionMap().keySet().iterator().next();
+            final Resource repositoryResource = arbitraryInternalAction.eResource();
+            boolean profileAddedSuccessfully = this.addPalladioTXProfileToRepositoryModel(repositoryResource);
+            if (!profileAddedSuccessfully) {
+                this.logger.warn(
+                        "Could not add Palladio.TX profile to repository model, skipping extraction of SQL statements");
+                refineSQL = false;
             }
-            this.parametrizeBranchingProbabilities(this.getPartition().getParametrization());
-            break;
-        case MEDIAN:
-            throw new UnsupportedOperationException();
-            // break;
-        default:
-            throw new RuntimeException("Unknown aggregation strategy: " + aggregation);
+        } else {
+            logger.info("Skipping extraction of SQL statements");
         }
+
+        this.parametrizeInternalActions(parametrization, aggregation, refineSQL);
+        this.parametrizeBranchingProbabilities(parametrization);
     }
 
     @Override
@@ -120,16 +120,15 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         }
     }
 
-    private void parametrizeResourceDemandsWithMean(final PCMParametrization parametrization) {
+    private void parametrizeInternalActions(final PCMParametrization parametrization,
+            AggregationStrategy aggregationStrategy, boolean refineSQL) {
         // check assumption used below
-        PCMHelper.ensureUniqueKeys(parametrization.getResourceDemandMap());
+        PCMHelper.ensureUniqueKeys(parametrization.getInternalActionMap());
 
-        for (final Entry<InternalAction, List<Double>> e : parametrization.getResourceDemandMap().entrySet()) {
+        for (final Entry<InternalAction, List<InternalActionInvocation>> e : parametrization.getInternalActionMap()
+                .entrySet()) {
             final InternalAction action = e.getKey();
-            final List<Double> demands = e.getValue();
-
-            // calculate mean
-            final double mean = calculateMean(demands);
+            final List<InternalActionInvocation> invocations = e.getValue();
 
             // if there is a demand > 0 already, something went wrong
             String existingDemand = action.getResourceDemand_Action().get(0)
@@ -139,9 +138,11 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
                         + ", but demand is " + existingDemand);
             }
 
-            // parametrize action
-            final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(mean);
-            action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
+            if (!refineSQL) {
+                parametrizeInternalActionWithoutSQL(aggregationStrategy, action, invocations);
+            } else {
+                parametrizeInternalActionWithSQL(aggregationStrategy, action, invocations);
+            }
         }
 
         if (SAVE_DEBUG_OUTPUT) {
@@ -149,35 +150,47 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         }
     }
 
-    private void dumpParametrizationToFile(final PCMParametrization parametrization) {
-        String outputFolder = (String) getPartition().getConfiguration().getAttributes()
-                .get(AbstractMoxConfiguration.SOMOX_OUTPUT_FOLDER);
-        URI outputFolderUri = URI.createPlatformResourceURI(outputFolder, true);
-        URI debugFileUri = outputFolderUri.appendSegment("ejbmox.ii2pcm.parametrization.txt");
-        URL resolvedUrl = null;
-        try {
-            URL url = new URL(debugFileUri.toString());
-            resolvedUrl = FileLocator.resolve(url);
+    private void parametrizeInternalActionWithoutSQL(AggregationStrategy aggregationStrategy,
+            final InternalAction action, final List<InternalActionInvocation> invocations) {
+        // perform desired aggregation and obtain PCM random variable
+        List<Double> durations = InternalActionInvocation.selectDurations(invocations);
+        PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
 
-        } catch (IOException e) {
-            logger.error("Error while saving debug output", e);
-        }
+        // parametrize action
+        action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
+    }
+
+    private void dumpParametrizationToFile(final PCMParametrization parametrization) {
+        // create URI to debug file, which may be platform specific, i.e. of the form platform:/...
+        URI debugFileUri = createDebugFileURI();
+
+        // transform platform-relative path to file system path
+        URL resolvedUrl = resolveURI(debugFileUri);
 
         File f = new File(resolvedUrl.getFile());
         parametrization.saveToFile(f);
     }
 
-    private double calculateMean(List<Double> demands) {
-        double sum = demands.stream().mapToDouble(Double::doubleValue).sum();
-        double mean = sum / demands.size();
-        return mean;
+    private URI createDebugFileURI() {
+        String outputFolder = (String) getPartition().getConfiguration().getAttributes()
+                .get(AbstractMoxConfiguration.SOMOX_OUTPUT_FOLDER);
+        URI outputFolderUri = URI.createPlatformResourceURI(outputFolder, true);
+        URI debugFileUri = outputFolderUri.appendSegment("ejbmox.ii2pcm.parametrization.txt");
+        return debugFileUri;
     }
 
-    private boolean addPalladioTXProfileToRepositoryModel(final PCMParametrization parametrization) {
-        final InternalAction arbitraryRepositoryAction = parametrization.getResourceDemandMap().keySet().iterator()
-                .next();
-        final Resource repositoryResource = arbitraryRepositoryAction.eResource();
+    private URL resolveURI(URI debugFileUri) {
+        URL resolvedUrl;
+        try {
+            URL url = new URL(debugFileUri.toString());
+            resolvedUrl = FileLocator.resolve(url);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not resolve URL " + debugFileUri.toString(), e);
+        }
+        return resolvedUrl;
+    }
 
+    private boolean addPalladioTXProfileToRepositoryModel(Resource repositoryResource) {
         boolean sucess = false;
         try {
             ProfileAPI.applyProfile(repositoryResource, "PCMTransactional");
@@ -189,70 +202,42 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         return sucess;
     }
 
-    // TODO simplify whole method
-    private void parametrizeSQLStatementsWithMean(final PCMParametrization parametrization) {
-        boolean profileAddedSuccessfully = this.addPalladioTXProfileToRepositoryModel(parametrization);
-        if (parametrization.getSqlStatementMap().size() == 0) {
-            this.logger.warn("Did not encounter any SQL statements while extracting SQL statements");
-            return;
-        }
-        if (!profileAddedSuccessfully) {
-            this.logger.warn(
-                    "Could not add Palladio.TX profile to repository model, skipping extraction of SQL statements");
+    private void parametrizeInternalActionWithSQL(AggregationStrategy aggregationStrategy, final InternalAction action,
+            final List<InternalActionInvocation> invocations) {
+        if (InternalActionInvocation.selectNonEmptySQLSequences(invocations).isEmpty()) {
+            parametrizeInternalActionWithoutSQL(aggregationStrategy, action, invocations);
             return;
         }
 
-        for (final Entry<InternalAction, List<SQLStatementSequence>> e : parametrization.getSqlStatementMap()
-                .entrySet()) {
-            final SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
-
-            // learn graph from paths (SQL statement sequences)
-            final InternalAction action = e.getKey();
-            final List<SQLStatementSequence> sequences = e.getValue();
-            for (final SQLStatementSequence s : sequences) {
-                sql2pcm.addStatementSequence(s);
-            }
-            final SPGraph g = sql2pcm.getLearner().getGraph();
-
-            // create SEFF from graph (assumes "verbose" representation)
-            final ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
-            g.toVerboseRepresentation();
-            g.traverse(new InvocationProbabilityVisitor());
-
-            // visitor stores resulting SEFF in rdb variable as side effect
-            g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
-
-            boolean keepReplaceAction = true;
-            PCMHelper.replaceAction(action, rdb, keepReplaceAction);
-
-            if (keepReplaceAction) {
-                // calculate adjusted resource demand of replace action
-                double unadjustedMeanDemand = calculateMean(parametrization.getResourceDemandMap().get(action));
-                double meanDemandCausedBySQLs = calculateMeanDemandOfSQLStatementSequence(sequences);
-                double adjustedDemand = unadjustedMeanDemand - meanDemandCausedBySQLs; // should be
-                                                                                       // > 0
-
-                // adjust resource demand of replace action
-                final PCMRandomVariable rv = PCMHelper.createPCMRandomVariable(adjustedDemand);
-                action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
-            }
+        // learn graph from paths (SQL statement sequences)
+        final SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
+        final List<SQLStatementSequence> sequences = InternalActionInvocation.selectNonEmptySQLSequences(invocations);
+        for (final SQLStatementSequence s : sequences) {
+            sql2pcm.addStatementSequence(s);
         }
-    }
+        final SPGraph g = sql2pcm.getLearner().getGraph();
 
-    private double calculateMeanDemandOfSQLStatementSequence(List<SQLStatementSequence> sequences) {
-        // contains the cumulative demand ("duration") for each SQLStatementSequence contained in
-        // sequences
-        List<Double> demands = new ArrayList<>();
-        for (SQLStatementSequence sequence : sequences) {
-            // TODO move to class SQLStatementSequence?
-            double sumOfDuration = 0;
-            for (SQLStatement stmt : sequence.getSequence()) {
-                sumOfDuration += stmt.getDuration();
-            }
-            demands.add(sumOfDuration);
+        // create SEFF from graph (assumes "verbose" representation)
+        final ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
+        g.toVerboseRepresentation();
+        g.traverse(new InvocationProbabilityVisitor());
+
+        // visitor stores resulting SEFF in rdb variable as side effect
+        g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
+
+        // TODO make configurable?
+        final boolean KEEP_REPLACE_ACTION = true;
+        PCMHelper.replaceAction(action, rdb, KEEP_REPLACE_ACTION);
+
+        if (KEEP_REPLACE_ACTION) {
+            // perform desired aggregation and obtain PCM random variable
+            List<Double> durations = InternalActionInvocation.selectDurationsWithoutSQL(invocations);
+            PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
+
+            // adjust resource demand of replace action
+            action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
         }
-        double mean = calculateMean(demands);
-        return mean;
+
     }
 
 }

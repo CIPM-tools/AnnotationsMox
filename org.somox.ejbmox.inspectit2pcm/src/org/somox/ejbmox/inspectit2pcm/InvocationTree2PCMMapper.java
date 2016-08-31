@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
@@ -23,7 +22,6 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
-import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
@@ -672,11 +670,9 @@ public class InvocationTree2PCMMapper {
             final double difference = time - this.timeBegin;
             logInfoInContext("Successfully detected internal action, execution time is " + difference, this.context);
 
-            this.context.getParametrization().captureResourceDemand(this.action, difference);
-
-            // capture SQL statements, if present
+            // capture duration and encountered SQL statements, if present
+            this.context.getParametrization().captureInternalAction(this.action, difference, this.sqlStatements);
             if (this.sqlStatements.size() > 0) {
-                this.context.getParametrization().captureSQLStatementSequence(this.action, this.sqlStatements);
                 logInfoInContext("Detected " + this.sqlStatements.size() + " SQL statements within internal action.",
                         this.context);
             }

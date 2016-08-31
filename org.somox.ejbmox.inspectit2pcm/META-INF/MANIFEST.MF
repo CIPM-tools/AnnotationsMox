@@ -19,7 +19,8 @@ Require-Bundle: com.google.gson,
  org.eclipse.debug.ui,
  org.eclipse.swt,
  de.uka.ipd.sdq.workflow.launchconfig,
- org.somox.ui
+ org.somox.ui,
+ org.apache.commons.math3;bundle-version="3.6.1"
 Export-Package: org.somox.ejbmox.inspectit2pcm,
  org.somox.ejbmox.inspectit2pcm.launch,
  org.somox.ejbmox.inspectit2pcm.model,

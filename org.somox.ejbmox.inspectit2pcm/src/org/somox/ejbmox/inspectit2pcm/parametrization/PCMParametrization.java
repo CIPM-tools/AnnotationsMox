@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.palladiosimulator.pcm.seff.AbstractBranchTransition;
 import org.palladiosimulator.pcm.seff.InternalAction;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
+import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 /**
  * Container that allows to collect various information required to parametrize a PCM model. In a
@@ -25,44 +27,28 @@ import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
  */
 public class PCMParametrization {
 
-    private Map<InternalAction, List<Double>> resourceDemandMap;
+    private Map<InternalAction, List<InternalActionInvocation>> internalActionMap;
 
-    private Map<InternalAction, List<SQLStatementSequence>> sqlStatementMap;
+    // private Map<InternalAction, List<SQLStatementSequence>> sqlStatementMap;
 
     private Map<AbstractBranchTransition, Integer> branchTransitionMap;
 
     // private Map<String, List<Integer>> loopIterationMap;
 
     public PCMParametrization() {
-        resourceDemandMap = new HashMap<>();
-        sqlStatementMap = new HashMap<>();
+        internalActionMap = new HashMap<>();
         branchTransitionMap = new HashMap<>();
     }
 
-    public void captureSQLStatementSequence(InternalAction action, SQLStatementSequence statements) {
-        if (action == null) {
-            throw new IllegalArgumentException("Action may not be null");
+    public void captureInternalAction(InternalAction action, double duration, SQLStatementSequence statements) {
+        Objects.requireNonNull(action);
+        if (duration < 0) {
+            throw new IllegalArgumentException("Duration may not be negative.");
         }
-        if (statements == null) {
-            throw new IllegalArgumentException("SQL Statements may not be null.");
-        }
-        if (!sqlStatementMap.containsKey(action)) {
-            sqlStatementMap.put(action, new ArrayList<>());
-        }
-        sqlStatementMap.get(action).add(statements);
-    }
 
-    public void captureResourceDemand(InternalAction action, double demand) {
-        if (action == null) {
-            throw new IllegalArgumentException("Action may not be null");
-        }
-        if (demand < 0) {
-            throw new IllegalArgumentException("Demand may not be negative.");
-        }
-        if (!resourceDemandMap.containsKey(action)) {
-            resourceDemandMap.put(action, new ArrayList<>());
-        }
-        resourceDemandMap.get(action).add(demand);
+        InternalActionInvocation invocation = new InternalActionInvocation(duration, statements);
+        internalActionMap.putIfAbsent(action, new ArrayList<>());
+        internalActionMap.get(action).add(invocation);
     }
 
     public void captureBranchTransition(AbstractBranchTransition transition) {
@@ -74,19 +60,12 @@ public class PCMParametrization {
     }
 
     public void mergeFrom(PCMParametrization other) {
-        // merge resource demands
-        for (Entry<InternalAction, List<Double>> entry : other.resourceDemandMap.entrySet()) {
+        // merge internal action invocations
+        for (Entry<InternalAction, List<InternalActionInvocation>> entry : other.getInternalActionMap().entrySet()) {
             InternalAction internalAction = entry.getKey();
-            List<Double> resourceDemands = entry.getValue();
-            resourceDemandMap.putIfAbsent(internalAction, new ArrayList<>());
-            resourceDemandMap.get(internalAction).addAll(resourceDemands);
-        }
-
-        // merge SQL statements
-        for (Entry<InternalAction, List<SQLStatementSequence>> entry : other.sqlStatementMap.entrySet()) {
-            for (SQLStatementSequence stmtSequence : entry.getValue()) {
-                captureSQLStatementSequence(entry.getKey(), stmtSequence);
-            }
+            List<InternalActionInvocation> invocations = entry.getValue();
+            internalActionMap.putIfAbsent(internalAction, new ArrayList<>());
+            internalActionMap.get(internalAction).addAll(invocations);
         }
 
         // merge branch transitions
@@ -101,33 +80,34 @@ public class PCMParametrization {
         return branchTransitionMap;
     }
 
-    public Map<InternalAction, List<Double>> getResourceDemandMap() {
-        return resourceDemandMap;
+    public Map<InternalAction, List<InternalActionInvocation>> getInternalActionMap() {
+        return internalActionMap;
     }
 
-    public Map<InternalAction, List<SQLStatementSequence>> getSqlStatementMap() {
-        return sqlStatementMap;
-    }
-
-    @Override
-    public String toString() {
+    public String toDebugString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("==== Resource Demands =============\n");
-        for (Entry<InternalAction, List<Double>> e : resourceDemandMap.entrySet()) {
-            builder.append(e.getKey().getEntityName() + ": " + e.getValue().toString() + "\n");
-        }
-        builder.append("==== SQL Statements ===============\n");
-        for (Entry<InternalAction, List<SQLStatementSequence>> e : sqlStatementMap.entrySet()) {
-            builder.append(e.getKey().getEntityName() + ": \n");
-            for (SQLStatementSequence s : e.getValue()) {
+
+        for (Entry<InternalAction, List<InternalActionInvocation>> e : internalActionMap.entrySet()) {
+            builder.append("=== " + PCMHelper.entityToString(e.getKey()) + " ===");
+
+            List<Double> durations = new ArrayList<>();
+            List<SQLStatementSequence> statementSequences = new ArrayList<>();
+            for (InternalActionInvocation invocation : e.getValue()) {
+                durations.add(invocation.getDuration());
+                statementSequences.add(invocation.getSqlSequence());
+            }
+
+            builder.append("--- Resource Demands --------------\n");
+            builder.append(durations.toString() + "\n");
+
+            builder.append("--- SQL Statements -----------------\n");
+            for (SQLStatementSequence s : statementSequences) {
                 for (SQLStatement stmt : s.getSequence()) {
                     builder.append("    " + stmt + " \n");
                 }
-                builder.append("--\n");
+                builder.append("***\n");
             }
-            builder.append("--------\n");
         }
-
         return builder.toString();
     }
 
@@ -135,7 +115,7 @@ public class PCMParametrization {
         Writer fw = null;
         try {
             fw = new FileWriter(file);
-            fw.write(toString());
+            fw.write(toDebugString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

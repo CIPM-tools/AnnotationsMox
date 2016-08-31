@@ -1,12 +1,11 @@
 package org.somox.ejbmox.inspectit2pcm.parametrization;
 
-/**
- * 
- * @author Philipp Merkle
- *
- */
-public enum AggregationStrategy {
+import java.util.Collection;
 
-    HISTOGRAM, MEAN, MEDIAN;
+import org.palladiosimulator.pcm.core.PCMRandomVariable;
 
+public interface AggregationStrategy {
+
+    public PCMRandomVariable aggregate(Collection<Double> values);
+    
 }

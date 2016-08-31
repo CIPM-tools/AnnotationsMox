@@ -42,6 +42,12 @@ public class PCMHelper {
         // do not instantiate
     }
 
+    public static PCMRandomVariable createPCMRandomVariable(String stoEx) {
+        PCMRandomVariable rv = CoreFactory.eINSTANCE.createPCMRandomVariable();
+        rv.setSpecification(stoEx);
+        return rv;
+    }
+
     public static PCMRandomVariable createPCMRandomVariable(int count) {
         PCMRandomVariable rv = CoreFactory.eINSTANCE.createPCMRandomVariable();
         rv.setSpecification(Integer.toString(count));

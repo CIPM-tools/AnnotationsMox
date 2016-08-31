@@ -28,6 +28,7 @@ public class SQLStatementsToPCM {
         SQLStatementSequence filtered = new SQLStatementSequence();
         for (SQLStatement stmt : sequence.getSequence()) {
             // TODO make configurable
+            // remove comments and metadata queries
             if (stmt.getSql().startsWith("/*") || stmt.getSql().startsWith("SELECT @@")) {
                 continue;
             }
