@@ -34,12 +34,6 @@ public class InvocationGraphLearner extends GraphLearner {
                 LeafNode addNode = (LeafNode) addIterator.next();
                 LeafNode combinedNode = (LeafNode) combinedIterator.next();
 
-                // check for possible programming error
-                if (!(addNode.getContent() instanceof SQLStatement)
-                        || !(combinedNode.getContent() instanceof SQLStatement)) {
-                    throw new IllegalStateException("Unexpected content type of node.");
-                }
-
                 // check for another possible programming error
                 if (!addNode.getContent().equals(combinedNode.getContent())) {
                     throw new IllegalStateException("Node mismatch");
