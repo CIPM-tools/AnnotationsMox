@@ -51,7 +51,9 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
                 continue;
             }
             final InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
-            this.logger.debug("Scanning invocation sequence " + i + " out of " + invocationIds.size() + "...");
+            if (i % 100 == 0) {
+                this.logger.info("Scanning invocation sequence " + i + " out of " + invocationIds.size() + "...");
+            }
             scanner.scanInvocationTree(invocation);
             monitor.worked(1);
         }
