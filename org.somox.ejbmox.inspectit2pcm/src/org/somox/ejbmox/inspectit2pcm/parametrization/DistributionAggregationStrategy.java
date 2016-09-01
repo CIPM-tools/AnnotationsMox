@@ -9,13 +9,23 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class DistributionAggregationStrategy implements AggregationStrategy {
 
-    public static final int BIN_COUNT = 10;
+    public static final int DEFAULT_BIN_COUNT = 10;
+
+    private int binCount;
+
+    public DistributionAggregationStrategy() {
+        this(DEFAULT_BIN_COUNT);
+    }
+
+    public DistributionAggregationStrategy(int binCount) {
+        this.binCount = binCount;
+    }
 
     @Override
     public PCMRandomVariable aggregate(Collection<Double> values) {
         double[] data = values.stream().mapToDouble(i -> i).toArray();
 
-        EmpiricalDistribution distribution = new EmpiricalDistribution(BIN_COUNT);
+        EmpiricalDistribution distribution = new EmpiricalDistribution(binCount);
         distribution.load(data);
 
         StringBuilder stoExBuilder = new StringBuilder().append("DoublePDF[");

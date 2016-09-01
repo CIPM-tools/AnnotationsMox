@@ -1,7 +1,9 @@
 package org.somox.ejbmox.inspectit2pcm.graphlearner;
 
+import java.util.List;
 import java.util.Stack;
 
+import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.palladiosimulator.pcm.seff.AbstractAction;
 import org.palladiosimulator.pcm.seff.BranchAction;
 import org.palladiosimulator.pcm.seff.InternalAction;
@@ -18,6 +20,7 @@ import org.somox.ejbmox.graphlearner.node.ParallelNode;
 import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
+import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
@@ -27,12 +30,15 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
 
     private ParametrizationTrace trace;
 
-    public Graph2SEFFVisitor() {
-        this(new ParametrizationTrace());
+    private AggregationStrategy aggregationStrategy;
+
+    public Graph2SEFFVisitor(AggregationStrategy aggregationStrategy) {
+        this(new ParametrizationTrace(), aggregationStrategy);
     }
 
-    public Graph2SEFFVisitor(ParametrizationTrace trace) {
+    public Graph2SEFFVisitor(ParametrizationTrace trace, AggregationStrategy aggregationStrategy) {
         this.trace = trace;
+        this.aggregationStrategy = aggregationStrategy;
         lastActionStack = new Stack<>();
     }
 
@@ -46,13 +52,13 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
         if (n.getContent() instanceof SQLStatement) {
             SQLStatement stmt = (SQLStatement) n.getContent();
 
-            // calculate mean duration
+            // aggregate durations
             int invocationCount = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
-            double durationTotal = (double) n.getAttribute(NodeAttribute.DURATION_TOTAL);
-            double durationMean = durationTotal / invocationCount;
+            List<Double> durations = (List<Double>) n.getAttribute(NodeAttribute.DURATIONS);
+            PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
 
             // store mean duration into model
-            ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(durationMean));
+            ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(rv));
             trace.addInternalActionToSQLStatementLink(ia, stmt);
         }
 

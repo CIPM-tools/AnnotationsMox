@@ -22,6 +22,7 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
+import org.somox.ejbmox.graphlearner.Visitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
@@ -29,6 +30,7 @@ import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.DistributionAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.InternalActionInvocation;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
+import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
 import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementsToPCM;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
@@ -223,7 +225,9 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         g.traverse(new InvocationProbabilityVisitor());
 
         // visitor stores resulting SEFF in rdb variable as side effect
-        g.traverse(new Graph2SEFFVisitor(this.getPartition().getTrace()), rdb);
+        ParametrizationTrace trace = this.getPartition().getTrace();
+        Graph2SEFFVisitor visitor = new Graph2SEFFVisitor(trace, aggregationStrategy);
+        g.traverse(visitor, rdb);
 
         // TODO make configurable?
         final boolean KEEP_REPLACE_ACTION = true;

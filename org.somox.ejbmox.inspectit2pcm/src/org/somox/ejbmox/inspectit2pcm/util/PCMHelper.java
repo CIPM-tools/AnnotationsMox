@@ -60,9 +60,9 @@ public class PCMHelper {
         return rv;
     }
 
-    public static ParametricResourceDemand createParametricResourceDemandCPU(double demand) {
+    public static ParametricResourceDemand createParametricResourceDemandCPU(PCMRandomVariable demand) {
         ParametricResourceDemand prd = SeffPerformanceFactory.eINSTANCE.createParametricResourceDemand();
-        prd.setSpecification_ParametericResourceDemand(createPCMRandomVariable(demand));
+        prd.setSpecification_ParametericResourceDemand(demand);
 
         ProcessingResourceType cpu = DefaultResourceEnvironment.getCPUProcessingResourceType();
         prd.setRequiredResource_ParametricResourceDemand(cpu);
@@ -107,7 +107,7 @@ public class PCMHelper {
         InternalAction ia = SeffFactory.eINSTANCE.createInternalAction();
         ia.setResourceDemandingBehaviour_AbstractAction(container);
         ia.setEntityName(name);
-        ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(0));
+        ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(createPCMRandomVariable(0)));
         return ia;
     }
 

@@ -1,5 +1,6 @@
 package org.somox.ejbmox.inspectit2pcm.graphlearner;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,15 +45,16 @@ public class InvocationGraphLearner extends GraphLearner {
                     throw new IllegalStateException("Node mismatch");
                 }
 
-                Double duration = (Double) combinedNode.getAttribute(NodeAttribute.DURATION_TOTAL);
-                if (duration == null) {
-                    duration = 0.0;
+                List<Double> durations = (List<Double>) combinedNode.getAttribute(NodeAttribute.DURATIONS);
+                if (durations == null) {
+                    durations = new ArrayList<>();
+                    combinedNode.setAttribute(NodeAttribute.DURATIONS, durations);
                 }
                 // the use of (inclusive) duration should make no difference to using exclusive
                 // duration because SQL statements don't have child invocations, so that
                 // inclusive == exclusive
                 double addDuration = ((SQLStatement) addNode.getContent()).getDuration();
-                combinedNode.setAttribute(NodeAttribute.DURATION_TOTAL, duration + addDuration);
+                durations.add(addDuration);
             }
         }
 
