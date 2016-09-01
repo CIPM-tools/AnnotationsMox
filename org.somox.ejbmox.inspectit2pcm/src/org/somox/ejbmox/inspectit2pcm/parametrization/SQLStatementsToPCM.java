@@ -8,7 +8,7 @@ import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
-import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.SQLInvocationGraphLearner;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
@@ -16,7 +16,7 @@ public class SQLStatementsToPCM {
 
     private static final Logger LOG = Logger.getLogger(SQLStatementsToPCM.class);
 
-    private GraphLearner learner = new InvocationGraphLearner();
+    private GraphLearner learner = new SQLInvocationGraphLearner();
 
     public void addStatementSequence(SQLStatementSequence sequence) {
         Path path = pathFromStatementSequence(filter(sequence));

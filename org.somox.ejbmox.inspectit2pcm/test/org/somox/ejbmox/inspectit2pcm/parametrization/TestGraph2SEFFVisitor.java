@@ -42,7 +42,7 @@ public class TestGraph2SEFFVisitor {
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
         learnedGraph.toVerboseRepresentation();
         learnedGraph.traverse(new InvocationProbabilityVisitor());
-        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+        learnedGraph.traverse(new Graph2SEFFVisitor(new MeanAggregationStrategy()), behaviour);
 
         Assert.assertEquals(3, behaviour.getSteps_Behaviour().size());
 
@@ -59,7 +59,7 @@ public class TestGraph2SEFFVisitor {
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
         learnedGraph.toVerboseRepresentation();
         learnedGraph.traverse(new InvocationProbabilityVisitor());
-        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+        learnedGraph.traverse(new Graph2SEFFVisitor(new MeanAggregationStrategy()), behaviour);
 
         Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
 
@@ -78,7 +78,7 @@ public class TestGraph2SEFFVisitor {
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
         learnedGraph.toVerboseRepresentation();
         learnedGraph.traverse(new InvocationProbabilityVisitor());
-        learnedGraph.traverse(new Graph2SEFFVisitor(), behaviour);
+        learnedGraph.traverse(new Graph2SEFFVisitor(new MeanAggregationStrategy()), behaviour);
 
         Assert.assertEquals(4, behaviour.getSteps_Behaviour().size());
 
