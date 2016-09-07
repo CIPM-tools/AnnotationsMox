@@ -84,6 +84,10 @@ public class PCMParametrization {
         return internalActionMap;
     }
 
+    public boolean isEmpty() {
+        return internalActionMap.isEmpty() && branchTransitionMap.isEmpty();
+    }
+
     public String toDebugString() {
         StringBuilder builder = new StringBuilder();
 

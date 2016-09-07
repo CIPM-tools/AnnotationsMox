@@ -22,7 +22,6 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
-import org.somox.ejbmox.graphlearner.Visitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
@@ -48,8 +47,14 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         this.logger.info("Storing monitored runtime behaviour to PCM model...");
 
         final PCMParametrization parametrization = this.getPartition().getParametrization();
+        if (parametrization.isEmpty()) {
+            logger.warn("Could not find any parametrization information. Skipping parametrization.");
+            return;
+        }
+
         // TODO make configurable
-        final AggregationStrategy aggregation = new DistributionAggregationStrategy(); // MeanAggregationStrategy();
+        final AggregationStrategy aggregation = new DistributionAggregationStrategy();
+        // final AggregationStrategy aggregation = new MeanAggregationStrategy();
         boolean refineSQL = this.getPartition().getConfiguration().isRefineSQLStatements();
 
         if (refineSQL) {
@@ -235,8 +240,8 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
         if (KEEP_REPLACE_ACTION) {
             // perform desired aggregation and obtain PCM random variable
-            List<Double> durations = InternalActionInvocation.selectDurationsWithoutSQL(invocations);
-            PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
+            List<Double> exclusiveDurations = InternalActionInvocation.selectDurationsWithoutSQL(invocations);
+            PCMRandomVariable rv = aggregationStrategy.aggregate(exclusiveDurations);
 
             // adjust resource demand of replace action
             action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);

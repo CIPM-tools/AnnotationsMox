@@ -28,7 +28,14 @@ public class InternalActionInvocation {
         // sum up durations of all statements in the sequence
         double sqlDuration = sqlSequence.getSequence().stream().mapToDouble(s -> s.getDuration()).sum();
 
-        return duration - sqlDuration;
+        double exclusiveDuration = duration - sqlDuration;
+
+        // fail fast in case there is a programming error
+        if (exclusiveDuration < 0) {
+            throw new RuntimeException("Exclusive duration cannot be smaller than 0.");
+        }
+
+        return exclusiveDuration;
     }
 
     public SQLStatementSequence getSqlSequence() {
