@@ -9,7 +9,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class DistributionAggregationStrategy implements AggregationStrategy {
 
-    public static final int DEFAULT_BIN_COUNT = 10;
+    public static final int DEFAULT_BIN_COUNT = 30;
 
     private int binCount;
 
