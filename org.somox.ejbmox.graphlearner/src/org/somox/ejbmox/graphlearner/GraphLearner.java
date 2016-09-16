@@ -75,7 +75,9 @@ public class GraphLearner {
      */
     protected Path findPathClosestTo(Path path) {
         List<Path> paths = graph.allPaths();
-        LOG.debug("Collected paths: " + paths);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Collected paths: " + paths);
+        }
         int minCost = Integer.MAX_VALUE;
         Path minPath = null;
         for (Path p : paths) {
@@ -101,11 +103,15 @@ public class GraphLearner {
 
     // TODO simplify and get rid of duplicated code
     protected void integrate(Path closestPath, Path path) {
-        LOG.debug("Integrating " + path + " into path " + closestPath);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Integrating " + path + " into path " + closestPath);
+        }
 
         Patch<Node> patch = DiffUtils.diff(closestPath.getNodes(), path.getNodes(), new NodeEqualiser());
         for (Delta<Node> delta : patch.getDeltas()) {
-            LOG.debug("Delta: " + delta);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Delta: " + delta);
+            }
             Path originalPath = Path.fromNodes(delta.getOriginal().getLines());
             Path revisedPath = Path.fromNodes(delta.getRevised().getLines());
             switch (delta.getType()) {
@@ -163,7 +169,9 @@ public class GraphLearner {
                 break;
             }
         }
-        LOG.debug("Result: " + graph);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Result: " + graph);
+        }
     }
 
     private boolean haveSameParent(Path path) {
