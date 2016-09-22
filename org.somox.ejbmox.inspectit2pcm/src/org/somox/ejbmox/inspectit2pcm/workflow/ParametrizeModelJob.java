@@ -71,7 +71,10 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             logger.info("Skipping extraction of SQL statements");
         }
 
+        logger.info("Parameterizing Internal Actions with resource demands...");
         this.parametrizeInternalActions(parametrization, aggregation, refineSQL);
+        
+        logger.info("Parameterizing Branches with branching probabilities...");
         this.parametrizeBranchingProbabilities(parametrization);
     }
 
@@ -137,6 +140,9 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             final InternalAction action = e.getKey();
             final List<InternalActionInvocation> invocations = e.getValue();
 
+            logger.info("Calculating resource demand for " + PCMHelper.entityToString(action) + " from "
+                    + invocations.size() + " observed invocations");
+            
             // if there is a demand > 0 already, something went wrong
             String existingDemand = action.getResourceDemand_Action().get(0)
                     .getSpecification_ParametericResourceDemand().getSpecification();
