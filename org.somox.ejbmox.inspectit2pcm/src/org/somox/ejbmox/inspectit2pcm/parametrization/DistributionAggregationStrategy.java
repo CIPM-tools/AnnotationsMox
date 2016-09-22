@@ -9,6 +9,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class DistributionAggregationStrategy implements AggregationStrategy {
 
+    // actual bin size may be lower, this value is no guarantee
     public static final int DEFAULT_BIN_COUNT = 30;
 
     private int binCount;
@@ -23,11 +24,15 @@ public class DistributionAggregationStrategy implements AggregationStrategy {
 
     @Override
     public PCMRandomVariable aggregate(Collection<Double> values) {
-        double[] data = values.stream().mapToDouble(i -> i).toArray();
+        // 1) remove outliers
+        Collection<Double> valuesAfterOutlierRemoval = ParametrizationUtils.removeOutliers(values);
+        double[] data = valuesAfterOutlierRemoval.stream().mapToDouble(i -> i).toArray();
 
+        // 2) create histogram
         EmpiricalDistribution distribution = new EmpiricalDistribution(binCount);
         distribution.load(data);
 
+        // 3) build StoEx from histogram
         StringBuilder stoExBuilder = new StringBuilder().append("DoublePDF[");
         int observations = data.length;
 
