@@ -80,7 +80,13 @@ public class InvocationTreeScanner {
             if (isExternalServiceWrapper(calledService)) {
                 calledService = new WrapperMethodIdent(calledService, findWrappedService(nestedInvocation));
             }
-            if ((isExternalService(calledService) && !callingService.isWrapper()) || calledService.isWrapper()) {
+            /*
+             * following condition ensures that only one external call (the outer one, i.e. the
+             * wrapper) will be reported for a wrapped service call (which would otherwise be
+             * reported as two separate successive calls)
+             */
+            if ((isExternalService(calledService) && !callingService.isWrapperFor(calledService))
+                    || calledService.isWrapper()) {
                 // before external call, close existing internal action
                 listener.internalActionEnd(callingService, nestedInvocation.getStart());
 

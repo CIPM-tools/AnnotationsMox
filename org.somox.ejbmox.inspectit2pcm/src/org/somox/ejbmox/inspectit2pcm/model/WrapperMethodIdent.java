@@ -55,6 +55,14 @@ public class WrapperMethodIdent extends MethodIdent {
     }
 
     @Override
+    public boolean isWrapperFor(MethodIdent other) {
+        if(wrapped.equals(other)) {
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
     public boolean isWrapper() {
         return true;
     }

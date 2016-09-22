@@ -1,11 +1,11 @@
 package org.somox.ejbmox.inspectit2pcm.util;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.palladiosimulator.pcm.core.CoreFactory;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
@@ -25,8 +25,6 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.palladiosimulator.pcm.seff.seff_performance.ParametricResourceDemand;
 import org.palladiosimulator.pcm.seff.seff_performance.ResourceCall;
 import org.palladiosimulator.pcm.seff.seff_performance.SeffPerformanceFactory;
-import org.palladiosimulator.pcm.usagemodel.Start;
-import org.palladiosimulator.pcm.usagemodel.Stop;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 
@@ -93,6 +91,31 @@ public class PCMHelper {
     public static StopAction findStopAction(ResourceDemandingBehaviour behaviour) {
         return (StopAction) behaviour.getSteps_Behaviour().stream().filter(a -> a instanceof StopAction).findFirst()
                 .get();
+    }
+
+    public static List<ExternalCallAction> findExternalCallActions(ResourceDemandingBehaviour behaviour) {
+        List<ExternalCallAction> calls = behaviour.getSteps_Behaviour().stream()
+                .filter(a -> a instanceof ExternalCallAction).map(a -> (ExternalCallAction) a)
+                .collect(Collectors.toList());
+
+        calls.addAll(findExternalCallActionsInBranches(behaviour));
+
+        return calls;
+    }
+
+    private static List<ExternalCallAction> findExternalCallActionsInBranches(ResourceDemandingBehaviour behaviour) {
+        final List<BranchAction> branches = behaviour.getSteps_Behaviour().stream()
+                .filter(a -> a instanceof BranchAction).map(a -> (BranchAction) a).collect(Collectors.toList());
+
+        // collect external call actions in branch transitions
+        List<ExternalCallAction> calls = new ArrayList<>();
+        for (BranchAction b : branches) {
+            for (AbstractBranchTransition transition : b.getBranches_Branch()) {
+                calls.addAll(findExternalCallActions(transition.getBranchBehaviour_BranchTransition()));
+            }
+        }
+
+        return calls;
     }
 
     public static void insertSQLStatementAsResourceCall(InternalAction action, SQLStatement stmt) {

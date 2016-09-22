@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
@@ -22,6 +23,7 @@ import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
+import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
@@ -45,8 +47,8 @@ public class InvocationTree2PCMMapper {
     private final PCMParametrization parametrization;
 
     static {
-        // TODO use config file
-        // Logger.getRootLogger().setLevel(Level.DEBUG);
+//         TODO use config file
+//         Logger.getRootLogger().setLevel(Level.DEBUG);
     }
 
     /**
@@ -60,8 +62,12 @@ public class InvocationTree2PCMMapper {
         this.seffToFQNMap = seffToFQNMap;
         this.parametrization = new PCMParametrization();
 
+        // TODO should not be part of mapper, rather of a separate preprocessing step
         if (ensureInternalActionsBeforeSTOPAction) {
             this.ensureInternalActionBeforeStopActions();
+
+            // TODO make separate configuration option
+            this.ensureInternalActionBeforeExternalCallActions();
         }
     }
 
@@ -70,9 +76,9 @@ public class InvocationTree2PCMMapper {
      * placeholder for SQL statements issued at the end of the service invocation
      */
     private void ensureInternalActionBeforeStopActions() {
-
         for (final Entry<ResourceDemandingSEFF, String> entry : this.seffToFQNMap.entrySet()) {
-            final StopAction stop = PCMHelper.findStopAction(entry.getKey());
+            final ResourceDemandingSEFF seff = entry.getKey();
+            final StopAction stop = PCMHelper.findStopAction(seff);
             final AbstractAction stopPredecessor = stop.getPredecessor_AbstractAction();
             if (!(stopPredecessor instanceof InternalAction)) {
                 final InternalAction placeholder = PCMHelper.createInternalActionStub(
@@ -80,6 +86,23 @@ public class InvocationTree2PCMMapper {
                         "Inserted by InspectIT2PCM processor @ " + entry.getValue());
                 placeholder.setPredecessor_AbstractAction(stopPredecessor);
                 stop.setPredecessor_AbstractAction(placeholder);
+            }
+        }
+    }
+    
+    private void ensureInternalActionBeforeExternalCallActions() {
+        for (final Entry<ResourceDemandingSEFF, String> entry : this.seffToFQNMap.entrySet()) {
+            final ResourceDemandingSEFF seff = entry.getKey();
+            final List<ExternalCallAction> calls = PCMHelper.findExternalCallActions(seff);
+            for(ExternalCallAction call : calls) {
+                final AbstractAction callPredecessor = call.getPredecessor_AbstractAction();
+                if (!(callPredecessor instanceof InternalAction)) {
+                    final InternalAction placeholder = PCMHelper.createInternalActionStub(
+                            call.getResourceDemandingBehaviour_AbstractAction(),
+                            "Inserted by InspectIT2PCM processor @ " + entry.getValue());
+                    placeholder.setPredecessor_AbstractAction(callPredecessor);
+                    call.setPredecessor_AbstractAction(placeholder);
+                }   
             }
         }
     }
@@ -696,6 +719,11 @@ public class InvocationTree2PCMMapper {
                             + "and continuing with its successor (...that is hopefully an external action).",
                     this.context);
             this.context.proceedWithNextAction();
+            
+            // delegate
+            if (context.getDetector() != null) { // can be null if stop action is expected
+                this.context.getDetector().externalCallBegin(callingService, calledService, time);
+            }
         }
 
         @Override
