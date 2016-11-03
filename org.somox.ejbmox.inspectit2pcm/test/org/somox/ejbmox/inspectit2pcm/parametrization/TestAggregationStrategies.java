@@ -27,7 +27,7 @@ public class TestAggregationStrategies {
     private static final double MEAN_COMPARISON_DELTA = 0.000001;
 
     private static final double ACCEPTABLE_ERROR = 0.02; // fraction between 0...1
-    private static final int DISTRIBUTION_BIN_COUNT = 10;
+    private static final int DISTRIBUTION_BIN_COUNT = 30;
 
     @Test
     public void testMeanAggregation() {
