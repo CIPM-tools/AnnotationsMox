@@ -7,6 +7,13 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
+/**
+ * Calculates a probability distribution of supplied values and builds a {@link PCMRandomVariable}
+ * representing that distribution.
+ * 
+ * @author Philipp Merkle
+ *
+ */
 public class DistributionAggregationStrategy implements AggregationStrategy {
 
     // actual bin size may be lower, this value is no guarantee
@@ -14,19 +21,28 @@ public class DistributionAggregationStrategy implements AggregationStrategy {
 
     private int binCount;
 
+    /** whether outliers should be removed */
+    private boolean removeOutliers;
+
     public DistributionAggregationStrategy() {
-        this(DEFAULT_BIN_COUNT);
+        this(DEFAULT_BIN_COUNT, true);
     }
 
-    public DistributionAggregationStrategy(int binCount) {
+    public DistributionAggregationStrategy(int binCount, boolean removeOutliers) {
         this.binCount = binCount;
+        this.removeOutliers = removeOutliers;
     }
 
     @Override
     public PCMRandomVariable aggregate(Collection<Double> values) {
         // 1) remove outliers
-        Collection<Double> valuesAfterOutlierRemoval = ParametrizationUtils.removeOutliers(values);
-        double[] data = valuesAfterOutlierRemoval.stream().mapToDouble(i -> i).toArray();
+        double[] data;
+        if (removeOutliers) {
+            Collection<Double> valuesAfterOutlierRemoval = ParametrizationUtils.removeOutliers(values);
+            data = valuesAfterOutlierRemoval.stream().mapToDouble(i -> i).toArray();
+        } else {
+            data = values.stream().mapToDouble(i -> i).toArray();
+        }
 
         // 2) create histogram
         EmpiricalDistribution distribution = new EmpiricalDistribution(binCount);
