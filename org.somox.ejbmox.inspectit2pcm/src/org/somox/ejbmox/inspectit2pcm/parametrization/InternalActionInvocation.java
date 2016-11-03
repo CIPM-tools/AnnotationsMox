@@ -5,6 +5,12 @@ import java.util.List;
 
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
+/**
+ * Represents a distinct invocation of an internal action.
+ * 
+ * @author Philipp Merkle
+ *
+ */
 public class InternalActionInvocation {
 
     private double duration;

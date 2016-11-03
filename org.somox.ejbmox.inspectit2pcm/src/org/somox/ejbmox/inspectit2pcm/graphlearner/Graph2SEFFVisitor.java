@@ -19,8 +19,8 @@ import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
 import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.node.SeriesNode;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
-import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 

@@ -22,15 +22,15 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.DistributionAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
+import org.somox.ejbmox.inspectit2pcm.graphlearner.SQLStatementSequence2Graph;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
-import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
-import org.somox.ejbmox.inspectit2pcm.parametrization.DistributionAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.InternalActionInvocation;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
-import org.somox.ejbmox.inspectit2pcm.parametrization.SQLStatementsToPCM;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 import de.uka.ipd.sdq.workflow.jobs.CleanupFailedException;
@@ -251,12 +251,12 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         }
 
         // learn graph from paths (SQL statement sequences)
-        final SQLStatementsToPCM sql2pcm = new SQLStatementsToPCM();
+        final SQLStatementSequence2Graph sql2pcm = new SQLStatementSequence2Graph();
         final List<SQLStatementSequence> sequences = InternalActionInvocation.selectNonEmptySQLSequences(invocations);
         for (final SQLStatementSequence s : sequences) {
             sql2pcm.addStatementSequence(s);
         }
-        final SPGraph g = sql2pcm.getLearner().getGraph();
+        final SPGraph g = sql2pcm.getLearnedGraph();
 
         // create SEFF from graph (assumes "verbose" representation)
         final ResourceDemandingBehaviour rdb = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();

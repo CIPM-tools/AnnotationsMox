@@ -20,10 +20,10 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StopAction;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
-import org.somox.ejbmox.inspectit2pcm.parametrization.AggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
