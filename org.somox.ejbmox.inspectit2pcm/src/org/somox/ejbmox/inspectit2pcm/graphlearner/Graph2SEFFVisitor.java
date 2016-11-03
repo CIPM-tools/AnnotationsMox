@@ -46,6 +46,8 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
     public void visit(LeafNode n, ResourceDemandingBehaviour arg) {
         AbstractAction previousAction = lastActionStack.pop();
 
+        // TODO extract statements below to separate method in separate class
+        
         InternalAction ia = SeffFactory.eINSTANCE.createInternalAction();
         ia.setResourceDemandingBehaviour_AbstractAction(arg);
         ia.setEntityName(n.getContent().toString());
