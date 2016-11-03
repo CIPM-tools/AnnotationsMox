@@ -1,4 +1,4 @@
-package org.somox.ejbmox.inspectit2pcm;
+package org.somox.ejbmox.inspectit2pcm.workflow;
 
 import java.util.Map;
 

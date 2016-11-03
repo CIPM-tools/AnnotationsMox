@@ -1,13 +1,9 @@
-package org.somox.ejbmox.inspectit2pcm;
+package org.somox.ejbmox.inspectit2pcm.workflow;
 
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
-import org.somox.ejbmox.inspectit2pcm.workflow.II2PCMPartition;
-import org.somox.ejbmox.inspectit2pcm.workflow.ParametrizationFromMonitoringResultsJob;
-import org.somox.ejbmox.inspectit2pcm.workflow.ParametrizeModelJob;
-import org.somox.ejbmox.inspectit2pcm.workflow.SaveModifiedModelJob;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractWorkflowExtensionJob;
 import de.uka.ipd.sdq.workflow.extension.ExtendableJobConfiguration;
