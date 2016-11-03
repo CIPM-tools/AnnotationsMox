@@ -73,7 +73,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
         logger.info("Parameterizing Internal Actions with resource demands...");
         this.parametrizeInternalActions(parametrization, aggregation, refineSQL);
-        
+
         logger.info("Parameterizing Branches with branching probabilities...");
         this.parametrizeBranchingProbabilities(parametrization);
     }
@@ -142,7 +142,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
 
             logger.info("Calculating resource demand for " + PCMHelper.entityToString(action) + " from "
                     + invocations.size() + " observed invocations");
-            
+
             // if there is a demand > 0 already, something went wrong
             String existingDemand = action.getResourceDemand_Action().get(0)
                     .getSpecification_ParametericResourceDemand().getSpecification();
@@ -167,10 +167,38 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             final InternalAction action, final List<InternalActionInvocation> invocations) {
         // perform desired aggregation and obtain PCM random variable
         List<Double> durations = InternalActionInvocation.selectDurations(invocations);
-        PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
+        PCMRandomVariable resourceDemand = aggregationStrategy.aggregate(durations);
 
         // parametrize action
-        action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);
+        boolean SPLIT = false; // TODO make configurable
+        double CPU_FRACTION = 0.6; // TODO make configurable
+
+        if (SPLIT) {
+            splitResourceDemandBetweenCpuAndDelay(action, resourceDemand, CPU_FRACTION);
+        } else {
+            assignResourceDemandEntirelyToCpu(action, resourceDemand);
+        }
+    }
+
+    private void splitResourceDemandBetweenCpuAndDelay(InternalAction action, PCMRandomVariable resourceDemand,
+            double cpuFraction) {
+        // create CPU resource demand
+        String cpuStoEx = resourceDemand.getSpecification() + "*" + Double.toString(cpuFraction);
+        PCMRandomVariable cpuResourceDemand = PCMHelper.createPCMRandomVariable(cpuStoEx);
+
+        // create DELAY resource demand
+        double delayFraction = 1 - cpuFraction;
+        String delayStoEx = resourceDemand.getSpecification() + "*" + Double.toString(delayFraction);
+        PCMRandomVariable delayResourceDemand = PCMHelper.createPCMRandomVariable(delayStoEx);
+
+        // assign resource demands to action
+        action.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(cpuResourceDemand));
+        action.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandDELAY(delayResourceDemand));
+    }
+
+    private void assignResourceDemandEntirelyToCpu(InternalAction action, PCMRandomVariable resourceDemand) {
+        action.getResourceDemand_Action().clear();
+        action.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(resourceDemand));
     }
 
     private void dumpParametrizationToFile(final PCMParametrization parametrization) {
