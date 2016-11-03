@@ -54,23 +54,30 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         monitor.beginTask(this.getName(), invocationIds.size());
         int i = 0;
         for (final long invocationId : invocationIds) {
+            // skip invocations considered to belong to the warmup phase
             if (++i < config.getWarmupLength()) {
+                // skip this iteration
                 continue;
             }
-            
-//            // consider every 10th invocation and skip the rest
-//            // TODO make configurable
-//            if (i % 10 != 0) {
-//                continue;
-//            }
-            
+
+            // consider every i-th invocation and skip the rest
+            // TODO make configurable
+            int SAMPLING_DISTANCE = 1; // consider all invocations
+            if (i % SAMPLING_DISTANCE != 0) {
+                // skip this iteration
+                continue;
+            }
+
+            // scan invocation sequence
             final InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
+            scanner.scanInvocationTree(invocation);
+            monitor.worked(1);
+
+            // log progress
             if (i % 100 == 0) {
                 this.logger.info("Scanning invocation sequence " + i + " out of " + invocationIds.size()
                         + ". Invocation id = " + invocationId + ", start = " + invocation.getStart());
             }
-            scanner.scanInvocationTree(invocation);
-            monitor.worked(1);
         }
 
         // store resulting parametrization to blackboard
