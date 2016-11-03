@@ -39,13 +39,14 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         final InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
                 externalServicesFQN, interfacesFQN, identService, invocationsService);
 
-        // scan all invocation trees available
+        // obtain all invocation sequence ids
         final II2PCMConfiguration config = this.getPartition().getConfiguration();
         final List<Long> invocationIds = invocationsService.getInvocationSequencesId();
         this.logger.info("Found " + invocationIds.size() + " invocation sequences.");
+
+        // log warmup phase infos
         this.logger
                 .info("Skipping first " + config.getWarmupLength() + " invocation sequences treated as warmup phase");
-
         if (config.getWarmupLength() > invocationIds.size()) {
             logger.warn("All available invocation sequences are considered to lie in the warmup phase. "
                     + "Reduce the warmup phase size or increase the number of available invocation sequences.");
