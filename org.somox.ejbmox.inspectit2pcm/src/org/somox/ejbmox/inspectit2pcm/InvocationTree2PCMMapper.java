@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.seff.AbstractAction;
