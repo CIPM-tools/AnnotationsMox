@@ -14,6 +14,9 @@ import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.junit.Assert;
 import org.junit.Test;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.DistributionAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.MeanAggregationStrategy;
 
 import de.uka.ipd.sdq.probfunction.math.IProbabilityDensityFunction;
 import de.uka.ipd.sdq.probfunction.math.ManagedPDF;
@@ -125,7 +128,7 @@ public class TestAggregationStrategies {
     }
 
     private IProbabilityDensityFunction createDistributionOf(Collection<Double> values) throws RecognitionException {
-        AggregationStrategy strategy = new DistributionAggregationStrategy(DISTRIBUTION_BIN_COUNT);
+        AggregationStrategy strategy = new DistributionAggregationStrategy(DISTRIBUTION_BIN_COUNT, false);
         PCMRandomVariable rv = strategy.aggregate(values);
         String stoEx = rv.getSpecification();
 

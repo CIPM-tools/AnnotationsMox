@@ -14,6 +14,7 @@ import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
 import org.somox.ejbmox.graphlearner.util.PathBuilder;
+import org.somox.ejbmox.inspectit2pcm.aggregation.MeanAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
