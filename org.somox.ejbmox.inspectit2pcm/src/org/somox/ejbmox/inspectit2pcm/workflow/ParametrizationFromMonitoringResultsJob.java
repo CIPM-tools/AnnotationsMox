@@ -7,8 +7,10 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.ejbmox.inspectit2pcm.InvocationTree2PCMMapper;
 import org.somox.ejbmox.inspectit2pcm.InvocationTreeScanner;
+import org.somox.ejbmox.inspectit2pcm.ScanningProgressListener;
 import org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
+import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
@@ -22,31 +24,28 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
     @Override
     public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
+        final II2PCMConfiguration config = this.getPartition().getConfiguration();
+
         // instantiate REST service clients
         final RESTClient client = new RESTClient(this.getPartition().getConfiguration().getCmrUrl());
         final IdentsServiceClient identService = new IdentsServiceClient(client);
         final InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
-        final boolean ensureInternalActionsBeforeSTOPAction = this.getPartition().getConfiguration()
-                .isEnsureInternalActionsBeforeSTOPAction();
 
         // create mapper
-        final InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(this.getPartition().getSeffToFQNMap(),
-                ensureInternalActionsBeforeSTOPAction);
+        final InvocationTree2PCMMapper mapper = buildMapper();
 
         // create scanner and connect to mapper via scanning progress listener
-        final Set<String> externalServicesFQN = new HashSet<>(this.getPartition().getSeffToFQNMap().values());
-        final Set<String> interfacesFQN = new HashSet<>(this.getPartition().getInterfaceToFQNMap().values());
-        final InvocationTreeScanner scanner = new InvocationTreeScanner(mapper.getScanningProgressDispatcher(),
-                externalServicesFQN, interfacesFQN, identService, invocationsService);
+        ScanningProgressListener listener = mapper.getScanningProgressDispatcher();
+        Set<MethodIdent> methods = identService.listMethodIdents();
+        final InvocationTreeScanner scanner = buildScanner(listener, methods);
 
         // obtain all invocation sequence ids
-        final II2PCMConfiguration config = this.getPartition().getConfiguration();
         final List<Long> invocationIds = invocationsService.getInvocationSequencesId();
-        this.logger.info("Found " + invocationIds.size() + " invocation sequences.");
+        this.logger.info(String.format("Found %s invocation sequences.", invocationIds.size()));
 
         // log warmup phase infos
-        this.logger
-                .info("Skipping first " + config.getWarmupLength() + " invocation sequences treated as warmup phase");
+        this.logger.info(String.format("Skipping first %s invocation sequences treated as warmup phase",
+                config.getWarmupLength()));
         if (config.getWarmupLength() > invocationIds.size()) {
             logger.warn("All available invocation sequences are considered to lie in the warmup phase. "
                     + "Reduce the warmup phase size or increase the number of available invocation sequences.");
@@ -84,6 +83,22 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         // store resulting parametrization to blackboard
         final PCMParametrization parametrization = mapper.getParametrization();
         this.getPartition().setParametrization(parametrization);
+    }
+
+    private InvocationTreeScanner buildScanner(ScanningProgressListener listener, Set<MethodIdent> methods) {
+        final Set<String> externalServicesFQN = new HashSet<>(this.getPartition().getSeffToFQNMap().values());
+        final Set<String> interfacesFQN = new HashSet<>(this.getPartition().getInterfaceToFQNMap().values());
+        final InvocationTreeScanner scanner = new InvocationTreeScanner(listener, externalServicesFQN, interfacesFQN,
+                methods);
+        return scanner;
+    }
+
+    private InvocationTree2PCMMapper buildMapper() {
+        final boolean ensureInternalActionsBeforeSTOPAction = this.getPartition().getConfiguration()
+                .isEnsureInternalActionsBeforeSTOPAction();
+        final InvocationTree2PCMMapper mapper = new InvocationTree2PCMMapper(this.getPartition().getSeffToFQNMap(),
+                ensureInternalActionsBeforeSTOPAction);
+        return mapper;
     }
 
     @Override
