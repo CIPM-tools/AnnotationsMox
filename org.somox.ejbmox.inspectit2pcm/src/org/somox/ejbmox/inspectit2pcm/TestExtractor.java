@@ -60,7 +60,7 @@ public class TestExtractor {
         InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
 
         InvocationTreeScanner scanner = new InvocationTreeScanner(new ConsoleOutputTraversalListener(), servicesFQN,
-                interfacesFQN, identService, invocationsService);
+                interfacesFQN, identService.listMethodIdents());
 
         List<Long> invocationIds = invocationsService.getInvocationSequencesId();
         for (long invocationId : invocationIds) {
