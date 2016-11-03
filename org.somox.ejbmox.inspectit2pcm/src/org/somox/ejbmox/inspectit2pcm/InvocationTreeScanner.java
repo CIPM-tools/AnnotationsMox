@@ -10,8 +10,6 @@ import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.WrapperMethodIdent;
-import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
-import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
 
 /**
  * Scans an invocation tree ({@link InvocationSequence}) recursively in order of (ascending)
@@ -43,14 +41,14 @@ public class InvocationTreeScanner {
     private Map<String, MethodIdent> methodFQNToIdentMap;
 
     public InvocationTreeScanner(ScanningProgressListener listener, Set<String> externalServicesFQN,
-            Set<String> interfacesFQN, IdentsServiceClient identService, InvocationsServiceClient invocationsService) {
+            Set<String> interfacesFQN, Set<MethodIdent> methods) {
         this.listener = listener;
         this.externalServicesFQN = externalServicesFQN;
         this.interfacesFQN = interfacesFQN;
 
         methodIdToIdentMap = new HashMap<>();
         methodFQNToIdentMap = new HashMap<>();
-        for (MethodIdent m : identService.listMethodIdents()) {
+        for (MethodIdent m : methods) {
             methodIdToIdentMap.put(m.getId(), m);
             methodFQNToIdentMap.put(m.toFQN(), m);
         }
