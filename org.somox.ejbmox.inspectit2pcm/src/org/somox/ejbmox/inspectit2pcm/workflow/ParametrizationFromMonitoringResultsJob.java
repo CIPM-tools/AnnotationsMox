@@ -1,5 +1,6 @@
 package org.somox.ejbmox.inspectit2pcm.workflow;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,9 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         final List<Long> invocationIds = invocationsService.getInvocationSequencesId();
         this.logger.info(String.format("Found %s invocation sequences.", invocationIds.size()));
 
+        // remove invocations considered to belong to the warmup phase
+        final List<Long> invocationIdsWithoutWarmup = removeWarmupInvocations(config.getWarmupLength(), invocationIds);
+
         // log warmup phase infos
         this.logger.info(String.format("Skipping first %s invocation sequences treated as warmup phase",
                 config.getWarmupLength()));
@@ -51,14 +55,10 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
                     + "Reduce the warmup phase size or increase the number of available invocation sequences.");
         }
 
-        monitor.beginTask(this.getName(), invocationIds.size());
+        monitor.beginTask(this.getName(), invocationIdsWithoutWarmup.size());
         int i = 0;
-        for (final long invocationId : invocationIds) {
-            // skip invocations considered to belong to the warmup phase
-            if (++i < config.getWarmupLength()) {
-                // skip this iteration
-                continue;
-            }
+        for (final long invocationId : invocationIdsWithoutWarmup) {
+            i++;
 
             // consider every i-th invocation and skip the rest
             // TODO make configurable
@@ -75,14 +75,27 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
             // log progress
             if (i % 100 == 0) {
-                this.logger.info("Scanning invocation sequence " + i + " out of " + invocationIds.size()
-                        + ". Invocation id = " + invocationId + ", start = " + invocation.getStart());
+                this.logger
+                        .info(String.format("Scanning invocation sequence %s out of %s. Invocation id = %s, start = %s",
+                                i, invocationIdsWithoutWarmup.size(), invocationId, invocation.getStart()));
             }
         }
 
         // store resulting parametrization to blackboard
         final PCMParametrization parametrization = mapper.getParametrization();
         this.getPartition().setParametrization(parametrization);
+    }
+
+    private List<Long> removeWarmupInvocations(int warmupLength, final List<Long> invocationIds) {
+        int fromIndex = warmupLength;
+        int toIndex = invocationIds.size(); // no "-1" because toIndex parameter is exclusive
+        final List<Long> invocationIdsWithoutWarmup;
+        if (fromIndex < toIndex) {
+            invocationIdsWithoutWarmup = invocationIds.subList(fromIndex, toIndex);
+        } else {
+            invocationIdsWithoutWarmup = Collections.emptyList();
+        }
+        return invocationIdsWithoutWarmup;
     }
 
     private InvocationTreeScanner buildScanner(ScanningProgressListener listener, Set<MethodIdent> methods) {
