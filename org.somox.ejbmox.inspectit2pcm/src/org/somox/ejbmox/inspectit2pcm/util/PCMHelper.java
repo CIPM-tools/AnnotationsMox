@@ -67,6 +67,16 @@ public class PCMHelper {
 
         return prd;
     }
+    
+    public static ParametricResourceDemand createParametricResourceDemandDELAY(PCMRandomVariable demand) {
+        ParametricResourceDemand prd = SeffPerformanceFactory.eINSTANCE.createParametricResourceDemand();
+        prd.setSpecification_ParametericResourceDemand(demand);
+
+        ProcessingResourceType delay = DefaultResourceEnvironment.getDelayProcessingResourceType();
+        prd.setRequiredResource_ParametricResourceDemand(delay);
+
+        return prd;
+    }
 
     public static StartAction findStartAction(ResourceDemandingBehaviour behaviour) {
         return (StartAction) behaviour.getSteps_Behaviour().stream().filter(a -> a instanceof StartAction).findFirst()
