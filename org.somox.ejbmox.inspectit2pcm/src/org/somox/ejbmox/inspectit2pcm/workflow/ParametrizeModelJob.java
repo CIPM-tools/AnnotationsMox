@@ -174,13 +174,13 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         double CPU_FRACTION = 0.6; // TODO make configurable
 
         if (SPLIT) {
-            splitResourceDemandBetweenCpuAndDelay(action, resourceDemand, CPU_FRACTION);
+            distributeResourceDemandBetweenCpuAndDelay(action, resourceDemand, CPU_FRACTION);
         } else {
             assignResourceDemandEntirelyToCpu(action, resourceDemand);
         }
     }
 
-    private void splitResourceDemandBetweenCpuAndDelay(InternalAction action, PCMRandomVariable resourceDemand,
+    private void distributeResourceDemandBetweenCpuAndDelay(InternalAction action, PCMRandomVariable resourceDemand,
             double cpuFraction) {
         // create CPU resource demand
         String cpuStoEx = resourceDemand.getSpecification() + "*" + Double.toString(cpuFraction);
