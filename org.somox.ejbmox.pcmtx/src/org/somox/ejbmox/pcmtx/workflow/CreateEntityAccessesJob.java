@@ -38,6 +38,12 @@ public class CreateEntityAccessesJob extends AbstractPCMTXJob {
             SQLStatement stmt = e.getValue();
             ParsedSQLStatement parsedStmt = getPCMTXPartition().getParsedStatementsMap().get(stmt);
 
+            if (parsedStmt == null) {
+                logger.warn("Could not find parsed statement for statement " + stmt
+                        + ". No entity access will be created for that statement.");
+                continue;
+            }
+
             for (String accessedTableName : parsedStmt.getTableNames()) {
                 EntityType entityType = getPCMTXPartition().getTableNameToEntityTypeMap().get(accessedTableName);
 
