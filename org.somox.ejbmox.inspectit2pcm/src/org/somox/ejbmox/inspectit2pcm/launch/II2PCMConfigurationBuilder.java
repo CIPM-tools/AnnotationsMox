@@ -2,8 +2,6 @@ package org.somox.ejbmox.inspectit2pcm.launch;
 
 import java.util.Map;
 
-import org.somox.ejbmox.inspectit2pcm.workflow.II2PCMConfiguration;
-
 import de.uka.ipd.sdq.workflow.extension.AbstractWorkflowExtensionConfigurationBuilder;
 
 public class II2PCMConfigurationBuilder extends AbstractWorkflowExtensionConfigurationBuilder {

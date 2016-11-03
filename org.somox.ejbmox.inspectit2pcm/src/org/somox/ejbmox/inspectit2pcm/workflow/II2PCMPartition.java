@@ -9,6 +9,7 @@ import org.emftext.language.java.members.ClassMethod;
 import org.palladiosimulator.pcm.repository.Interface;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
+import org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationTrace;
 import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.ejbmox.inspectit2pcm.InvocationTree2PCMMapper;
 import org.somox.ejbmox.inspectit2pcm.InvocationTreeScanner;
+import org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
