@@ -31,14 +31,14 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         final IdentsServiceClient identService = new IdentsServiceClient(client);
 
         final InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
-        InvocationsProvider invocationsProvider = InvocationsProvider.fromService(invocationsService);
-        this.logger.info(String.format("Found %s invocation sequences.", invocationsProvider.size()));
+        InvocationsProvider invocations = InvocationsProvider.fromService(invocationsService);
+        this.logger.info(String.format("Found %s invocation sequences.", invocations.size()));
 
         // remove invocation sequences belonging to warmup phase
         this.logger.info(String.format("Removing first %s invocation sequences treated as warmup phase",
                 config.getWarmupLength()));
-        invocationsProvider.removeWarmup(config.getWarmupLength());
-        if (invocationsProvider.size() == 0) {
+        invocations = invocations.removeWarmup(config.getWarmupLength());
+        if (invocations.size() == 0) {
             logger.warn("There are no invocation sequences or all are considered to belong to the warmup phase.");
         }
 
@@ -50,9 +50,18 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         Set<MethodIdent> methods = identService.listMethodIdents();
         final InvocationTreeScanner scanner = buildScanner(listener, methods);
 
-        monitor.beginTask(this.getName(), invocationsProvider.size());
+        scanInvocations(invocations, scanner, monitor);
+
+        // store resulting parametrization to blackboard
+        final PCMParametrization parametrization = mapper.getParametrization();
+        this.getPartition().setParametrization(parametrization);
+    }
+
+    private void scanInvocations(InvocationsProvider invocations, final InvocationTreeScanner scanner,
+            final IProgressMonitor monitor) {
+        monitor.beginTask(this.getName(), invocations.size());
         int i = 0;
-        for (InvocationSequence invocation : invocationsProvider) {
+        for (InvocationSequence invocation : invocations) {
             i++;
 
             // consider every i-th invocation and skip the rest
@@ -71,13 +80,9 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
             if (i % 100 == 0) {
                 this.logger.info(
                         String.format("Scanning invocation sequence %s out of %s. Invocation start timestamp = %s", i,
-                                invocationsProvider.size(), invocation.getStart()));
+                                invocations.size(), invocation.getStart()));
             }
         }
-
-        // store resulting parametrization to blackboard
-        final PCMParametrization parametrization = mapper.getParametrization();
-        this.getPartition().setParametrization(parametrization);
     }
 
     private InvocationTreeScanner buildScanner(ScanningProgressListener listener, Set<MethodIdent> methods) {

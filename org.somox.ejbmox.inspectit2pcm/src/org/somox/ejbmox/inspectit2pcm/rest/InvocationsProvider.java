@@ -10,21 +10,24 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
 
     private final InvocationsServiceClient invocationsService;
 
-    private List<Long> invocationIds;
+    private final List<Long> invocationIds;
 
-    private InvocationsProvider(InvocationsServiceClient invocationsService) {
+    private InvocationsProvider(List<Long> invocationIds, InvocationsServiceClient invocationsService) {
+        this.invocationIds = invocationIds;
         this.invocationsService = invocationsService;
-        invocationIds = invocationsService.getInvocationSequencesId();
+
     }
 
     /**
-     * Removes invocations considered to belong to the warmup phase
+     * Removes invocations considered to belong to the warmup phase and returns the result as a new
+     * {@link InvocationsProvider}. The called instance remains unchanged.
      * 
      * @param count
      *            the warmup phase length (number of measururements)
      */
-    public void removeWarmup(int count) {
-        invocationIds = removeWarmupInvocations(count, invocationIds);
+    public InvocationsProvider removeWarmup(int count) {
+        List<Long> invocationIdsWithoutWarmup = removeWarmupInvocations(count);
+        return new InvocationsProvider(invocationIdsWithoutWarmup, invocationsService);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
         return invocationIds.size();
     }
 
-    private static List<Long> removeWarmupInvocations(int warmupLength, final List<Long> invocationIds) {
+    private List<Long> removeWarmupInvocations(int warmupLength) {
         int fromIndex = warmupLength;
         int toIndex = invocationIds.size(); // no "-1" because toIndex parameter is exclusive
         final List<Long> invocationIdsWithoutWarmup;
@@ -49,29 +52,31 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
     }
 
     public static InvocationsProvider fromService(InvocationsServiceClient invocationsService) {
-        return new InvocationsProvider(invocationsService);
+        List<Long> invocationIds = invocationsService.getInvocationSequencesId();
+        InvocationsProvider provider = new InvocationsProvider(invocationIds, invocationsService);
+        return provider;
     }
 
     private class InvocationSequenceIterator implements Iterator<InvocationSequence> {
-    
+
         private Iterator<Long> idIterator;
-    
+
         public InvocationSequenceIterator() {
             this.idIterator = invocationIds.iterator();
         }
-    
+
         @Override
         public boolean hasNext() {
             return idIterator.hasNext();
         }
-    
+
         @Override
         public InvocationSequence next() {
             long invocationId = idIterator.next();
             InvocationSequence invocationSequence = invocationsService.getInvocationSequence(invocationId);
             return invocationSequence;
         }
-    
+
     }
 
 }
