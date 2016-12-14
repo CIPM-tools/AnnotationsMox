@@ -1,18 +1,15 @@
 package org.somox.ejbmox.test;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.emftext.language.java.members.ClassMethod;
 import org.emftext.language.java.members.Method;
 import org.emftext.language.java.statements.Statement;
 import org.junit.Assert;
-import org.junit.Test;
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.ejbmox.ejb.functionclassification.EJBFunctionClassificationStrategy;
@@ -68,26 +65,10 @@ public class EJBFunctionClassificationStrategyTest extends EJBmoxAbstractTest<Li
                 FunctionCallType.INTERNAL_CALL_CONTAINING_EXTERNAL_CALL);
     }
 
-    /**
-     * we need to ovveride the method here in order to catch the expected NoSuchElementException
-     */
-    @Override
-    @Test
-    public void testSingleComponent() {
-        try {
-            super.testSingleComponent();
-        } catch (final NoSuchElementException e) {
-            // expected behavior: since the class does not require any interface there are no
-            // external calls which leads to an exception in execute test
-            return;
-        }
-        fail("NoSuchElementException not occured during exeute test");
-
-    }
-
     @Override
     protected void assertTestSingleComponent(final List<BitSet> bitSets) {
-        fail("NoSuchElementException not occured during exeute test");
+    	this.assertAnnotations(bitSets, FunctionCallType.INTERNAL, FunctionCallType.LIBRARY, 
+    			FunctionCallType.LIBRARY, FunctionCallType.INTERNAL);
     }
 
     @Override
@@ -95,12 +76,25 @@ public class EJBFunctionClassificationStrategyTest extends EJBmoxAbstractTest<Li
         this.assertAnnotations(bitSets, FunctionCallType.INTERNAL, FunctionCallType.LIBRARY, FunctionCallType.LIBRARY,
                 FunctionCallType.INTERNAL);
     }
+    
+    @Override
+	protected void assertTestComponentWithProvidedEventInterface(List<BitSet> bitSets) {
+		this.assertAnnotations(bitSets, FunctionCallType.INTERNAL, FunctionCallType.LIBRARY, FunctionCallType.INTERNAL);
+	}
+    
+    @Override
+	protected void assertTestTwoComponentsWithProvidedEventInterfaceAndRequiredInterface(List<BitSet> bitSets) {
+    	this.assertAnnotations(bitSets, FunctionCallType.INTERNAL, FunctionCallType.EMITEVENT,FunctionCallType.LIBRARY, 
+    			FunctionCallType.INTERNAL_CALL_CONTAINING_EXTERNAL_CALL);
+	}
 
     private void assertAnnotations(final List<BitSet> bitSets, final FunctionCallType... expectedFunctionCallTypes) {
+    	//remove empty bit sets from list
+    	List<BitSet> filteredBitSets = bitSets.stream().filter(bitSet->!bitSet.isEmpty()).collect(Collectors.toList());
         Assert.assertEquals("Expected  length of bit sets does not match the actual length",
-                expectedFunctionCallTypes.length, bitSets.size());
-        for (int i = 0; i < bitSets.size(); i++) {
-            final BitSet bitSet = bitSets.get(i);
+                expectedFunctionCallTypes.length, filteredBitSets.size());
+        for (int i = 0; i < filteredBitSets.size(); i++) {
+            final BitSet bitSet = filteredBitSets.get(i);
             final FunctionCallType expectedFunctionCallType = expectedFunctionCallTypes[i];
             final BitSet expectedBitSet = new BitSet();
             expectedBitSet.set(FunctionCallClassificationVisitor.getIndex(expectedFunctionCallType));

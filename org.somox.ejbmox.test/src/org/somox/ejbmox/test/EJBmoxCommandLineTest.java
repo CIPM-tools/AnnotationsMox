@@ -6,10 +6,13 @@ import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.palladiosimulator.pcm.repository.BasicComponent;
+import org.palladiosimulator.pcm.repository.EventGroup;
+import org.palladiosimulator.pcm.repository.EventType;
 import org.palladiosimulator.pcm.repository.OperationInterface;
 import org.palladiosimulator.pcm.repository.OperationRequiredRole;
 import org.palladiosimulator.pcm.repository.OperationSignature;
 import org.palladiosimulator.pcm.repository.Repository;
+import org.palladiosimulator.pcm.repository.SourceRole;
 import org.palladiosimulator.pcm.seff.ResourceDemandingSEFF;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.palladiosimulator.pcm.seff.ServiceEffectSpecification;
@@ -25,6 +28,8 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
     private static final String FIND_CATEGORIES_IN_REGION = "findCategoriesInRegion";
     private static final String FIND_ITEM_MAX_BID = "findItemMaxBid";
     private static final String REQUIRED_ROLE_NAME = NAME_OF_SINGLE_COMPONENT + "_requires_" + NAME_OF_REQ_INTERFACE;
+	private static final String NAME_OF_REQ_EVENT = "ChangeAmountCalculatedEvent";
+	private static final String EVENT_REQUIRED_ROLE_NAME = NAME_OF_SINGLE_COMPONENT + "_requires_" + NAME_OF_REQ_EVENT;
 
     @Override
     protected void beforeTest() {
@@ -43,18 +48,11 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
 
     @Override
     protected void assertTestSingleComponent(final AnalysisResult analysisResult) {
-        // only one component, no interfaces and a system with one assembly context should exist
+        // only one component should exist
         final Repository repository = analysisResult.getInternalArchitectureModel();
         final System system = analysisResult.getSystemModel();
         EJBmoxAssertHelper.assertOneBasicComponentWithName(repository, NAME_OF_SINGLE_COMPONENT);
         EJBmoxAssertHelper.assertSingleAssemblyContext(system);
-        // assert that no seff has been created
-        final boolean seffExisting = this.findComponentsWithSEFFs(repository).findAny().isPresent();
-        if (seffExisting) {
-            Assert.fail(
-                    "No component should exist that contains a SEFF if the component does not provide any interface");
-        }
-
     }
 
     @Override
@@ -80,7 +78,7 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
     protected void assertTestTwoComponentsWithProvidedAndRequiredInterface(final AnalysisResult analysisResult) {
         final Repository repository = analysisResult.getInternalArchitectureModel();
         final System system = analysisResult.getSystemModel();
-        EJBmoxAssertHelper.assertRepositoryWithTwoComponentsAndProvidedAndRequiredInterfaces(repository);
+        EJBmoxAssertHelper.assertRepositoryWithTwoComponentsAndProvidedAndRequiredInterfaces(repository, OperationInterface.class);
         EJBmoxAssertHelper.assertSystemWithTwoComponentsWithProvidedAndRequiredInterface(system);
 
         final List<ServiceEffectSpecification> seffs = this.findSEFFs(repository);
@@ -116,6 +114,52 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
 
         AssertSEFFHelper.assertSeffEquals(rdSeff, expectedSEFF);
     }
+    
+    @Override
+	protected void assertTestComponentWithProvidedEventInterface(AnalysisResult analysisResult) {
+    	final List<ServiceEffectSpecification> seffs = this.findSEFFs(analysisResult.getInternalArchitectureModel());
+    	final ResourceDemandingSEFF rdSeff = this.getRDSEFFForMethod(seffs, "SaleStartedEvent");
+    	
+    	// create expected SEFF
+    	final ResourceDemandingSEFF expectedSEFF = SeffFactory.eINSTANCE.createResourceDemandingSEFF();
+        expectedSEFF.getSteps_Behaviour().add(SeffFactory.eINSTANCE.createStartAction());
+        SEFFCreationHelper.createAndAddInternalActionToSeff(expectedSEFF);
+        expectedSEFF.getSteps_Behaviour().add(SeffFactory.eINSTANCE.createStopAction());
+
+        AssertSEFFHelper.assertSeffEquals(rdSeff, expectedSEFF);
+	}
+    
+    @Override
+	protected void assertTestTwoComponentsWithProvidedEventInterfaceAndRequiredInterface(AnalysisResult analysisResult) {
+    	Repository repository = analysisResult.getInternalArchitectureModel();
+    	EJBmoxAssertHelper.assertEntriesInCollection(repository.getComponents__Repository(), 2);
+    	EJBmoxAssertHelper.assertEventGroups(repository,EJBmoxPCMRepositoryModelCreatorTest.NUMBER_OF_EVENT_GROUPS);
+    	
+    	final List<ServiceEffectSpecification> seffs = this.findSEFFs(repository);
+        final ResourceDemandingSEFF rdSeff = this.getRDSEFFForMethod(seffs, "SaleStartedEvent");
+    	
+        // find necessary infos to create expected SEFF
+        final BasicComponent basicComponent = (BasicComponent) SEFFCreationHelper
+                .findComponentInPCMRepository(NAME_OF_SINGLE_COMPONENT, repository);
+        final SourceRole sourceRole = SEFFCreationHelper
+                .findSourceRoleInBasicComponent(basicComponent, EVENT_REQUIRED_ROLE_NAME);
+        final EventGroup requiredEventGroup = sourceRole.getEventGroup__SourceRole();
+        final EventType onEventType = SEFFCreationHelper
+                .findEventTypeInEventGroup(NAME_OF_REQ_EVENT, requiredEventGroup);
+    	
+    	// create expected SEFF
+        final ResourceDemandingSEFF expectedSEFF = SeffFactory.eINSTANCE.createResourceDemandingSEFF();
+        expectedSEFF.getSteps_Behaviour().add(SeffFactory.eINSTANCE.createStartAction());
+        SEFFCreationHelper.createAndAddInternalActionToSeff(expectedSEFF);
+        expectedSEFF.getSteps_Behaviour()
+                .add(SEFFCreationHelper.createEmitEventCallAction(sourceRole, onEventType));
+        SEFFCreationHelper.createAndAddInternalActionToSeff(expectedSEFF);
+        expectedSEFF.getSteps_Behaviour().add(
+                SEFFCreationHelper.createEmitEventCallAction(sourceRole, onEventType));
+        expectedSEFF.getSteps_Behaviour().add(SeffFactory.eINSTANCE.createStopAction());
+        
+        AssertSEFFHelper.assertSeffEquals(rdSeff, expectedSEFF);
+	}
 
     private ResourceDemandingSEFF getRDSEFFForMethod(final List<ServiceEffectSpecification> seffs,
             final String investigatedMethodName) {
@@ -136,5 +180,6 @@ public class EJBmoxCommandLineTest extends EJBmoxAbstractTest<AnalysisResult> {
         return repository.getComponents__Repository().stream().map(component -> (BasicComponent) component)
                 .filter(basicComp -> !basicComp.getServiceEffectSpecifications__BasicComponent().isEmpty());
     }
+
 
 }

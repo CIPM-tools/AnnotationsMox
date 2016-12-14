@@ -16,7 +16,7 @@ import de.hpi.sam.rubis.queryservice.QueryService;
  *
  */
 @Stateless(mappedName = InventoryService.MAPPED_NAME)
-public class InventoryServiceBean implements InventoryService {
+public class InventoryServiceBean {
 
     InputStream inStream = new FileInputStream("test");
 
@@ -38,7 +38,7 @@ public class InventoryServiceBean implements InventoryService {
         this.inStream.available();
         // libary call
         this.inStream.close();
-        // internal call containing external call
+        // internal call containing
         internalCall();
         // end of method calls
     }

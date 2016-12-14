@@ -14,7 +14,7 @@ import org.somox.kdmhelper.KDMReader;
 import org.somox.kdmhelper.metamodeladdition.Root;
 
 public class EJBmoxTestUtil {
-    public static String TEST_CODE_FOLDER_NAME = "testcode";
+	public static String TEST_CODE_FOLDER_NAME = "testcode";
     public static String TEST_OUTPUT_FOLDER_NAME = "testmodel";
 
     /**

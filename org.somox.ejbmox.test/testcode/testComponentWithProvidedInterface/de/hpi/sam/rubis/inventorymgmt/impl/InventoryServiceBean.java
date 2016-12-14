@@ -44,7 +44,7 @@ public class InventoryServiceBean implements InventoryService {
         this.inStream.available();
         // libary call
         bid.getBidPrice();
-        // internal call containing external call
+        // internal call 
         this.internalCall();
         // end of method calls
     }

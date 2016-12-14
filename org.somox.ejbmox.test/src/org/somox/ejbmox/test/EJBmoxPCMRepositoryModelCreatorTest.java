@@ -1,12 +1,17 @@
 package org.somox.ejbmox.test;
 
+import java.util.List;
+
+import org.palladiosimulator.pcm.repository.EventGroup;
+import org.palladiosimulator.pcm.repository.OperationInterface;
 import org.palladiosimulator.pcm.repository.Repository;
 import org.somox.analyzer.AnalysisResult;
 import org.somox.ejbmox.test.mock.DummyModelAnalyzer;
 
 public class EJBmoxPCMRepositoryModelCreatorTest extends EJBmoxAbstractTest<Repository> {
 
-    private AnalysisResult analysisResult;
+    public static final int NUMBER_OF_EVENT_GROUPS= 11;
+	private AnalysisResult analysisResult;
 
     @Override
     protected void beforeTest() {
@@ -26,8 +31,23 @@ public class EJBmoxPCMRepositoryModelCreatorTest extends EJBmoxAbstractTest<Repo
 
     @Override
     protected void assertTestTwoComponentsWithProvidedAndRequiredInterface(final Repository repository) {
-        EJBmoxAssertHelper.assertRepositoryWithTwoComponentsAndProvidedAndRequiredInterfaces(repository);
+        EJBmoxAssertHelper.assertRepositoryWithTwoComponentsAndProvidedAndRequiredInterfaces(repository, OperationInterface.class);
     }
+    
+    @Override
+	protected void assertTestComponentWithProvidedEventInterface(Repository repository) {
+    	EJBmoxAssertHelper.assertOneBasicComponentWithName(repository, NAME_OF_SINGLE_COMPONENT);
+    	List<EventGroup> eventGroups = EJBmoxAssertHelper.assertEventGroups(repository, NUMBER_OF_EVENT_GROUPS-1);
+    	for (EventGroup eventGroup : eventGroups) {
+			EJBmoxAssertHelper.assertSingleEntryInCollection(eventGroup.getEventTypes__EventGroup());
+		}
+	}
+    
+    @Override
+	protected void assertTestTwoComponentsWithProvidedEventInterfaceAndRequiredInterface(Repository repository) {
+    	EJBmoxAssertHelper.assertEntriesInCollection(repository.getComponents__Repository(), 2);
+		EJBmoxAssertHelper.assertEntriesInCollection(repository.getInterfaces__Repository(), NUMBER_OF_EVENT_GROUPS);
+	}
 
     @Override
     protected Repository executeTest(final String testMethodName) {

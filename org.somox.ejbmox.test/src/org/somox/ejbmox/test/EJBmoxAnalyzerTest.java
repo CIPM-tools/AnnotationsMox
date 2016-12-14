@@ -1,5 +1,7 @@
 package org.somox.ejbmox.test;
 
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -50,5 +52,16 @@ public class EJBmoxAnalyzerTest extends EJBmoxAbstractTest<System> {
     protected void assertTestComponentWithProvidedInterface(final System system) {
         EJBmoxAssertHelper.assertSingleAssemblyContext(system);
     }
+    
+    @Override
+	protected void assertTestComponentWithProvidedEventInterface(final System system) {
+    	EJBmoxAssertHelper.assertSingleAssemblyContext(system);
+	}
 
+	@Override
+	protected void assertTestTwoComponentsWithProvidedEventInterfaceAndRequiredInterface(System system) {
+		fail("Not implemented yet");
+		//EJBmoxAssertHelper.assertSystemWithTwoComponentsWithProvidedAndRequiredInterface(system);
+	}
+    
 }
