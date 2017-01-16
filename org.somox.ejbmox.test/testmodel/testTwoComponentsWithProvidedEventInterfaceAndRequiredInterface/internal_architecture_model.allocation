@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<allocation:Allocation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:allocation="http://palladiosimulator.org/PalladioComponentModel/Allocation/5.1" id="_x2Mi09wxEeaL1oDpkMMfbg" entityName="SoMoX Reverse Engineered Allocation Model">
+  <targetResourceEnvironment_Allocation href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.resourceenvironment#/"/>
+  <system_Allocation href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.system#_x2Mi0NwxEeaL1oDpkMMfbg"/>
+  <allocationContexts_Allocation id="_x7OMwdwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean">
+    <resourceContainer_AllocationContext href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.resourceenvironment#_wpNyUNwxEeaL1oDpkMMfbg"/>
+    <assemblyContext_AllocationContext href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.system#_x7OMwNwxEeaL1oDpkMMfbg"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_x7Oz0dwxEeaL1oDpkMMfbg" entityName="QueryServiceBean">
+    <resourceContainer_AllocationContext href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.resourceenvironment#_wpNyUNwxEeaL1oDpkMMfbg"/>
+    <assemblyContext_AllocationContext href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.system#_x7Oz0NwxEeaL1oDpkMMfbg"/>
+  </allocationContexts_Allocation>
+</allocation:Allocation>

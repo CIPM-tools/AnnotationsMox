@@ -3,7 +3,7 @@
 <plugin>
 <extension point="org.eclipse.debug.core.launchConfigurationTypes">
 	    <launchConfigurationType
-           delegate="org.somox.ejbmox.ejb.ui.EJBmoxModelAnalyzerConfigurationDelegate"
+           delegate="org.somox.ejbmox.ui.EJBmoxModelAnalyzerConfigurationDelegate"
            id="org.somox.ejbmox.analyzer.ejbmodelanalyzer.runconfig.LaunchEJBModelAnalyzer"
            modes="run, debug"
            name="Launch EJBmox"
@@ -13,7 +13,7 @@
    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 	    <launchConfigurationTabGroup
 	        type="org.somox.ejbmox.analyzer.ejbmodelanalyzer.runconfig.LaunchEJBModelAnalyzer"
-	        class="org.somox.ejbmox.ejb.ui.EJBmoxModelAnalyzerTabGroup"
+	        class="org.somox.ejbmox.ui.EJBmoxModelAnalyzerTabGroup"
 	        id="org.somox.analyzer.ejbmoxanalyzer.ui.launchConfigurationTabGroupAnalyzer">
 	    </launchConfigurationTabGroup>
 	</extension>

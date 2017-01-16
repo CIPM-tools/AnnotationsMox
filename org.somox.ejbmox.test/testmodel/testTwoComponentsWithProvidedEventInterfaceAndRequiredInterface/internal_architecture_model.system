@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<system:System xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:repository="http://palladiosimulator.org/PalladioComponentModel/Repository/5.1" xmlns:system="http://palladiosimulator.org/PalladioComponentModel/System/5.1" id="_x2Mi0NwxEeaL1oDpkMMfbg" entityName="SoMoX Reverse Engineered System">
+  <assemblyContexts__ComposedStructure id="_x7OMwNwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.repository#_x66DsNwxEeaL1oDpkMMfbg"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_x7Oz0NwxEeaL1oDpkMMfbg" entityName="QueryServiceBean">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="testmodel/testTwoComponentsWithProvidedEventInterfaceAndRequiredInterface/internal_architecture_model.repository#_x7GQ89wxEeaL1oDpkMMfbg"/>
+  </assemblyContexts__ComposedStructure>
+</system:System>

@@ -1,4 +1,4 @@
-package org.somox.ejbmox.ejb.ui;
+package org.somox.ejbmox.ui;
 
 import java.util.Map;
 

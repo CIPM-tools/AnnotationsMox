@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sourcecodedecorator:SourceCodeDecoratorRepository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:classifiers="http://www.emftext.org/java/classifiers" xmlns:members="http://www.emftext.org/java/members" xmlns:repository="http://palladiosimulator.org/PalladioComponentModel/Repository/5.1" xmlns:seff="http://palladiosimulator.org/PalladioComponentModel/SEFF/5.1" xmlns:sourcecodedecorator="http://somox.org/SourceCodeDecorator/2.0" xmlns:statements="http://www.emftext.org/java/statements">
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.0"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1qXUdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.1"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1sMgdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.2"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1taodwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.3"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1uowdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.4"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1v24dwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.5"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1xFAdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.6"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1yTINwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.7"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1y6MdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.8"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1zhQdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <methodLevelSourceCodeLink>
+    <repositoryComponent xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#/"/>
+    <function xsi:type="members:InterfaceMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryService.java#//@classifiers.0/@members.9"/>
+    <operation xsi:type="repository:EventType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x11WcdwxEeaL1oDpkMMfbg"/>
+  </methodLevelSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1qXUNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleStartedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1sMgNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleFinishedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1taoNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/PaymentModeSelectedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1uowNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeDisabledEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1v24NwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ProductBarcodeScannedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1xFANwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashAmountEnteredEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1xsENwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashBoxClosedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1y6MNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardScannedEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1zhQNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardPinEnteredEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <interfaceSourceCodeLink>
+    <interface xsi:type="repository:EventGroup" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x11WcNwxEeaL1oDpkMMfbg"/>
+    <gastClass xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeEnabledEvent.java#//@classifiers.0"/>
+  </interfaceSourceCodeLink>
+  <componentImplementingClassesLink>
+    <component xsi:type="repository:BasicComponent" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1pwQNwxEeaL1oDpkMMfbg"/>
+    <implementingClasses xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0"/>
+  </componentImplementingClassesLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleStartedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleStartedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1qXUtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleStartedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.0/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleFinishedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleFinishedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1sMgtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/SaleFinishedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.1/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/PaymentModeSelectedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/PaymentModeSelectedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1taotwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/PaymentModeSelectedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.2/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeDisabledEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeDisabledEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1uowtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeDisabledEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.3/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ProductBarcodeScannedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ProductBarcodeScannedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1v24twxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ProductBarcodeScannedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.4/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ProductBarcodeScannedEvent.java#//@classifiers.0/@members.1"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.4/@innerDeclaration_CompositeDataType.1"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashAmountEnteredEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashAmountEnteredEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1xFAtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashAmountEnteredEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.5/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashAmountEnteredEvent.java#//@classifiers.0/@members.1"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.5/@innerDeclaration_CompositeDataType.1"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashBoxClosedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashBoxClosedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1yTIdwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CashBoxClosedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.6/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardScannedEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardScannedEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1y6MtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardScannedEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.7/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardScannedEvent.java#//@classifiers.0/@members.1"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.7/@innerDeclaration_CompositeDataType.1"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardPinEnteredEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardPinEnteredEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x1zhQtwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardPinEnteredEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.8/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/CreditCardPinEnteredEvent.java#//@classifiers.0/@members.1"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.8/@innerDeclaration_CompositeDataType.1"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <dataTypeSourceCodeLink>
+    <file href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeEnabledEvent.java#/"/>
+    <jaMoPPType xsi:type="classifiers:Class" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeEnabledEvent.java#//@classifiers.0"/>
+    <pcmDataType xsi:type="repository:CompositeDataType" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x11WctwxEeaL1oDpkMMfbg"/>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeEnabledEvent.java#//@classifiers.0/@members.0"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.9/@innerDeclaration_CompositeDataType.0"/>
+    </innerDatatypeSourceCodeLink>
+    <innerDatatypeSourceCodeLink>
+      <field href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/events/ExpressModeEnabledEvent.java#//@classifiers.0/@members.1"/>
+      <innerDeclaration href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#//@dataTypes__Repository.9/@innerDeclaration_CompositeDataType.1"/>
+    </innerDatatypeSourceCodeLink>
+  </dataTypeSourceCodeLink>
+  <abstractActionClassMethodLink>
+    <classMethod href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.1"/>
+    <abstractAction xsi:type="seff:InternalAction" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x195UtwxEeaL1oDpkMMfbg"/>
+  </abstractActionClassMethodLink>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x13LqtwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.1"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x13ysNwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.3"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x14ZwNwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.4"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x14ZwdwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.5"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x15A0NwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.6"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x15n4NwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.7"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x15n4dwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.8"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x16O8NwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.9"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x162ANwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.10"/>
+  </seff2MethodMappings>
+  <seff2MethodMappings>
+    <seff xsi:type="seff:ResourceDemandingSEFF" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x162AdwxEeaL1oDpkMMfbg"/>
+    <statementListContainer xsi:type="members:ClassMethod" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.11"/>
+  </seff2MethodMappings>
+  <seffElementsSourceCodeLinks>
+    <seffElement xsi:type="seff:InternalAction" href="testmodel/testComponentWithProvidedEventInterface/internal_architecture_model.repository#_x195UtwxEeaL1oDpkMMfbg"/>
+    <statement xsi:type="statements:LocalVariableStatement" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.1/@statements.0"/>
+    <statement xsi:type="statements:ForLoop" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.1/@statements.1"/>
+    <statement xsi:type="statements:ExpressionStatement" href="file:/Users/michael/eclipseWorkspaces/SoMoXEJBmox/EJBmox/org.somox.ejbmox.test/testcode/testComponentWithProvidedEventInterface/org/cocome/tradingsystem/cashdeskline/cashdesk/InventoryServiceBean.java#//@classifiers.0/@members.1/@statements.3"/>
+  </seffElementsSourceCodeLinks>
+</sourcecodedecorator:SourceCodeDecoratorRepository>

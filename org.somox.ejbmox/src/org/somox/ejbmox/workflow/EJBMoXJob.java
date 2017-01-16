@@ -6,7 +6,8 @@ import org.somox.analyzer.simplemodelanalyzer.jobs.SaveSoMoXModelsJob;
 import org.somox.analyzer.simplemodelanalyzer.jobs.SoMoXBlackboard;
 import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.ejbmox.analyzer.EJBmoxConfiguration;
-import org.somox.ejbmox.ejb.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
+import org.somox.ejbmox.seffhelper.externalcallfinder.EJBInterfaceOfExternalCallFindingFactory;
+import org.somox.ejbmox.seffhelper.functionclassification.EJBmoxFunctionClassificationStrategyFactory;
 import org.somox.gast2seff.jobs.GAST2SEFFJob;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractExtendableJob;
@@ -28,8 +29,9 @@ public class EJBMoXJob extends AbstractExtendableJob<SoMoXBlackboard> {
 
         final boolean reverseEngineerResourceDemandingInternalBehaviour = ejbmoxConfiguration
                 .isReverseEngineerInternalMethodsAsResourceDemandingInternalBehaviour();
-        this.add(new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
-                new EJBmoxFunctionClassificationStrategyFactory()));
+        GAST2SEFFJob ejb2SEFFJob = new GAST2SEFFJob(reverseEngineerResourceDemandingInternalBehaviour,
+                new EJBmoxFunctionClassificationStrategyFactory(), new EJBInterfaceOfExternalCallFindingFactory());
+        this.add(ejb2SEFFJob);
 
         this.handleJobExtensions(EJBMoXWorkflowHooks.PRE_SAVE_MODELS, new Configuration());
 

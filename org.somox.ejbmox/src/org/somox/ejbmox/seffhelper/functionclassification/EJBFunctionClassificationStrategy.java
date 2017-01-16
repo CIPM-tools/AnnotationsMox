@@ -1,4 +1,4 @@
-package org.somox.ejbmox.ejb.functionclassification;
+package org.somox.ejbmox.seffhelper.functionclassification;
 
 import java.util.List;
 import java.util.Set;
@@ -12,14 +12,12 @@ import org.palladiosimulator.pcm.repository.OperationInterface;
 import org.palladiosimulator.pcm.repository.OperationRequiredRole;
 import org.somox.gast2seff.visitors.AbstractFunctionClassificationStrategy;
 import org.somox.gast2seff.visitors.MethodCallFinder;
-import org.somox.kdmhelper.KDMHelper;
 import org.somox.kdmhelper.metamodeladdition.Root;
 import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
 
 public class EJBFunctionClassificationStrategy extends AbstractFunctionClassificationStrategy {
 
-	private static final String EVENT_EVENT_CLASS_FQN = "javax.enterprise.event.Event";
 	private static final String EVENT_FIRE_METHOD = "fire";
 	private final SourceCodeDecoratorRepository sourceCodeDecoratorRepository;
 	private final BasicComponent basicComponent;
@@ -68,10 +66,7 @@ public class EJBFunctionClassificationStrategy extends AbstractFunctionClassific
 	 */
 	@Override
 	protected boolean isEmitEventCall(final Method method) {
-		if (method.getName().equals(EVENT_FIRE_METHOD)) {
-			return true;
-		}
-		return false;
+		return method.getName().equals(EVENT_FIRE_METHOD);
 	}
 
 	/**

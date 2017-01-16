@@ -12,7 +12,7 @@ import org.emftext.language.java.statements.Statement;
 import org.junit.Assert;
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.somox.analyzer.AnalysisResult;
-import org.somox.ejbmox.ejb.functionclassification.EJBFunctionClassificationStrategy;
+import org.somox.ejbmox.seffhelper.functionclassification.EJBFunctionClassificationStrategy;
 import org.somox.ejbmox.test.mock.DummyModelAnalyzer;
 import org.somox.gast2seff.visitors.FunctionCallClassificationVisitor;
 import org.somox.gast2seff.visitors.FunctionCallClassificationVisitor.FunctionCallType;

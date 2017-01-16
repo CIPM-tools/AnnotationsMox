@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="ASCII"?>
+<repository:Repository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:repository="http://palladiosimulator.org/PalladioComponentModel/Repository/5.1" xmlns:seff="http://palladiosimulator.org/PalladioComponentModel/SEFF/5.1" id="_x2Mi0twxEeaL1oDpkMMfbg">
+  <components__Repository xsi:type="repository:BasicComponent" id="_x66DsNwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean">
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp4NwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x67R0NwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp4dwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x68f8NwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp4twxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x69uENwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp49wxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x6_jQNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp5NwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7AxYNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp5dwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7BYcNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7Fp5twxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7B_gNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7GQ8NwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7CmkNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7GQ8dwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7D0sNwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7GQ8twxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_provides_aName" eventGroup__SinkRole="_x7EbwNwxEeaL1oDpkMMfbg"/>
+    <requiredRoles_InterfaceRequiringEntity xsi:type="repository:SourceRole" id="_x7J7UNwxEeaL1oDpkMMfbg" entityName="InventoryServiceBean_requires_ChangeAmountCalculatedEvent" eventGroup__SourceRole="_x7G4ANwxEeaL1oDpkMMfbg"/>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7J7UdwxEeaL1oDpkMMfbg" describedService__SEFF="_x67R0dwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7RQENwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7RQEtwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:InternalAction" id="_x7RQEtwxEeaL1oDpkMMfbg" entityName="IA  @position: org.cocome.tradingsystem.cashdeskline.cashdesk.InventoryServiceBean.java.InventoryServiceBean.reserveItem() at 3161" predecessor_AbstractAction="_x7RQENwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7UTYNwxEeaL1oDpkMMfbg">
+        <resourceDemand_Action>
+          <specification_ParametericResourceDemand specification="0"/>
+          <requiredResource_ParametricResourceDemand href="pathmap://PCM_MODELS/Palladio.resourcetype#_oro4gG3fEdy4YaaT-RYrLQ"/>
+        </resourceDemand_Action>
+      </steps_Behaviour>
+      <steps_Behaviour xsi:type="seff:EmitEventAction" id="_x7UTYNwxEeaL1oDpkMMfbg" entityName="fire @position: org.cocome.tradingsystem.cashdeskline.cashdesk.InventoryServiceBean.java.InventoryServiceBean.reserveItem() at 3359" predecessor_AbstractAction="_x7RQEtwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7X9wNwxEeaL1oDpkMMfbg" eventType__EmitEventAction="_x7G4AdwxEeaL1oDpkMMfbg" sourceRole__EmitEventAction="_x7J7UNwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:InternalAction" id="_x7X9wNwxEeaL1oDpkMMfbg" entityName="IA  @position: org.cocome.tradingsystem.cashdeskline.cashdesk.InventoryServiceBean.java.InventoryServiceBean.reserveItem() at 3417" predecessor_AbstractAction="_x7UTYNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7ZL4NwxEeaL1oDpkMMfbg">
+        <resourceDemand_Action>
+          <specification_ParametericResourceDemand specification="0"/>
+          <requiredResource_ParametricResourceDemand href="pathmap://PCM_MODELS/Palladio.resourcetype#_oro4gG3fEdy4YaaT-RYrLQ"/>
+        </resourceDemand_Action>
+      </steps_Behaviour>
+      <steps_Behaviour xsi:type="seff:EmitEventAction" id="_x7ZL4NwxEeaL1oDpkMMfbg" entityName="fire @position: org.cocome.tradingsystem.cashdeskline.cashdesk.InventoryServiceBean.java.InventoryServiceBean.internalCallContainingExternal() at 3736" predecessor_AbstractAction="_x7X9wNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7RQEdwxEeaL1oDpkMMfbg" eventType__EmitEventAction="_x7G4AdwxEeaL1oDpkMMfbg" sourceRole__EmitEventAction="_x7J7UNwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7RQEdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7ZL4NwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7KiYNwxEeaL1oDpkMMfbg" describedService__SEFF="_x68f8dwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7aaANwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7aaAdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7aaAdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7aaANwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7KiYdwxEeaL1oDpkMMfbg" describedService__SEFF="_x69uEdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7aaAtwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7aaA9wxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7aaA9wxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7aaAtwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7KiYtwxEeaL1oDpkMMfbg" describedService__SEFF="_x6_jQdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7bBENwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7bBEdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7bBEdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7bBENwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LJcNwxEeaL1oDpkMMfbg" describedService__SEFF="_x7AxYdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7bBEtwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7bBE9wxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7bBE9wxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7bBEtwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LJcdwxEeaL1oDpkMMfbg" describedService__SEFF="_x7BYcdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7bBFNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7bBFdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7bBFdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7bBFNwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LJctwxEeaL1oDpkMMfbg" describedService__SEFF="_x7B_gdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7boINwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7boIdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7boIdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7boINwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LwgNwxEeaL1oDpkMMfbg" describedService__SEFF="_x7CmkdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7boItwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7boI9wxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7boI9wxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7boItwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LwgdwxEeaL1oDpkMMfbg" describedService__SEFF="_x7D0sdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7cPMNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7cPMdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7cPMdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7cPMNwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7LwgtwxEeaL1oDpkMMfbg" describedService__SEFF="_x7EbwdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7c2QNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7c2QdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7c2QdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7c2QNwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+  </components__Repository>
+  <components__Repository xsi:type="repository:BasicComponent" id="_x7GQ89wxEeaL1oDpkMMfbg" entityName="QueryServiceBean">
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7JUQNwxEeaL1oDpkMMfbg" entityName="QueryServiceBean_provides_aName" eventGroup__SinkRole="_x7G4ANwxEeaL1oDpkMMfbg"/>
+    <providedRoles_InterfaceProvidingEntity xsi:type="repository:SinkRole" id="_x7JUQdwxEeaL1oDpkMMfbg" entityName="QueryServiceBean_provides_aName" eventGroup__SinkRole="_x7B_gNwxEeaL1oDpkMMfbg"/>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7MXkNwxEeaL1oDpkMMfbg" describedService__SEFF="_x7G4AdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7c2QtwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7c2Q9wxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7c2Q9wxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7c2QtwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+    <serviceEffectSpecifications__BasicComponent xsi:type="seff:ResourceDemandingSEFF" id="_x7MXkdwxEeaL1oDpkMMfbg" describedService__SEFF="_x7B_gdwxEeaL1oDpkMMfbg">
+      <steps_Behaviour xsi:type="seff:StartAction" id="_x7ddUNwxEeaL1oDpkMMfbg" successor_AbstractAction="_x7ddUdwxEeaL1oDpkMMfbg"/>
+      <steps_Behaviour xsi:type="seff:StopAction" id="_x7ddUdwxEeaL1oDpkMMfbg" predecessor_AbstractAction="_x7ddUNwxEeaL1oDpkMMfbg"/>
+    </serviceEffectSpecifications__BasicComponent>
+  </components__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x67R0NwxEeaL1oDpkMMfbg" entityName="SaleStartedEvent">
+    <eventTypes__EventGroup id="_x67R0dwxEeaL1oDpkMMfbg" entityName="SaleStartedEvent">
+      <parameter__EventType dataType__Parameter="_x67R0twxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x68f8NwxEeaL1oDpkMMfbg" entityName="SaleFinishedEvent">
+    <eventTypes__EventGroup id="_x68f8dwxEeaL1oDpkMMfbg" entityName="SaleFinishedEvent">
+      <parameter__EventType dataType__Parameter="_x68f8twxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x69uENwxEeaL1oDpkMMfbg" entityName="PaymentModeSelectedEvent">
+    <eventTypes__EventGroup id="_x69uEdwxEeaL1oDpkMMfbg" entityName="PaymentModeSelectedEvent">
+      <parameter__EventType dataType__Parameter="_x69uEtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x6_jQNwxEeaL1oDpkMMfbg" entityName="ExpressModeDisabledEvent">
+    <eventTypes__EventGroup id="_x6_jQdwxEeaL1oDpkMMfbg" entityName="ExpressModeDisabledEvent">
+      <parameter__EventType dataType__Parameter="_x6_jQtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7AxYNwxEeaL1oDpkMMfbg" entityName="ProductBarcodeScannedEvent">
+    <eventTypes__EventGroup id="_x7AxYdwxEeaL1oDpkMMfbg" entityName="ProductBarcodeScannedEvent">
+      <parameter__EventType dataType__Parameter="_x7AxYtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7BYcNwxEeaL1oDpkMMfbg" entityName="CashAmountEnteredEvent">
+    <eventTypes__EventGroup id="_x7BYcdwxEeaL1oDpkMMfbg" entityName="CashAmountEnteredEvent">
+      <parameter__EventType dataType__Parameter="_x7BYctwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7B_gNwxEeaL1oDpkMMfbg" entityName="CashBoxClosedEvent">
+    <eventTypes__EventGroup id="_x7B_gdwxEeaL1oDpkMMfbg" entityName="CashBoxClosedEvent">
+      <parameter__EventType dataType__Parameter="_x7B_gtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7CmkNwxEeaL1oDpkMMfbg" entityName="CreditCardScannedEvent">
+    <eventTypes__EventGroup id="_x7CmkdwxEeaL1oDpkMMfbg" entityName="CreditCardScannedEvent">
+      <parameter__EventType dataType__Parameter="_x7CmktwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7D0sNwxEeaL1oDpkMMfbg" entityName="CreditCardPinEnteredEvent">
+    <eventTypes__EventGroup id="_x7D0sdwxEeaL1oDpkMMfbg" entityName="CreditCardPinEnteredEvent">
+      <parameter__EventType dataType__Parameter="_x7D0stwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7EbwNwxEeaL1oDpkMMfbg" entityName="ExpressModeEnabledEvent">
+    <eventTypes__EventGroup id="_x7EbwdwxEeaL1oDpkMMfbg" entityName="ExpressModeEnabledEvent">
+      <parameter__EventType dataType__Parameter="_x7EbwtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <interfaces__Repository xsi:type="repository:EventGroup" id="_x7G4ANwxEeaL1oDpkMMfbg" entityName="ChangeAmountCalculatedEvent">
+    <eventTypes__EventGroup id="_x7G4AdwxEeaL1oDpkMMfbg" entityName="ChangeAmountCalculatedEvent">
+      <parameter__EventType dataType__Parameter="_x7G4AtwxEeaL1oDpkMMfbg" parameterName="event"/>
+    </eventTypes__EventGroup>
+  </interfaces__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x67R0twxEeaL1oDpkMMfbg" entityName="SaleStartedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x68f8twxEeaL1oDpkMMfbg" entityName="SaleFinishedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x69uEtwxEeaL1oDpkMMfbg" entityName="PaymentModeSelectedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x6_jQtwxEeaL1oDpkMMfbg" entityName="ExpressModeDisabledEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7AxYtwxEeaL1oDpkMMfbg" entityName="ProductBarcodeScannedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__barcode">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7BYctwxEeaL1oDpkMMfbg" entityName="CashAmountEnteredEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__amount">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.3"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7B_gtwxEeaL1oDpkMMfbg" entityName="CashBoxClosedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7CmktwxEeaL1oDpkMMfbg" entityName="CreditCardScannedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__creditCardInformation">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.1"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7D0stwxEeaL1oDpkMMfbg" entityName="CreditCardPinEnteredEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__pin">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7EbwtwxEeaL1oDpkMMfbg" entityName="ExpressModeEnabledEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__cashDesk">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.1"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+  <dataTypes__Repository xsi:type="repository:CompositeDataType" id="_x7G4AtwxEeaL1oDpkMMfbg" entityName="ChangeAmountCalculatedEvent">
+    <innerDeclaration_CompositeDataType entityName="serialVersionUID">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.0"/>
+    </innerDeclaration_CompositeDataType>
+    <innerDeclaration_CompositeDataType entityName="__changeAmount">
+      <datatype_InnerDeclaration xsi:type="repository:PrimitiveDataType" href="pathmap://PCM_MODELS/PrimitiveTypes.repository#//@dataTypes__Repository.3"/>
+    </innerDeclaration_CompositeDataType>
+  </dataTypes__Repository>
+</repository:Repository>

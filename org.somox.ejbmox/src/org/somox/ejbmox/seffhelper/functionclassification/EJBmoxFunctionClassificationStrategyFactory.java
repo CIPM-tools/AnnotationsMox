@@ -1,4 +1,4 @@
-package org.somox.ejbmox.ejb.functionclassification;
+package org.somox.ejbmox.seffhelper.functionclassification;
 
 import org.palladiosimulator.pcm.repository.BasicComponent;
 import org.somox.gast2seff.visitors.IFunctionClassificationStrategy;

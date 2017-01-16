@@ -19,5 +19,5 @@ Require-Bundle: org.somox.core,
  org.somox.util
 Export-Package: org.somox.ejbmox.analyzer,
  org.somox.ejbmox.commandline,
- org.somox.ejbmox.ejb.functionclassification,
+ org.somox.ejbmox.seffhelper.functionclassification,
  org.somox.ejbmox.util
