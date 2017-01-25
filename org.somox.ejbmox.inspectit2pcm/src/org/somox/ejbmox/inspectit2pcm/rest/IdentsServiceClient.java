@@ -19,14 +19,17 @@ import com.google.gson.reflect.TypeToken;
 public class IdentsServiceClient extends RESTServiceClient {
 
     // TODO this assumes, there is only one agent with platformId "1"
-    private static final String SERVICE_URL_PREFIX = "agents/1/idents";
+    private static final String SERVICE_URL_PREFIX = "agents/{agentid}/idents";
 
-    public IdentsServiceClient(RESTClient client) {
+    private int agentId;
+
+    public IdentsServiceClient(RESTClient client, int agentId) {
         super(client);
+        this.agentId = agentId;
     }
 
     public Set<MethodIdent> listMethodIdents() {
-        String response = request(SERVICE_URL_PREFIX + "/methods");
+        String response = request(SERVICE_URL_PREFIX.replace("{agentid}", Integer.toString(agentId)) + "/methods");
         Type collectionType = new TypeToken<Set<MethodIdent>>() {
         }.getType();
         Set<MethodIdent> methods = buildGson().fromJson(response, collectionType);

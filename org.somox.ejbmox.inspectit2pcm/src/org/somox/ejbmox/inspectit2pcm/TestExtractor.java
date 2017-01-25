@@ -55,16 +55,18 @@ public class TestExtractor {
         // log4j basic setup
         BasicConfigurator.configure();
 
+        int agentId = 1;
+        
         RESTClient client = new RESTClient("http://localhost:8182/rest/");
-        IdentsServiceClient identService = new IdentsServiceClient(client);
-        InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
+        IdentsServiceClient identService = new IdentsServiceClient(client, agentId);
+        InvocationsServiceClient invocationsService = new InvocationsServiceClient(client, agentId);
 
         InvocationTreeScanner scanner = new InvocationTreeScanner(new ConsoleOutputTraversalListener(), servicesFQN,
                 interfacesFQN, identService.listMethodIdents());
 
         List<Long> invocationIds = invocationsService.getInvocationSequencesId();
         for (long invocationId : invocationIds) {
-            InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId);
+            InvocationSequence invocation = invocationsService.getInvocationSequence(invocationId, true);
             scanner.scanInvocationTree(invocation);
         }
     }

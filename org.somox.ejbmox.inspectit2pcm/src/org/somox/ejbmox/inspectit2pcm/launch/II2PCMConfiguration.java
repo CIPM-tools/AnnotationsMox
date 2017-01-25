@@ -12,6 +12,8 @@ import de.uka.ipd.sdq.workflow.extension.AbstractExtensionJobConfiguration;
 public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
 
     public static final String CMR_REST_API_DEFAULT = "http://localhost:8182/rest/";
+    
+    public static final Integer AGENT_ID_DEFAULT = 1;
 
     public static final Integer WARMUP_MEASUREMENTS_DEFAULT = 10;
 
@@ -29,6 +31,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     private boolean ensureInternalActionsBeforeSTOPAction;
     
     private boolean refineSQLStatements;
+    
+    private Integer agentId = AGENT_ID_DEFAULT;
 
     public II2PCMConfiguration(final Map<String, Object> attributes) {
         this.attributes = attributes;
@@ -68,6 +72,14 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
 
     public void setRefineSQLStatements(boolean refineSQLStatements) {
         this.refineSQLStatements = refineSQLStatements;
+    }
+
+    public int getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(int agentId) {
+        this.agentId = agentId;
     }
 
     @Override

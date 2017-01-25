@@ -25,6 +25,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     private Text txtWarmup;
     private Button btnInternalActionsBeforeStop;
     private Button btnSQLRefinement;
+    private Text txtAgentId;
 
     /**
      * @wbp.parser.entryPoint
@@ -65,6 +66,14 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
             }
         });
         btnNewButton.setText("Default");
+
+        Label lblAgentId = new Label(grpInspectitCmr, SWT.NONE);
+        lblAgentId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        lblAgentId.setText("Agent ID:");
+
+        txtAgentId = new Text(grpInspectitCmr, SWT.BORDER);
+        txtAgentId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        new Label(grpInspectitCmr, SWT.NONE);
 
         final Group grpSeffParametrization = new Group(container, SWT.NONE);
         grpSeffParametrization.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -119,6 +128,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
                 II2PCMConfiguration.CMR_REST_API_DEFAULT);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.AGENT_ID, II2PCMConfiguration.AGENT_ID_DEFAULT);
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
                 II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
@@ -132,6 +142,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
         try {
             this.txtCmrUrl.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
                     II2PCMConfiguration.CMR_REST_API_DEFAULT));
+            this.txtAgentId.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.AGENT_ID,
+                    II2PCMConfiguration.AGENT_ID_DEFAULT.toString()));
             this.txtWarmup.setText(configuration.getAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
                     II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString()));
             this.btnInternalActionsBeforeStop.setSelection(configuration.getAttribute(
@@ -148,6 +160,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     @Override
     public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL, this.txtCmrUrl.getText());
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.AGENT_ID, this.txtAgentId.getText());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS, this.txtWarmup.getText());
         final boolean ensureInternalActions = this.btnInternalActionsBeforeStop.getSelection();
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,

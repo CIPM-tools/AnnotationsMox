@@ -1,5 +1,7 @@
 package org.somox.ejbmox.inspectit2pcm.rest;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,8 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
     private final InvocationsServiceClient invocationsService;
 
     private final List<Long> invocationIds;
+
+    private boolean detailed = false;
 
     private InvocationsProvider(List<Long> invocationIds, InvocationsServiceClient invocationsService) {
         this.invocationIds = invocationIds;
@@ -28,6 +32,18 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
     public InvocationsProvider removeWarmup(int count) {
         List<Long> invocationIdsWithoutWarmup = removeWarmupInvocations(count);
         return new InvocationsProvider(invocationIdsWithoutWarmup, invocationsService);
+    }
+
+    /**
+     * 
+     * @param ids
+     *            the invocation ids to be removed
+     * @return
+     */
+    public InvocationsProvider remove(Collection<Long> ids) {
+        List<Long> result = new ArrayList<>(invocationIds);
+        result.removeAll(ids);
+        return new InvocationsProvider(result, invocationsService);
     }
 
     @Override
@@ -49,6 +65,14 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
             invocationIdsWithoutWarmup = Collections.emptyList();
         }
         return invocationIdsWithoutWarmup;
+    }
+
+    public void setDetailed(boolean detailed) {
+        this.detailed = detailed;
+    }
+
+    public boolean isDetailed() {
+        return detailed;
     }
 
     public static InvocationsProvider fromService(InvocationsServiceClient invocationsService) {
@@ -73,7 +97,7 @@ public class InvocationsProvider implements Iterable<InvocationSequence> {
         @Override
         public InvocationSequence next() {
             long invocationId = idIterator.next();
-            InvocationSequence invocationSequence = invocationsService.getInvocationSequence(invocationId);
+            InvocationSequence invocationSequence = invocationsService.getInvocationSequence(invocationId, detailed);
             return invocationSequence;
         }
 

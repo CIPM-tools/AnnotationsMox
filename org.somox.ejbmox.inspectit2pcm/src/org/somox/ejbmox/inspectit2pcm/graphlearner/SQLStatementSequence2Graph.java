@@ -40,7 +40,7 @@ public class SQLStatementSequence2Graph {
         for (SQLStatement stmt : sequence.getSequence()) {
             // TODO make configurable
             // remove comments and metadata queries
-            if (stmt.getSql().startsWith("/*") || stmt.getSql().startsWith("SELECT @@")) {
+            if (stmt.getSql().startsWith("/*") || stmt.getSql().toLowerCase().startsWith("select @@")) {
                 continue;
             }
             filtered.add(stmt);

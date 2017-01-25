@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class InvocationSequence {
 
+    private long id;
+    
     /**
      * The unique identifier of the method.
      */
@@ -57,6 +59,10 @@ public class InvocationSequence {
      */
     private Timestamp timeStamp;
 
+    public long getId() {
+        return id;
+    }
+    
     public long getMethodId() {
         return methodIdent;
     }

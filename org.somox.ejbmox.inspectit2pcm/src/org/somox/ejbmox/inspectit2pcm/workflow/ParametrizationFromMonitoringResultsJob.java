@@ -1,12 +1,15 @@
 package org.somox.ejbmox.inspectit2pcm.workflow;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.jmx.Agent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.ejbmox.inspectit2pcm.InvocationTree2PCMMapper;
 import org.somox.ejbmox.inspectit2pcm.InvocationTreeScanner;
 import org.somox.ejbmox.inspectit2pcm.ScanningProgressListener;
+import org.somox.ejbmox.inspectit2pcm.anomalies.AnomalyDetection;
 import org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
@@ -27,10 +30,11 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         final II2PCMConfiguration config = this.getPartition().getConfiguration();
 
         // instantiate REST service clients
+        int agentId = this.getPartition().getConfiguration().getAgentId();
         final RESTClient client = new RESTClient(this.getPartition().getConfiguration().getCmrUrl());
-        final IdentsServiceClient identService = new IdentsServiceClient(client);
+        final IdentsServiceClient identService = new IdentsServiceClient(client, agentId);
 
-        final InvocationsServiceClient invocationsService = new InvocationsServiceClient(client);
+        final InvocationsServiceClient invocationsService = new InvocationsServiceClient(client, agentId);
         InvocationsProvider invocations = InvocationsProvider.fromService(invocationsService);
         this.logger.info(String.format("Found %s invocation sequences.", invocations.size()));
 
@@ -50,6 +54,9 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         Set<MethodIdent> methods = identService.listMethodIdents();
         final InvocationTreeScanner scanner = buildScanner(listener, methods);
 
+        Collection<Long> anomalousInvocationIds = detectAnomalies(invocations);
+        invocations = invocations.remove(anomalousInvocationIds);
+
         scanInvocations(invocations, scanner, monitor);
 
         // store resulting parametrization to blackboard
@@ -57,8 +64,24 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         this.getPartition().setParametrization(parametrization);
     }
 
+    private Collection<Long> detectAnomalies(InvocationsProvider invocations) {
+        logger.info("Detecting anomalies...");
+
+        // request invocation overviews
+        invocations.setDetailed(false);
+
+        AnomalyDetection anomalyDetection = new AnomalyDetection(invocations);
+        Set<Long> anomalies = anomalyDetection.detect();
+
+        logger.info(String.format("Deteced %s anomalous measurements", anomalies.size())); // outlierCount
+        return anomalies;
+    }
+
     private void scanInvocations(InvocationsProvider invocations, final InvocationTreeScanner scanner,
             final IProgressMonitor monitor) {
+        // request entire invocation trees
+        invocations.setDetailed(true);
+
         monitor.beginTask(this.getName(), invocations.size());
         int i = 0;
         for (InvocationSequence invocation : invocations) {
