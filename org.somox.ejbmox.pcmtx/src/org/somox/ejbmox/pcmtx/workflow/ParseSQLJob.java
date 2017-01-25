@@ -28,7 +28,7 @@ public class ParseSQLJob extends AbstractPCMTXJob {
                 ParsedSQLStatement parsedStmt = new ParsedSQLStatement(type, tableNames);
                 getPCMTXPartition().addParsedStatement(stmt, parsedStmt);
             } catch (JSQLParserException e) {
-                logger.error("Could not parse SQL statement", e);
+                logger.error("Could not parse SQL statement: " + stmt, e);
             }
         }
     }
