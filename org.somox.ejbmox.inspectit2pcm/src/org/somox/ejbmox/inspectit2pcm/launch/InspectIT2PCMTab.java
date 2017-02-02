@@ -25,6 +25,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     private Text txtWarmup;
     private Button btnInternalActionsBeforeStop;
     private Button btnSQLRefinement;
+    private Button btnRemoveAnomalies;
     private Text txtAgentId;
 
     /**
@@ -92,6 +93,11 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
         final Label lblMeasurements = new Label(grpSeffParametrization, SWT.NONE);
         lblMeasurements.setText("measurements");
 
+        Group grpAnomalyRemoval = new Group(container, SWT.NONE);
+        grpAnomalyRemoval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        grpAnomalyRemoval.setText("Anomaly Removal");
+        grpAnomalyRemoval.setLayout(new GridLayout(1, false));
+
         final Group miscellaneousGroup = new Group(container, SWT.None);
         miscellaneousGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         miscellaneousGroup.setText("Miscellaneous");
@@ -113,6 +119,9 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
             }
 
         };
+
+        this.btnRemoveAnomalies = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(grpAnomalyRemoval,
+                "Detect and remove anomalies", "Detect and remove anomalies", selectionListener);
 
         this.btnInternalActionsBeforeStop = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(
                 miscellaneousGroup, "Ensure InternalAction before StopAction",
@@ -137,6 +146,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
                 II2PCMConfiguration.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT);
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
                 II2PCMConfiguration.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE,
+                II2PCMConfiguration.REMOVE_ANOMALIES_DEFAULT);
     }
 
     @Override
@@ -154,6 +165,9 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
             this.btnSQLRefinement.setSelection(configuration.getAttribute(
                     InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
                     II2PCMConfiguration.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT));
+            this.btnRemoveAnomalies.setSelection(
+                    configuration.getAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE,
+                            II2PCMConfiguration.REMOVE_ANOMALIES_DEFAULT));
         } catch (final CoreException e) {
             e.printStackTrace();
         }
@@ -169,6 +183,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
                 ensureInternalActions);
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS,
                 btnSQLRefinement.getSelection());
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE,
+                btnRemoveAnomalies.getSelection());
     }
 
     @Override

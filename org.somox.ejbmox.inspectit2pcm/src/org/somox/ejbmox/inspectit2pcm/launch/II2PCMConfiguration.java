@@ -20,6 +20,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     public static final Boolean ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION_DEFAULT = true;
     
     public static final Boolean REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS_DEFAULT = true;
+    
+    public static final Boolean REMOVE_ANOMALIES_DEFAULT = true;
 
     private final Map<String, Object> attributes;
 
@@ -33,6 +35,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     private boolean refineSQLStatements;
     
     private Integer agentId = AGENT_ID_DEFAULT;
+    
+    private Boolean removeAnomalies = REMOVE_ANOMALIES_DEFAULT;
 
     public II2PCMConfiguration(final Map<String, Object> attributes) {
         this.attributes = attributes;
@@ -80,6 +84,14 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
 
     public void setAgentId(int agentId) {
         this.agentId = agentId;
+    }
+
+    public Boolean getRemoveAnomalies() {
+        return removeAnomalies;
+    }
+
+    public void setRemoveAnomalies(Boolean removeAnomalies) {
+        this.removeAnomalies = removeAnomalies;
     }
 
     @Override

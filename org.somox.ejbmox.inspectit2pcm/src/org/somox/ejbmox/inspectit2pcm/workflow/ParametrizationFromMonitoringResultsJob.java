@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.jmx.Agent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.somox.ejbmox.inspectit2pcm.InvocationTree2PCMMapper;
 import org.somox.ejbmox.inspectit2pcm.InvocationTreeScanner;
@@ -54,8 +53,12 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         Set<MethodIdent> methods = identService.listMethodIdents();
         final InvocationTreeScanner scanner = buildScanner(listener, methods);
 
-        Collection<Long> anomalousInvocationIds = detectAnomalies(invocations);
-        invocations = invocations.remove(anomalousInvocationIds);
+        // detect and remove anomalies if desired
+        boolean removeAnomalies = this.getPartition().getConfiguration().getRemoveAnomalies();
+        if (removeAnomalies) {
+            Collection<Long> anomalousInvocationIds = detectAnomalies(invocations);
+            invocations = invocations.remove(anomalousInvocationIds);
+        }
 
         scanInvocations(invocations, scanner, monitor);
 
