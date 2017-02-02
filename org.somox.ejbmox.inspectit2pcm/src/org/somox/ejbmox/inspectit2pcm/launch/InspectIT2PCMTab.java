@@ -73,6 +73,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 
         txtAgentId = new Text(grpInspectitCmr, SWT.BORDER);
         txtAgentId.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        txtAgentId.addModifyListener(modifyListener);
         new Label(grpInspectitCmr, SWT.NONE);
 
         final Group grpSeffParametrization = new Group(container, SWT.NONE);
@@ -128,7 +129,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.CMR_REST_API_URL,
                 II2PCMConfiguration.CMR_REST_API_DEFAULT);
-        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.AGENT_ID, II2PCMConfiguration.AGENT_ID_DEFAULT);
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.AGENT_ID,
+                II2PCMConfiguration.AGENT_ID_DEFAULT.toString());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.WARMUP_MEASUREMENTS,
                 II2PCMConfiguration.WARMUP_MEASUREMENTS_DEFAULT.toString());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.ENSURE_INTERNAL_ACTIONS_BEFORE_STOP_ACTION,
