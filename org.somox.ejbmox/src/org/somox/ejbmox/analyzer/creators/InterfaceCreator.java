@@ -12,9 +12,6 @@ import org.emftext.language.java.classifiers.ConcreteClassifier;
 import org.emftext.language.java.classifiers.Interface;
 import org.emftext.language.java.members.Member;
 import org.emftext.language.java.members.Method;
-import org.emftext.language.java.parameters.Parameter;
-import org.emftext.language.java.types.Type;
-import org.palladiosimulator.pcm.repository.EventGroup;
 import org.palladiosimulator.pcm.repository.OperationInterface;
 import org.palladiosimulator.pcm.repository.Repository;
 import org.somox.ejbmox.analyzer.EJBAnnotationHelper;
@@ -22,7 +19,7 @@ import org.somox.ejbmox.analyzer.EJBmoxPCMRepositoryModelCreator;
 import org.somox.kdmhelper.GetAccessedType;
 import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
-import org.somox.util.PCMModelCreationHelper;
+import org.somox.util.PcmModelCreationHelper;
 import org.somox.util.SourceCodeDecoratorHelper;
 
 public class InterfaceCreator {
@@ -32,10 +29,10 @@ public class InterfaceCreator {
 	private final Repository repository;
 	private final SourceCodeDecoratorRepository sourceCodeDecorator;
 	public final SourceCodeDecoratorHelper sourceCodeDecoratorHelper;
-	private final PCMModelCreationHelper pcmModelCreationHelper;
+	private final PcmModelCreationHelper pcmModelCreationHelper;
 
 	public InterfaceCreator(Repository repository, SourceCodeDecoratorRepository sourceCodeDecorator,
-			SourceCodeDecoratorHelper sourceCodeDecoratorHelper, PCMModelCreationHelper pcmModelCreationHelper) {
+			SourceCodeDecoratorHelper sourceCodeDecoratorHelper, PcmModelCreationHelper pcmModelCreationHelper) {
 		this.repository = repository;
 		this.sourceCodeDecorator = sourceCodeDecorator;
 		this.sourceCodeDecoratorHelper = sourceCodeDecoratorHelper;
@@ -101,37 +98,8 @@ public class InterfaceCreator {
 	private void createArchitecturalInterfaceForEJBInterface(final Interface jaMoPPInterface,
 			final Collection<org.palladiosimulator.pcm.repository.Interface> pcmInterfaces,
 			final org.palladiosimulator.pcm.repository.Interface possibleChildInterface) {
-		// decide whether to create an OpInterface or an EventGroup or both
-		List<Method> opInterfaceMethods = new ArrayList<Method>();
-		List<Method> eventGroupMethods = new ArrayList<Method>();
-		for (Method method : jaMoPPInterface.getMethods()) {
-			if (EJBAnnotationHelper.hasEventParameter(method)) {
-				eventGroupMethods.add(method);
-			} else {
-				opInterfaceMethods.add(method);
-			}
-		}
-		logger.info("Found " + eventGroupMethods.size() + " event methods and " + opInterfaceMethods.size()
-				+ " operation interface methods in " + jaMoPPInterface.getName());
-
-		createOpIfAndSignatures(opInterfaceMethods, jaMoPPInterface, pcmInterfaces, possibleChildInterface);
-		createEventGroupsAndEventTypes(eventGroupMethods, jaMoPPInterface, pcmInterfaces);
-
-	}
-
-	private Optional<InterfaceSourceCodeLink> checkForAlreadyExistingInteface(
-			final ConcreteClassifier concreteClassifier) {
-		final Optional<InterfaceSourceCodeLink> existingInterfaceSourceCodeLink = this.sourceCodeDecorator
-				.getInterfaceSourceCodeLink().stream()
-				.filter(interfaceSourceCodeLink -> interfaceSourceCodeLink.getGastClass().equals(concreteClassifier))
-				.findAny();
-		return existingInterfaceSourceCodeLink;
-	}
-
-	private void createOpIfAndSignatures(List<Method> opInterfaceMethods, final Interface jaMoPPInterface,
-			final Collection<org.palladiosimulator.pcm.repository.Interface> pcmInterfaces,
-			org.palladiosimulator.pcm.repository.Interface possibleChildInterface) {
-		if (opInterfaceMethods.isEmpty()) {
+		List<Method> methods = jaMoPPInterface.getMethods();
+		if (methods.isEmpty()) {
 			return;
 		}
 		org.palladiosimulator.pcm.repository.Interface pcmInterface = null;
@@ -146,7 +114,7 @@ public class InterfaceCreator {
 
 		} else {
 			pcmInterface = this.pcmModelCreationHelper.createOperationInterfaceAndUpdateSCDM(jaMoPPInterface);
-			for (final Member jaMoPPMember : opInterfaceMethods) {
+			for (final Member jaMoPPMember : methods) {
 				this.pcmModelCreationHelper
 						.createOperationSignatureInInterfaceForJaMoPPMemberAndUpdateSourceCodeDecorator(
 								(OperationInterface) pcmInterface, this.repository, jaMoPPMember);
@@ -156,37 +124,13 @@ public class InterfaceCreator {
 		createSuperInterfaces(jaMoPPInterface, pcmInterfaces, pcmInterface);
 	}
 
-	private void createEventGroupsAndEventTypes(List<Method> eventGroupMethods, Interface jaMoPPInterface,
-			Collection<org.palladiosimulator.pcm.repository.Interface> pcmInterfaces) {
-		if (eventGroupMethods.isEmpty()) {
-			return;
-		}
-		for (Method method : eventGroupMethods) {
-			Parameter observedJaMoPPParameter = findRelevantJaMoPPParameter(method);
-			ConcreteClassifier observedEventDataType = getObservedEventDataType(observedJaMoPPParameter);
-			EventGroup eventGroup = this.sourceCodeDecoratorHelper
-					.findPCMInterfaceForJaMoPPType(observedEventDataType, EventGroup.class);
-			if (null == eventGroup) {
-				eventGroup = this.pcmModelCreationHelper.createEventGroupAndEventTypeAndUpdateSourceCodeDecorator(
-						observedEventDataType, repository, observedJaMoPPParameter, method);
-			}
-			pcmInterfaces.add(eventGroup);
-		}
-		createSuperInterfaces(jaMoPPInterface, pcmInterfaces, null);
-	}
-
-	private ConcreteClassifier getObservedEventDataType(Parameter relevantJaMoPPParameter) {
-		Type targetType = relevantJaMoPPParameter.getTypeReference().getTarget();
-		if (null == targetType || !(targetType instanceof ConcreteClassifier)) {
-			throw new RuntimeException("Parameter has wrong target type: " + relevantJaMoPPParameter);
-		}
-		return (ConcreteClassifier) targetType;
-	}
-
-	private Parameter findRelevantJaMoPPParameter(Method method) {
-		Parameter relevantJaMoPPParameter = method.getParameters().stream()
-				.filter(param -> EJBAnnotationHelper.isEventParameter(param)).findFirst().get();
-		return relevantJaMoPPParameter;
+	private Optional<InterfaceSourceCodeLink> checkForAlreadyExistingInteface(
+			final ConcreteClassifier concreteClassifier) {
+		final Optional<InterfaceSourceCodeLink> existingInterfaceSourceCodeLink = this.sourceCodeDecorator
+				.getInterfaceSourceCodeLink().stream()
+				.filter(interfaceSourceCodeLink -> interfaceSourceCodeLink.getGastClass().equals(concreteClassifier))
+				.findAny();
+		return existingInterfaceSourceCodeLink;
 	}
 
 	private void createSuperInterfaces(final Interface jaMoPPInterface,

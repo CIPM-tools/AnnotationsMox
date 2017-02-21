@@ -13,7 +13,7 @@ import org.somox.ejbmox.analyzer.creators.BasicComponentCreator;
 import org.somox.ejbmox.analyzer.creators.InterfaceCreator;
 import org.somox.ejbmox.analyzer.creators.ProvidedRoleCreator;
 import org.somox.ejbmox.analyzer.creators.RequiredRoleCreator;
-import org.somox.util.PCMModelCreationHelper;
+import org.somox.util.PcmModelCreationHelper;
 import org.somox.util.Seff2JavaCreatorUtil;
 import org.somox.util.SourceCodeDecoratorHelper;
 
@@ -30,12 +30,13 @@ public class EJBmoxPCMRepositoryModelCreator {
 	private final HashSet<CompilationUnit> compilationUnits;
 
 	private final Repository repository;
-	private final PCMModelCreationHelper pcmModelCreationHelper;
+	private final PcmModelCreationHelper pcmModelCreationHelper;
 	private final SourceCodeDecoratorHelper sourceCodeDecoratorHelper;
 	private final AnalysisResult analysisResult;
 
 	private final BasicComponentCreator basicComponentCreator;
 	private final InterfaceCreator interfaceCreator;
+	private final EventCreator eventCreator;
 	private final ProvidedRoleCreator providedRoleCreator;
 	private final RequiredRoleCreator requiredRoleCreator;
 
@@ -51,7 +52,7 @@ public class EJBmoxPCMRepositoryModelCreator {
 		this.repository = analysisResult.getInternalArchitectureModel();
 		this.sourceCodeDecoratorHelper = new SourceCodeDecoratorHelper(
 				analysisResult.getSourceCodeDecoratorRepository());
-		this.pcmModelCreationHelper = new PCMModelCreationHelper(analysisResult, this.sourceCodeDecoratorHelper);
+		this.pcmModelCreationHelper = new PcmModelCreationHelper(analysisResult, this.sourceCodeDecoratorHelper);
 
 		this.basicComponentCreator = new BasicComponentCreator(this.repository, this.sourceCodeDecoratorHelper);
 		this.interfaceCreator = new InterfaceCreator(this.repository,
@@ -59,22 +60,24 @@ public class EJBmoxPCMRepositoryModelCreator {
 				this.pcmModelCreationHelper);
 		this.requiredRoleCreator = new RequiredRoleCreator(this.sourceCodeDecoratorHelper);
 		this.providedRoleCreator = new ProvidedRoleCreator();
+		this.eventCreator = new EventCreator(this.repository, this.sourceCodeDecoratorHelper, this.pcmModelCreationHelper, this.providedRoleCreator);
 	}
 
 	public Repository createStaticArchitectureModel() {
 		this.compilationUnits.forEach(compilationUnit -> compilationUnit.getClassifiers().stream()
 				.filter(classifier -> classifier instanceof Class).map(classifier -> (Class) classifier)
 				.filter(jamoppClass -> EJBAnnotationHelper.isEJBClass(jamoppClass))
-				.forEach(ejbClass -> this.createArchitectureForEJBClass(ejbClass)));
+				.forEach(ejbClass -> this.createBasicComponentAndProvidedOperationInterfacesForEJBClass(ejbClass)));
 		Map<BasicComponent, Class> basicComponent2EJBClassMap = this.basicComponentCreator
 				.getBasicComponent2EJBClassMap();
+		this.eventCreator.createEventGroups(this.compilationUnits, basicComponent2EJBClassMap);
 		basicComponent2EJBClassMap.keySet()
 				.forEach(component -> this.requiredRoleCreator.createRequiredRoles(component, basicComponent2EJBClassMap.get(component)));
 		this.createEmptySEFFs();
 		return this.repository;
 	}
 
-	private void createArchitectureForEJBClass(final Class ejbClass) {
+	private void createBasicComponentAndProvidedOperationInterfacesForEJBClass(final Class ejbClass) {
 		final BasicComponent basicComponent = this.basicComponentCreator.createBasicComponentForEJBClass(ejbClass);
 		final Collection<org.palladiosimulator.pcm.repository.Interface> providedInterfaces = this.interfaceCreator
 				.createProvidedInterfacesForEJBClass(ejbClass);
