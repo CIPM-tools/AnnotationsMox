@@ -108,7 +108,7 @@ public class EventCreator {
 			implementingBasicComponents.add(basicComponent);
 		} else {
 			logger.error("Class " + concreteClassifier
-					+ " does not having corresponding BasicComponent. This is not supported yet");
+					+ " does not having corresponding BasicComponent. Currently, we only support event methods in component-implementing classes.");
 		}
 	}
 
@@ -117,6 +117,9 @@ public class EventCreator {
 		for (Method method : eventGroupMethods) {
 			Parameter observedJaMoPPParameter = findRelevantJaMoPPParameter(method);
 			ConcreteClassifier observedEventDataType = getObservedEventDataType(observedJaMoPPParameter);
+			if(null == observedEventDataType){
+				continue;
+			}
 			EventGroup eventGroup = this.sourceCodeDecoratorHelper.findPCMInterfaceForJaMoPPType(observedEventDataType,
 					EventGroup.class);
 			if (null == eventGroup) {
@@ -130,10 +133,13 @@ public class EventCreator {
 		return eventGroup2MethodMap;
 	}
 
-	private ConcreteClassifier getObservedEventDataType(Parameter relevantJaMoPPParameter) {
-		Type targetType = relevantJaMoPPParameter.getTypeReference().getTarget();
-		if (null == targetType || !(targetType instanceof ConcreteClassifier)) {
-			throw new RuntimeException("Parameter has wrong target type: " + relevantJaMoPPParameter);
+	private ConcreteClassifier getObservedEventDataType(Parameter relevantJaMoPPParameter) {		Type targetType = relevantJaMoPPParameter.getTypeReference().getTarget();
+		if(null == targetType){
+			logger.info("targetType is null -- not considering the following Parameter as event relevant: " + relevantJaMoPPParameter);
+			return null;
+		}
+		if (!(targetType instanceof ConcreteClassifier)) {
+			throw new RuntimeException("Parameter " +  relevantJaMoPPParameter + " has wrong target type: " + targetType);
 		}
 		return (ConcreteClassifier) targetType;
 	}

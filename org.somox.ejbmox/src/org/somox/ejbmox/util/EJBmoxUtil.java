@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -13,11 +12,8 @@ import org.eclipse.emf.ecore.resource.URIConverter;
 import org.palladiosimulator.pcm.PcmPackage;
 import org.palladiosimulator.pcm.util.PcmResourceFactoryImpl;
 import org.somox.analyzer.simplemodelanalyzer.builder.util.DefaultResourceEnvironment;
-import org.somox.ejbmox.analyzer.EJBmoxAnalyzerConfiguration;
 import org.somox.sourcecodedecorator.SourcecodedecoratorPackage;
 import org.somox.sourcecodedecorator.util.SourcecodedecoratorResourceFactoryImpl;
-
-import de.uka.ipd.sdq.workflow.jobs.SequentialBlackboardInteractingJob;
 
 public class EJBmoxUtil {
 

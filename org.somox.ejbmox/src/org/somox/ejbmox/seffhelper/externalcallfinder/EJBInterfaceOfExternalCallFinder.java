@@ -14,7 +14,6 @@ import org.palladiosimulator.pcm.repository.EventGroup;
 import org.palladiosimulator.pcm.repository.RequiredRole;
 import org.palladiosimulator.pcm.repository.SourceRole;
 import org.somox.gast2seff.visitors.DefaultInterfaceOfExternalCallFinder;
-import org.somox.gast2seff.visitors.InterfaceOfExternalCallFinding;
 import org.somox.sourcecodedecorator.ComponentImplementingClassesLink;
 import org.somox.sourcecodedecorator.InterfaceSourceCodeLink;
 import org.somox.sourcecodedecorator.SourceCodeDecoratorRepository;
