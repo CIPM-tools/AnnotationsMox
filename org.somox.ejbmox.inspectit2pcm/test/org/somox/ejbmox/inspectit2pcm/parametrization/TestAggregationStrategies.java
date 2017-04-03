@@ -26,7 +26,7 @@ public class TestAggregationStrategies {
 
     private static final double MEAN_COMPARISON_DELTA = 0.000001;
 
-    private static final double ACCEPTABLE_ERROR = 0.02; // fraction between 0...1
+    private static final double ACCEPTABLE_ERROR = 0.005; // 0.5% (fraction between 0...1)
     private static final int DISTRIBUTION_BIN_COUNT = 30;
 
     @Test
@@ -60,7 +60,7 @@ public class TestAggregationStrategies {
 
     @Test
     public void testDistributionAggregation_normal() throws StringNotPDFException, RecognitionException {
-        testDistributionAggregation_RealDistribution(new NormalDistribution(5.0, 2.0));
+        testDistributionAggregation_RealDistribution(new NormalDistribution(10.0, 2.0));
     }
     
     @Test
@@ -80,13 +80,13 @@ public class TestAggregationStrategies {
 
     @Test
     public void testDistributionAggregation_uniform_wide() throws StringNotPDFException, RecognitionException {
-        testDistributionAggregation_RealDistribution(new UniformRealDistribution(0.0, 100.0));
+        testDistributionAggregation_RealDistribution(new UniformRealDistribution(0.0, 1000.0));
     }
 
     private void testDistributionAggregation_RealDistribution(AbstractRealDistribution distribution)
             throws RecognitionException {
         // calculate expected statistics
-        Collection<Double> values = drawSamples(distribution, 1_000);
+        Collection<Double> values = drawSamples(distribution, 1_000_000);
         DescriptiveStatistics expectedStatistics = statistics(drawSamples(distribution, 1_000_000));
 
         // create PDF using aggregation strategy
