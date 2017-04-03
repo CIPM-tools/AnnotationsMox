@@ -54,32 +54,41 @@ public class DistributionAggregationStrategy implements AggregationStrategy {
         int observations = data.length;
 
         SummaryStatistics previousBin = null;
-        double lastFrequency = 0;
-        double previousValue = -1;
+        boolean contiguous = false;
         for (SummaryStatistics stats : distribution.getBinStats()) {
-            // is bin empty? Then, the bin's boundaries (min/max) are undefinied (Double.NaN) and
-            // need to be treated differently
-            double value;
+            // is bin empty?
             if (stats.getN() == 0) {
-                if (previousBin.getN() != 0) {
-                    value = ensureValueGreaterThanPreviousValue(previousBin.getMax(), previousValue);
-                    stoExBuilder.append("(").append(value);
-                    stoExBuilder.append(";").append(lastFrequency).append(")");
-                } else {
-                    value = previousValue;
-                }
-                lastFrequency = 0;
-            } else {
-                value = ensureValueGreaterThanPreviousValue(stats.getMin(), previousValue);
-                stoExBuilder.append("(").append(value);
-                stoExBuilder.append(";").append(lastFrequency).append(")");
-                lastFrequency = stats.getN() / (double) observations;
+                contiguous = false;
+                continue;
             }
+
+            final double min, max;
+            if (previousBin == null) {
+                min = stats.getMin();
+            } else {
+                min = ensureGreaterThan(stats.getMin(), previousBin.getMax());
+            }
+            max = ensureGreaterThan(stats.getMax(), min);
+
+            // the empirical probability
+            double probability = stats.getN() / (double) observations;
+
+            if (!contiguous) {
+                // insert bin with zero probability
+                stoExBuilder.append("(").append(min);
+                stoExBuilder.append(";").append(0);
+                stoExBuilder.append(")");
+            }
+
+            // second bin
+            stoExBuilder.append("(").append(max);
+            stoExBuilder.append(";").append(probability);
+            stoExBuilder.append(")");
+
             previousBin = stats;
-            previousValue = value;
+            contiguous = true;
         }
-        stoExBuilder.append("(").append(ensureValueGreaterThanPreviousValue(previousBin.getMax(), previousValue));
-        stoExBuilder.append(";").append(lastFrequency).append(")").append("]");
+        stoExBuilder.append("]");
 
         return PCMHelper.createPCMRandomVariable(stoExBuilder.toString());
     }
@@ -92,7 +101,7 @@ public class DistributionAggregationStrategy implements AggregationStrategy {
      * @param lastValue
      * @return
      */
-    private double ensureValueGreaterThanPreviousValue(double currentValue, double lastValue) {
+    private double ensureGreaterThan(double currentValue, double lastValue) {
         final double DELTA = 0.001;
         if (currentValue > lastValue) {
             return currentValue;
