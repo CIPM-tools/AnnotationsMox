@@ -54,7 +54,7 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
         final InvocationTreeScanner scanner = buildScanner(listener, methods);
 
         // detect and remove anomalies if desired
-        boolean removeAnomalies = this.getPartition().getConfiguration().getRemoveAnomalies();
+        boolean removeAnomalies = this.getPartition().getConfiguration().isRemoveAnomalies();
         if (removeAnomalies) {
             Collection<Long> anomalousInvocationIds = detectAnomalies(invocations);
             invocations = invocations.remove(anomalousInvocationIds);
@@ -113,9 +113,7 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
     private InvocationTreeScanner buildScanner(ScanningProgressListener listener, Set<MethodIdent> methods) {
         final Set<String> externalServicesFQN = new HashSet<>(this.getPartition().getSeffToFQNMap().values());
-        final Set<String> interfacesFQN = new HashSet<>(this.getPartition().getInterfaceToFQNMap().values());
-        final InvocationTreeScanner scanner = new InvocationTreeScanner(listener, externalServicesFQN, interfacesFQN,
-                methods);
+        final InvocationTreeScanner scanner = new InvocationTreeScanner(listener, externalServicesFQN, methods);
         return scanner;
     }
 
