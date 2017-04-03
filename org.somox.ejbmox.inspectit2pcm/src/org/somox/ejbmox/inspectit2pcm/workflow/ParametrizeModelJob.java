@@ -40,7 +40,7 @@ import de.uka.ipd.sdq.workflow.jobs.UserCanceledException;
 public class ParametrizeModelJob extends AbstractII2PCMJob {
 
     // TODO make configurable via launch configuration
-    private final static boolean SAVE_DEBUG_OUTPUT = true;
+    private final static boolean SAVE_DEBUG_OUTPUT = false;
 
     @Override
     public void execute(final IProgressMonitor monitor) throws JobFailedException, UserCanceledException {
@@ -52,8 +52,10 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             return;
         }
 
-        // TODO make configurable
-        final AggregationStrategy aggregation = new DistributionAggregationStrategy();
+        boolean removeAnomalies = this.getPartition().getConfiguration().isRemoveAnomalies();
+        final AggregationStrategy aggregation = new DistributionAggregationStrategy(
+                DistributionAggregationStrategy.DEFAULT_BIN_COUNT, removeAnomalies);
+
         // final AggregationStrategy aggregation = new MeanAggregationStrategy();
         boolean refineSQL = this.getPartition().getConfiguration().isRefineSQLStatements();
 
