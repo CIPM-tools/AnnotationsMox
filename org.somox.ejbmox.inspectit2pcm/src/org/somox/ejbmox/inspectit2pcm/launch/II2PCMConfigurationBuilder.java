@@ -21,6 +21,8 @@ public class II2PCMConfigurationBuilder extends AbstractWorkflowExtensionConfigu
                 .get(InspectIT2PCMConfigurationAttributes.REFINE_INTERNAL_ACTIONS_TO_SQL_STATEMENTS));
         config.setRemoveAnomalies(
                 (boolean) attributes.get(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE));
+        config.setRemoveOutliers(
+                (boolean) attributes.get(InspectIT2PCMConfigurationAttributes.REMOVE_OUTLIERS_ATTRIBUTE));
         return config;
     }
 

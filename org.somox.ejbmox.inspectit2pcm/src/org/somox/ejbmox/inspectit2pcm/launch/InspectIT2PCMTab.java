@@ -26,6 +26,7 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
     private Button btnInternalActionsBeforeStop;
     private Button btnSQLRefinement;
     private Button btnRemoveAnomalies;
+    private Button btnRemoveOutliers;
     private Text txtAgentId;
 
     /**
@@ -97,6 +98,11 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
         grpAnomalyRemoval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         grpAnomalyRemoval.setText("Anomaly Removal");
         grpAnomalyRemoval.setLayout(new GridLayout(1, false));
+        
+        Group grpOutlierRemoval = new Group(container, SWT.NONE);
+        grpOutlierRemoval.setText("Outlier Removal");
+        grpOutlierRemoval.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        grpOutlierRemoval.setLayout(new GridLayout(1, false));
 
         final Group miscellaneousGroup = new Group(container, SWT.None);
         miscellaneousGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -122,6 +128,9 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
 
         this.btnRemoveAnomalies = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(grpAnomalyRemoval,
                 "Detect and remove anomalies", "Detect and remove anomalies", selectionListener);
+        
+        this.btnRemoveOutliers = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(grpOutlierRemoval,
+                "Detect and remove outliers", "Detect and remove outliers", selectionListener);
 
         this.btnInternalActionsBeforeStop = ModelAnalyzerStrategySelectionTab.createAndAddSWTCheckButton(
                 miscellaneousGroup, "Ensure InternalAction before StopAction",
@@ -168,6 +177,9 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
             this.btnRemoveAnomalies.setSelection(
                     configuration.getAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE,
                             II2PCMConfiguration.REMOVE_ANOMALIES_DEFAULT));
+            this.btnRemoveOutliers.setSelection(
+                    configuration.getAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_OUTLIERS_ATTRIBUTE,
+                            II2PCMConfiguration.REMOVE_OUTLIERS_DEFAULT));
         } catch (final CoreException e) {
             e.printStackTrace();
         }
@@ -185,6 +197,8 @@ public class InspectIT2PCMTab extends AbstractLaunchConfigurationTab {
                 btnSQLRefinement.getSelection());
         configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_ANOMALIES_ATTRIBUTE,
                 btnRemoveAnomalies.getSelection());
+        configuration.setAttribute(InspectIT2PCMConfigurationAttributes.REMOVE_OUTLIERS_ATTRIBUTE,
+                btnRemoveOutliers.getSelection());
     }
 
     @Override

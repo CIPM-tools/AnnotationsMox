@@ -1,5 +1,6 @@
 package org.somox.ejbmox.inspectit2pcm.launch;
 
+import java.util.List;
 import java.util.Map;
 
 import de.uka.ipd.sdq.workflow.extension.AbstractExtensionJobConfiguration;
@@ -23,6 +24,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     
     public static final Boolean REMOVE_ANOMALIES_DEFAULT = true;
 
+    public static final Boolean REMOVE_OUTLIERS_DEFAULT = false;
+
     private final Map<String, Object> attributes;
 
     private String cmrUrl = CMR_REST_API_DEFAULT;
@@ -37,6 +40,8 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
     private Integer agentId = AGENT_ID_DEFAULT;
     
     private Boolean removeAnomalies = REMOVE_ANOMALIES_DEFAULT;
+    
+    private Boolean removeOutliers = REMOVE_OUTLIERS_DEFAULT;
 
     public II2PCMConfiguration(final Map<String, Object> attributes) {
         this.attributes = attributes;
@@ -86,12 +91,20 @@ public class II2PCMConfiguration extends AbstractExtensionJobConfiguration {
         this.agentId = agentId;
     }
 
-    public Boolean getRemoveAnomalies() {
+    public Boolean isRemoveAnomalies() {
         return removeAnomalies;
     }
 
     public void setRemoveAnomalies(Boolean removeAnomalies) {
         this.removeAnomalies = removeAnomalies;
+    }    
+
+    public Boolean getRemoveOutliers() {
+        return removeOutliers;
+    }
+
+    public void setRemoveOutliers(Boolean removeOutliers) {
+        this.removeOutliers = removeOutliers;
     }
 
     @Override

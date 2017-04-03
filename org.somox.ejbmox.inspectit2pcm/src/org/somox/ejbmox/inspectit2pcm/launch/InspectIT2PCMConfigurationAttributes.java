@@ -14,4 +14,6 @@ public class InspectIT2PCMConfigurationAttributes {
 
     public static final String REMOVE_ANOMALIES_ATTRIBUTE = "org.somox.ejbmox.inspectit2pcm.removeanomalies";
 
+    public static final String REMOVE_OUTLIERS_ATTRIBUTE = "org.somox.ejbmox.inspectit2pcm.removeoutliers";
+
 }
