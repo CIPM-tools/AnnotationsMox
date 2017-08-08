@@ -14,4 +14,6 @@ public interface PathIntegrationListener {
      */
     void notifyIntegration(Path originalPath, Path addPath, Path combinedPath);
 
+    default void notifyClosestPath(Path path) {};
+    
 }

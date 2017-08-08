@@ -24,6 +24,39 @@ public class Path implements Cloneable {
         nodes.add(node);
     }
 
+    public static Path commonPrefix(Path path1, Path path2, Path... paths) {
+        List<Path> pathList = new ArrayList<>();
+        pathList.add(path1);
+        pathList.add(path2);
+        pathList.addAll(Arrays.asList(paths));
+
+        // determine shortest path
+        int shortestLength = Integer.MAX_VALUE;
+        for (Path p : pathList) { // TODO what about epsilon nodes?
+            int pathLength = p.getNodes().size();
+            shortestLength = Math.min(shortestLength, pathLength);
+        }
+
+        int commonPrefixLength = 0;
+        outer: for (int i = 0; i < shortestLength; i++) {
+            Node referenceNode = path1.getNodes().get(i);
+            for (Path p : pathList) {
+                Node node = p.getNodes().get(i);
+                if (!node.equals(referenceNode)) {
+                    break outer;
+                }
+            }
+            commonPrefixLength++;
+        }
+
+        // determine and return prefix for the given prefix length
+        if (commonPrefixLength > 0) {
+            return Path.fromNodes(path1.getNodes().subList(0, commonPrefixLength));
+        } else {
+            return Path.emptyPath();
+        }
+    }
+
     public static Path fromNodes(Node... nodes) {
         return fromNodes(Arrays.asList(nodes));
     }
@@ -36,7 +69,7 @@ public class Path implements Cloneable {
 
     @Override
     public String toString() {
-        return nodes.toString();
+        return this.excludeNonLeaves().getNodes().toString();
     }
 
     public List<Node> getNodes() {

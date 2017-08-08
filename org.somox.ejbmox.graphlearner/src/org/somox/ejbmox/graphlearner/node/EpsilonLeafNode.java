@@ -5,7 +5,7 @@ import org.somox.ejbmox.graphlearner.Visitor;
 
 public class EpsilonLeafNode extends LeafNode {
 
-    public static String EPSILON_CONTENT = "";
+    public static String EPSILON_CONTENT = "e";
 
     public EpsilonLeafNode() {
         super(EPSILON_CONTENT);

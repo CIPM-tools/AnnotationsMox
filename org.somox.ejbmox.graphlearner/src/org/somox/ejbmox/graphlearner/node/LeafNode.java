@@ -30,4 +30,16 @@ public class LeafNode extends Node {
         return v.visit(this);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LeafNode other = (LeafNode) obj;
+        if (getContent() != other.getContent())
+            return false;
+        return true;
+    }
+
 }
