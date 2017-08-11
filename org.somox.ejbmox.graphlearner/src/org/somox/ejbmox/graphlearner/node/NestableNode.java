@@ -53,9 +53,9 @@ public abstract class NestableNode extends Node {
         return Collections.unmodifiableList(children);
     }
 
-    @Override
-    public String toString() {
-        return children.toString();
-    }
+//    @Override
+//    public String toString() {
+//        return children.toString();
+//    }
 
 }

@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.palladiosimulator.pcm.core.PCMRandomVariable;
 import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
-import org.somox.ejbmox.inspectit2pcm.aggregation.DistributionAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.UniformBinWidthAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.aggregation.MeanAggregationStrategy;
 
 import de.uka.ipd.sdq.probfunction.math.IProbabilityDensityFunction;
@@ -128,7 +128,7 @@ public class TestAggregationStrategies {
     }
 
     private IProbabilityDensityFunction createDistributionOf(Collection<Double> values) throws RecognitionException {
-        AggregationStrategy strategy = new DistributionAggregationStrategy(DISTRIBUTION_BIN_COUNT, false);
+        AggregationStrategy strategy = new UniformBinWidthAggregationStrategy(DISTRIBUTION_BIN_COUNT, false);
         PCMRandomVariable rv = strategy.aggregate(values);
         String stoEx = rv.getSpecification();
 
@@ -196,7 +196,7 @@ public class TestAggregationStrategies {
             4.678512000013143, 4.0596320000477135, 4.161535999970511, 4.058511999901384, 3.9409119999036193,
             4.116512000095099, 4.36323200003244, 4.113904000027105, 4.598015999887139, 4.017855999991298,
             4.1264959999825805, 3.983312000054866, 4.1523680000100285, 4.199248000048101, 4.260080000152811,
-            4.13433600007556 };
+            1400.13433600007556 };
 
     private static final List<Double> VALUES_LIST = Arrays.asList(VALUES);
 

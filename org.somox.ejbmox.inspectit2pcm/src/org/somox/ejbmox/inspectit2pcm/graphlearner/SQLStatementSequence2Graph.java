@@ -39,9 +39,9 @@ public class SQLStatementSequence2Graph {
         SQLStatementSequence filtered = new SQLStatementSequence();
         for (SQLStatement stmt : sequence.getSequence()) {
             // TODO make configurable
-            // remove comments and metadata queries
-            if (stmt.getSql().startsWith("/*") || stmt.getSql().toLowerCase().startsWith("select @@")) {
-                continue;
+            // ignore comments and metadata queries
+            if (!SQLHelper.isActualStatement(stmt.getSql())) {
+                continue; // ignore this statement
             }
             filtered.add(stmt);
         }

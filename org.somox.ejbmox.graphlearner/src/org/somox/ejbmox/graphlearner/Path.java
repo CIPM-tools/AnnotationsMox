@@ -24,11 +24,16 @@ public class Path implements Cloneable {
         nodes.add(node);
     }
 
-    public static Path commonPrefix(Path path1, Path path2, Path... paths) {
-        List<Path> pathList = new ArrayList<>();
-        pathList.add(path1);
-        pathList.add(path2);
-        pathList.addAll(Arrays.asList(paths));
+    public static Path commonPrefix(List<Path> pathList) {
+        if (pathList.isEmpty()) {
+            throw new IllegalArgumentException("Path list may not be null.");
+        }
+        if (pathList.size() == 1) {
+            Path path = pathList.get(0);
+            return path.subPath(0, path.size() - 1);
+        }
+
+        Path referencePath = pathList.get(0);
 
         // determine shortest path
         int shortestLength = Integer.MAX_VALUE;
@@ -39,7 +44,7 @@ public class Path implements Cloneable {
 
         int commonPrefixLength = 0;
         outer: for (int i = 0; i < shortestLength; i++) {
-            Node referenceNode = path1.getNodes().get(i);
+            Node referenceNode = referencePath.getNodes().get(i);
             for (Path p : pathList) {
                 Node node = p.getNodes().get(i);
                 if (!node.equals(referenceNode)) {
@@ -51,10 +56,19 @@ public class Path implements Cloneable {
 
         // determine and return prefix for the given prefix length
         if (commonPrefixLength > 0) {
-            return Path.fromNodes(path1.getNodes().subList(0, commonPrefixLength));
+            return Path.fromNodes(referencePath.getNodes().subList(0, commonPrefixLength));
         } else {
             return Path.emptyPath();
         }
+    }
+
+    public static Path commonPrefix(Path path1, Path path2, Path... paths) {
+        List<Path> pathList = new ArrayList<>();
+        pathList.add(path1);
+        pathList.add(path2);
+        pathList.addAll(Arrays.asList(paths));
+
+        return commonPrefix(pathList);
     }
 
     public static Path fromNodes(Node... nodes) {
@@ -69,7 +83,8 @@ public class Path implements Cloneable {
 
     @Override
     public String toString() {
-        return this.excludeNonLeaves().getNodes().toString();
+        // return this.excludeNonLeaves().getNodes().toString();
+        return this.getNodes().toString();
     }
 
     public List<Node> getNodes() {
@@ -92,10 +107,23 @@ public class Path implements Cloneable {
      * 
      * @param fromIndex
      *            inclusive
+     * @param toIndex
+     *            exclusive
+     * 
+     * @return
+     */
+    public Path subPath(int fromIndex, int toIndex) {
+        return fromNodes(nodes.subList(fromIndex, toIndex));
+    }
+
+    /**
+     * 
+     * @param fromIndex
+     *            inclusive
      * @return
      */
     public Path subPathStartingAt(int fromIndex) {
-        return fromNodes(nodes.subList(fromIndex, nodes.size()));
+        return subPath(fromIndex, nodes.size());
     }
 
     // TODO better use visitor to avoid instanceof?
@@ -151,5 +179,7 @@ public class Path implements Cloneable {
             return false;
         return true;
     }
+    
+
 
 }

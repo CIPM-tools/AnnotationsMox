@@ -57,7 +57,7 @@ public class Graph2SEFFVisitor implements Visitor<ResourceDemandingBehaviour> {
             // aggregate durations
             int invocationCount = (int) n.getAttribute(NodeAttribute.INVOCATION_COUNT);
             List<Double> durations = (List<Double>) n.getAttribute(NodeAttribute.DURATIONS);
-            PCMRandomVariable rv = aggregationStrategy.aggregate(durations);
+            PCMRandomVariable rv = aggregationStrategy.aggregate(durations, ia);
 
             // store mean duration into model
             ia.getResourceDemand_Action().add(PCMHelper.createParametricResourceDemandCPU(rv));

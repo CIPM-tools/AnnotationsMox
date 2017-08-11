@@ -10,7 +10,7 @@ import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.PathIntegrationListener;
 import org.somox.ejbmox.graphlearner.ReorganizationListener;
 import org.somox.ejbmox.graphlearner.node.Node;
-import org.somox.ejbmox.graphlearner.visitor.TikZTreeForestVisitor;
+import org.somox.ejbmox.graphlearner.visitor.TikZTreeVisitor;
 
 /**
  * Use this tracer to track the actions of a {@link GraphLearner} as more and more paths are
@@ -33,8 +33,11 @@ public class TikzTracer {
 
     private int[] levels = { 0, 0, 0 };
 
-    private TikzTracer(GraphLearner learner) {
+    private TikzTreeVisitorFactory visitorFactory;
+
+    private TikzTracer(GraphLearner learner, TikzTreeVisitorFactory visitorFactory) {
         this.learner = learner;
+        this.visitorFactory = visitorFactory;
     }
 
     public DiffTracer getDiffTracer() {
@@ -72,8 +75,8 @@ public class TikzTracer {
         generateTikZ(Collections.emptyList());
     }
 
-    public static TikzTracer trace(GraphLearner learner) {
-        TikzTracer tracer = new TikzTracer(learner);
+    public static TikzTracer trace(GraphLearner learner, TikzTreeVisitorFactory visitorFactory) {
+        TikzTracer tracer = new TikzTracer(learner, visitorFactory);
         learner.addDiffListener(tracer.getDiffTracer());
         learner.addReorganizationListener(tracer.getReorganizationTracer());
         learner.addIntegrationListener(tracer.getIntegrationTracer());
@@ -181,15 +184,16 @@ public class TikzTracer {
     }
 
     private void generateTikZ(List<Node> boldNodes) {
-        TikZTreeForestVisitor v = new TikZTreeForestVisitor(boldNodes);
-        learner.getGraph().traverse(v, 0);
+        TikZTreeVisitor visitor = visitorFactory.create();
+        visitor.setBoldNodes(boldNodes);
+        learner.getGraph().traverse(visitor, 0);
 
-        builder.append(v.asString());
+        builder.append(visitor.asString());
         builder.append("\n");
     }
 
     private String printPath(Path path) {
-        return "\\texttt{" + path.excludeEpsilon().toString().replaceAll(" ", "") + "}";
+        return "\\texttt{" + path.excludeEpsilon().excludeNonLeaves().toString().replaceAll(" ", "") + "}";
     }
 
     private String printNode(Node node) {

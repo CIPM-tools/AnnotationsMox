@@ -15,7 +15,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 public class MeanAggregationStrategy implements AggregationStrategy {
 
     @Override
-    public PCMRandomVariable aggregate(Collection<Double> values) {
+    public PCMRandomVariable aggregate(Collection<Double> values, String description) {
         double sum = values.stream().mapToDouble(Double::doubleValue).sum();
         double mean = sum / values.size();
 

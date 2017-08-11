@@ -15,4 +15,9 @@ public class ParallelNode extends NestableNode {
         return v.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return "(P)";
+    }
+    
 }

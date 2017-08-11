@@ -19,7 +19,7 @@ public class ParametrizationUtils {
 
         for (double v : data) {
             // TODO this rule could be improved / fine-tuned
-            if (Math.abs(v - mean) > 2 * sd) { // outlier
+            if (Math.abs(v - mean) > 10 * sd) { // outlier
                 outliers.add(v);
                 continue;
             }

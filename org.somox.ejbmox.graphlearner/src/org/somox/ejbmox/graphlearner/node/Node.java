@@ -1,8 +1,12 @@
 package org.somox.ejbmox.graphlearner.node;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.ReturnOrientedVisitor;
 import org.somox.ejbmox.graphlearner.Visitor;
 
@@ -91,6 +95,52 @@ public abstract class Node {
     public void insertParallel(Node parallel) {
         getParent().accept(new EnsureParallelParent(this));
         parallel.insertAfter(this);
+    }
+
+    public Path pathToRoot() {
+        List<Node> nodes = new LinkedList<>();
+        Node currentNode = this;
+        while (currentNode != null) {
+            nodes.add(currentNode);
+            currentNode = currentNode.getParent();
+        }
+        Collections.reverse(nodes);
+        return Path.fromNodes(nodes);
+    }
+
+    public static List<Node> findSubtrees(List<Node> nodes) {
+        List<Path> paths = new LinkedList<>();
+        for (Node n : nodes) {
+            paths.add(n.pathToRoot());
+        }
+        Path prefix = Path.commonPrefix(paths);
+        int prefixLength = prefix.getNodes().size();
+
+        List<Path> subPaths = new LinkedList<>();
+        for (Path p : paths) {
+            Path subPath = p.subPathStartingAt(prefixLength);
+            subPaths.add(subPath);
+        }
+
+        List<Node> subPathHeads = new LinkedList<>();
+        for (Path p : subPaths) {
+            Node firstNode = p.first();
+            // don't add duplicates
+            if (!subPathHeads.contains(firstNode)) {
+                subPathHeads.add(firstNode);
+            }
+        }
+
+        return subPathHeads;
+    }
+    
+    public static List<Node> findSubtrees(Node node, Node... nodes) {
+        List<Node> nodeList = new LinkedList<>();
+        nodeList.add(node);
+        for(Node n :nodes) {
+            nodeList.add(n);
+        }
+        return findSubtrees(nodeList);
     }
 
     public Object getAttribute(Object key) {

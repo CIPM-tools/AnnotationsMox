@@ -3,6 +3,8 @@ package org.somox.ejbmox.inspectit2pcm.parametrization;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.somox.ejbmox.inspectit2pcm.graphlearner.SQLHelper;
+import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
 /**
@@ -31,8 +33,13 @@ public class InternalActionInvocation {
             return duration;
         }
 
-        // sum up durations of all statements in the sequence
-        double sqlDuration = sqlSequence.getSequence().stream().mapToDouble(s -> s.getDuration()).sum();
+        // sum up durations of all (actual) statements in the sequence
+        double sqlDuration = 0;
+        for (SQLStatement stmt : sqlSequence.getSequence()) {
+            if (SQLHelper.isActualStatement(stmt.getSql())) {
+                sqlDuration += stmt.getDuration();
+            }
+        }
 
         double exclusiveDuration = duration - sqlDuration;
 

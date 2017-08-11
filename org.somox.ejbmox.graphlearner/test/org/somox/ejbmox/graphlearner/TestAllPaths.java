@@ -1,9 +1,7 @@
 package org.somox.ejbmox.graphlearner;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
@@ -38,7 +36,7 @@ public class TestAllPaths {
 
         List<Path> actual = learner.getGraph().allPaths();
 
-        Assert.assertEquals(toStringSet(expected), toStringSet(actual));
+        Assert.assertEquals(TestUtils.pathToSetOfStrings(expected), TestUtils.pathToSetOfStrings(actual));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class TestAllPaths {
 
         List<Path> actual = learner.getGraph().allPaths();
 
-        Assert.assertEquals(toStringSet(expected), toStringSet(actual));
+        Assert.assertEquals(TestUtils.pathToSetOfStrings(expected), TestUtils.pathToSetOfStrings(actual));
     }
 
     @Test
@@ -64,18 +62,17 @@ public class TestAllPaths {
         List<Path> expected = new ArrayList<>();
         expected.add(PathBuilder.path("A", "B", "C"));
         expected.add(PathBuilder.path("A", "C"));
-        expected.add(PathBuilder.path("B", "C"));
         expected.add(PathBuilder.path("C"));
+
+        /*
+         * the following path has not been integrated explicitly but arises as a side effect of the
+         * other integrations. It is disputable whether that path is actually "expected" or not.
+         */
+        expected.add(PathBuilder.path("B", "C"));
 
         List<Path> actual = learner.getGraph().allPaths();
 
-        Assert.assertEquals(toStringSet(expected), toStringSet(actual));
-    }
-
-    private Set<String> toStringSet(List<Path> allPaths) {
-        Set<String> allPathString = new HashSet<>();
-        allPaths.forEach(p -> allPathString.add(p.excludeNonLeaves().excludeEpsilon().toString()));
-        return allPathString;
+        Assert.assertEquals(TestUtils.pathToSetOfStrings(expected), TestUtils.pathToSetOfStrings(actual));
     }
 
 }

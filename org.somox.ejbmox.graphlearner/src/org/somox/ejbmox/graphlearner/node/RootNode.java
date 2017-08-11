@@ -53,4 +53,9 @@ public class RootNode extends NestableNode {
         parallel.setParent(n);
     }
 
+    @Override
+    public String toString() {
+        return "(R)";
+    }
+    
 }

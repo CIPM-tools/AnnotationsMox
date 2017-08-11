@@ -22,8 +22,13 @@ import org.palladiosimulator.pcm.seff.ResourceDemandingBehaviour;
 import org.palladiosimulator.pcm.seff.SeffFactory;
 import org.somox.configuration.AbstractMoxConfiguration;
 import org.somox.ejbmox.graphlearner.SPGraph;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationResultExporter;
 import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategy;
-import org.somox.ejbmox.inspectit2pcm.aggregation.DistributionAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.AggregationStrategyValidator;
+import org.somox.ejbmox.inspectit2pcm.aggregation.BayesianBlocksAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.DhistAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.UniformBinWidthAggregationStrategy;
+import org.somox.ejbmox.inspectit2pcm.aggregation.OutlierFilter;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.SQLStatementSequence2Graph;
@@ -53,10 +58,16 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         }
 
         boolean removeAnomalies = this.getPartition().getConfiguration().isRemoveAnomalies();
-        final AggregationStrategy aggregation = new DistributionAggregationStrategy(
-                DistributionAggregationStrategy.DEFAULT_BIN_COUNT, removeAnomalies);
+        // final AggregationStrategy aggregation = new AggregationStrategyValidator(
+        // new OutlierFilter(new
+        // DistributionAggregationStrategy(DistributionAggregationStrategy.DEFAULT_BIN_COUNT,
+        // removeAnomalies)));
+
+        final AggregationStrategy aggregation = new AggregationResultExporter(
+                new AggregationStrategyValidator(new OutlierFilter(new BayesianBlocksAggregationStrategy())));
 
         // final AggregationStrategy aggregation = new MeanAggregationStrategy();
+
         boolean refineSQL = this.getPartition().getConfiguration().isRefineSQLStatements();
 
         if (refineSQL) {
@@ -169,7 +180,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
             final InternalAction action, final List<InternalActionInvocation> invocations) {
         // perform desired aggregation and obtain PCM random variable
         List<Double> durations = InternalActionInvocation.selectDurations(invocations);
-        PCMRandomVariable resourceDemand = aggregationStrategy.aggregate(durations);
+        PCMRandomVariable resourceDemand = aggregationStrategy.aggregate(durations, action);
 
         // parametrize action
         boolean SPLIT = false; // TODO make configurable
@@ -277,7 +288,7 @@ public class ParametrizeModelJob extends AbstractII2PCMJob {
         if (KEEP_REPLACE_ACTION) {
             // perform desired aggregation and obtain PCM random variable
             List<Double> exclusiveDurations = InternalActionInvocation.selectDurationsWithoutSQL(invocations);
-            PCMRandomVariable rv = aggregationStrategy.aggregate(exclusiveDurations);
+            PCMRandomVariable rv = aggregationStrategy.aggregate(exclusiveDurations, action);
 
             // adjust resource demand of replace action
             action.getResourceDemand_Action().get(0).setSpecification_ParametericResourceDemand(rv);

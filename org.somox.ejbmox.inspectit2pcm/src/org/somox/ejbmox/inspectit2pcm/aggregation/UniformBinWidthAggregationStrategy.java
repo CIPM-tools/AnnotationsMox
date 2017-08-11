@@ -15,7 +15,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
  * @author Philipp Merkle
  *
  */
-public class DistributionAggregationStrategy implements AggregationStrategy {
+public class UniformBinWidthAggregationStrategy implements AggregationStrategy {
 
     // actual bin size may be lower, this value is no guarantee
     public static final int DEFAULT_BIN_COUNT = 30;
@@ -25,17 +25,17 @@ public class DistributionAggregationStrategy implements AggregationStrategy {
     /** whether outliers should be removed */
     private boolean removeOutliers;
 
-    public DistributionAggregationStrategy() {
+    public UniformBinWidthAggregationStrategy() {
         this(DEFAULT_BIN_COUNT, true);
     }
 
-    public DistributionAggregationStrategy(int binCount, boolean removeOutliers) {
+    public UniformBinWidthAggregationStrategy(int binCount, boolean removeOutliers) {
         this.binCount = binCount;
         this.removeOutliers = removeOutliers;
     }
 
     @Override
-    public PCMRandomVariable aggregate(Collection<Double> values) {
+    public PCMRandomVariable aggregate(Collection<Double> values, String description) {
         // 1) remove outliers
         double[] data;
         if (removeOutliers) {

@@ -1,5 +1,6 @@
 package org.somox.ejbmox.graphlearner;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -42,7 +43,7 @@ public class GraphLearner {
         } else {
             Path closestPath = findPathClosestTo(path);
             integrationListeners.forEach(l -> l.notifyClosestPath(closestPath));
-            integrate(closestPath.excludeNonLeaves().excludeEpsilon(), path.excludeNonLeaves().excludeEpsilon());
+            integrate(closestPath, path);
             notifyIntegrationListeners(closestPath, path, findPathClosestTo(path));
         }
     }
@@ -123,13 +124,19 @@ public class GraphLearner {
         return cost;
     }
 
+    public boolean contains(Path path) {
+        Path closestPath = findPathClosestTo(path);
+        Patch<Node> patch = differences(closestPath, path);
+        return patch.getDeltas().isEmpty();
+    }
+
     // TODO simplify and get rid of duplicated code
     protected void integrate(Path closestPath, Path path) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Integrating " + path + " into path " + closestPath);
         }
 
-        Patch<Node> patch = DiffUtils.diff(closestPath.getNodes(), path.getNodes(), new NodeEqualiser());
+        Patch<Node> patch = differences(closestPath, path);
         for (Delta<Node> delta : patch.getDeltas()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Delta: " + delta);
@@ -139,42 +146,15 @@ public class GraphLearner {
             switch (delta.getType()) {
             case CHANGE:
                 diffListeners.forEach(l -> l.change(originalPath, revisedPath));
-                if (haveSameParent(originalPath)) { // TODO actually needed!?
-                    SPGraph.insertParallel(originalPath.first(), revisedPath.first());
-                    reorganizationListeners.forEach(l -> l.insertParallel(originalPath.first(), revisedPath.first()));
-                    Node lastNode = originalPath.first();
-                    for (Node insertNode : originalPath.subPathStartingAt(1).getNodes()) {
-                        Node anchor = lastNode;
-                        SPGraph.insertSeriesSuccessor(anchor, insertNode);
-                        reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(anchor, insertNode));
-                        lastNode = insertNode;
-                    }
-
-                    lastNode = revisedPath.first();
-                    for (Node insertNode : revisedPath.subPathStartingAt(1).getNodes()) {
-                        Node anchor = lastNode;
-                        SPGraph.insertSeriesSuccessor(anchor, insertNode);
-                        reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(anchor, insertNode));
-                        lastNode = insertNode;
-                    }
-                } else {
-                    // TODO implement? not sure, if different parents can happen
-                    throw new UnsupportedOperationException();
-                }
+                List<Node> subtreesLeft = Node.findSubtrees(originalPath.getNodes());
+                List<Node> subtreesRight = Node.findSubtrees(revisedPath.getNodes());
+                makeParallel(subtreesLeft, subtreesRight);
                 break;
             case DELETE: {
                 diffListeners.forEach(l -> l.delete(originalPath));
-                Node firstDeleteNode = originalPath.first();
+                List<Node> subtrees = Node.findSubtrees(originalPath.getNodes());
                 Node epsilon = new EpsilonLeafNode();
-                SPGraph.insertParallel(firstDeleteNode, epsilon);
-                reorganizationListeners.forEach(l -> l.insertParallel(firstDeleteNode, epsilon));
-                Node lastNode = firstDeleteNode;
-                for (Node insertNode : originalPath.subPathStartingAt(1).getNodes()) {
-                    Node anchor = lastNode;
-                    SPGraph.insertSeriesSuccessor(anchor, insertNode);
-                    reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(anchor, insertNode));
-                    lastNode = insertNode;
-                }
+                makeParallel(subtrees, epsilon);
                 break;
             }
             case INSERT:
@@ -196,7 +176,8 @@ public class GraphLearner {
                     }
                 } else {
                     Node firstInsertNode = revisedPath.first();
-                    Node nodeBeforeInsert = closestPath.getNodes().get(delta.getOriginal().getPosition() - 1);
+                    Node nodeBeforeInsert = closestPath.excludeEpsilon().excludeNonLeaves().getNodes()
+                            .get(delta.getOriginal().getPosition() - 1);
                     diffListeners.forEach(l -> l.insert(originalPath, nodeBeforeInsert));
                     SPGraph.insertSeriesSuccessor(nodeBeforeInsert, firstInsertNode);
                     reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(nodeBeforeInsert, firstInsertNode));
@@ -219,17 +200,41 @@ public class GraphLearner {
         }
     }
 
-    private boolean haveSameParent(Path path) {
-        Node lastNode = null;
-        for (Node node : path.getNodes()) {
-            if (lastNode != null) {
-                if (!node.getParent().equals(lastNode.getParent())) {
-                    return false;
-                }
-            }
-            lastNode = node;
+    private Patch<Node> differences(Path left, Path right) {
+        List<Node> leftNodes = left.excludeEpsilon().excludeNonLeaves().getNodes();
+        List<Node> rightNodes = right.excludeEpsilon().excludeNonLeaves().getNodes();
+        Patch<Node> patch = DiffUtils.diff(leftNodes, rightNodes, new NodeEqualiser());
+        return patch;
+    }
+
+    private void makeParallel(List<Node> leftSubtrees, Node rightNode) {
+        List<Node> list = new LinkedList<>();
+        list.add(rightNode);
+        makeParallel(leftSubtrees, list);
+    }
+
+    /**
+     * 
+     * @param leftSubtrees
+     *            subtree represented by its subtree root
+     * @param rightSubtrees
+     *            other subtree represented by its subtree root
+     */
+    private void makeParallel(List<Node> leftSubtrees, List<Node> rightSubtrees) {
+        SPGraph.insertParallel(leftSubtrees.get(0), rightSubtrees.get(0));
+        reorganizationListeners.forEach(l -> l.insertParallel(leftSubtrees.get(0), rightSubtrees.get(0)));
+        for (int i = 1; i < leftSubtrees.size(); i++) {
+            Node anchor = leftSubtrees.get(i - 1);
+            Node insert = leftSubtrees.get(i);
+            SPGraph.insertSeriesSuccessor(anchor, insert);
+            reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(anchor, insert));
         }
-        return true;
+        for (int i = 1; i < rightSubtrees.size(); i++) {
+            Node anchor = rightSubtrees.get(i - 1);
+            Node insert = rightSubtrees.get(i);
+            SPGraph.insertSeriesSuccessor(anchor, insert);
+            reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(anchor, insert));
+        }
     }
 
     private static class NodeEqualiser implements Equalizer<Node> {

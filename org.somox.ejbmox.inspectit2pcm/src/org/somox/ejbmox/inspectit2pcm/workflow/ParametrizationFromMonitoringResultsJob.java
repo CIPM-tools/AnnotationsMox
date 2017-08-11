@@ -1,5 +1,7 @@
 package org.somox.ejbmox.inspectit2pcm.workflow;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +15,7 @@ import org.somox.ejbmox.inspectit2pcm.launch.II2PCMConfiguration;
 import org.somox.ejbmox.inspectit2pcm.model.InvocationSequence;
 import org.somox.ejbmox.inspectit2pcm.model.MethodIdent;
 import org.somox.ejbmox.inspectit2pcm.parametrization.PCMParametrization;
+import org.somox.ejbmox.inspectit2pcm.parametrization.ParametrizationExporter;
 import org.somox.ejbmox.inspectit2pcm.rest.IdentsServiceClient;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsProvider;
 import org.somox.ejbmox.inspectit2pcm.rest.InvocationsServiceClient;
@@ -62,8 +65,13 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
         scanInvocations(invocations, scanner, monitor);
 
+        PCMParametrization parametrization = mapper.getParametrization();
+        
+        logger.info("Exporting parametrization to R...");
+        ParametrizationExporter exporter = new ParametrizationExporter(parametrization);
+        exporter.exportToR();
+
         // store resulting parametrization to blackboard
-        final PCMParametrization parametrization = mapper.getParametrization();
         this.getPartition().setParametrization(parametrization);
     }
 
@@ -87,6 +95,7 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
 
         monitor.beginTask(this.getName(), invocations.size());
         int i = 0;
+        InvocationSequence lastInvocation = null;
         for (InvocationSequence invocation : invocations) {
             i++;
 
@@ -103,11 +112,19 @@ public class ParametrizationFromMonitoringResultsJob extends AbstractII2PCMJob {
             monitor.worked(1);
 
             // log progress
+            Date invocationTime = new Date(invocation.getTimeStamp().getTime());
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a zzz");
             if (i % 100 == 0) {
                 this.logger.info(
                         String.format("Scanning invocation sequence %s out of %s. Invocation start timestamp = %s", i,
-                                invocations.size(), invocation.getStart()));
+                                invocations.size(), ft.format(invocationTime)));
             }
+
+            if (lastInvocation != null && invocation.getStart() < lastInvocation.getEnd()) {
+                throw new RuntimeException(
+                        "Inovation sequences obtained via REST service seem to be in the wrong order.");
+            }
+            lastInvocation = invocation;
         }
     }
 
