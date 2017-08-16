@@ -29,7 +29,14 @@ public class EnsureSeriesParent implements ReturnOrientedVisitor<SeriesNode> {
 
     @Override
     public SeriesNode visit(RootNode currentParent) {
-        throw new RuntimeException("Cannot transform root node");
+        SeriesNode newParent = new SeriesNode();
+
+        // TODO copying attributes may not be appropriate in any case
+        newParent.copyAttributesFrom(node);
+
+        currentParent.replaceChild(node, newParent);
+        node.setParent(newParent);
+        return newParent;
     }
 
     @Override

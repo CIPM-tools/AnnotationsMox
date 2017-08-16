@@ -84,4 +84,9 @@ public class TestNodes {
         Assert.assertEquals(cNode.pathToRoot().toString(), "[(R), (S), (P), C]");
     } 
     
+    @Test
+    public void testCommonParent() {
+        // TODO
+    }
+    
 }

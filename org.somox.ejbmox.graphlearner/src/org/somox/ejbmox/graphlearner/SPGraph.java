@@ -44,11 +44,11 @@ public class SPGraph {
     }
 
     public Node getSource() {
-        return allNodesDepthFirst().get(0);
+        return allNodesDepthFirst(true).get(0);
     }
 
     public Node getSink() {
-        List<Node> nodes = allNodesDepthFirst();
+        List<Node> nodes = allNodesDepthFirst(true);
         // return last node
         return nodes.get(nodes.size() - 1);
     }
@@ -68,8 +68,8 @@ public class SPGraph {
         return paths;
     }
 
-    public List<Node> allNodesDepthFirst() {
-        DepthFirstVisitor visitor = new DepthFirstVisitor();
+    public List<Node> allNodesDepthFirst(boolean includeSeriesAndParallel) {
+        DepthFirstVisitor visitor = new DepthFirstVisitor(includeSeriesAndParallel);
         getRoot().accept(visitor, null);
         return visitor.getNodes();
     }

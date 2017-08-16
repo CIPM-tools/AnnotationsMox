@@ -131,4 +131,20 @@ public class GenerateExample {
         System.out.println(tracer.getResult());
     }
 
+    @Test
+    public void generateExampleG() {
+        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+
+        Path p1 = PathBuilder.path("A", "B", "C");
+        tracer.announceIntegration(p1);
+        learner.integratePath(p1);
+        tracer.forcePlot();
+
+        Path p2 = PathBuilder.path("A", "D");
+        tracer.announceIntegration(p2);
+        learner.integratePath(p2);
+
+        System.out.println(tracer.getResult());
+    }
+    
 }

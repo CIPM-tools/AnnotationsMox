@@ -80,12 +80,12 @@ public class TestInvocationProbabilityVisitor2 {
         // String[] res = delete(new String[] {"A", "B", "C"}, 1, 1);
         // System.out.println(Arrays.toString(res));
 
-        for (int k = 0; k < 200; k++) {
+        for (int k = 0; k < 2000; k++) {
             GraphLearner learner = new InvocationGraphLearner();
 
             String[] path = new String[] { "A", "B", "C", "D", "E", "F", "G" };
             List<Path> mutations = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 20; i++) {
                 String[] mutation = mutate(path);
                 Path mutationPath = PathBuilder.path(mutation);
                 mutations.add(mutationPath);

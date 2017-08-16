@@ -1,7 +1,9 @@
 package org.somox.ejbmox.graphlearner.node;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Map;
 import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.ReturnOrientedVisitor;
 import org.somox.ejbmox.graphlearner.Visitor;
+import org.somox.ejbmox.graphlearner.visitor.AllChildrenVisitor;
 
 public abstract class Node {
 
@@ -108,6 +111,15 @@ public abstract class Node {
         return Path.fromNodes(nodes);
     }
 
+    public static Node commonParent(List<Node> subtrees) {
+        List<Path> pathsToRoot = new ArrayList<>();
+        for (Node sr : subtrees) {
+            pathsToRoot.add(sr.pathToRoot());
+        }
+        Path prefix = Path.commonPrefix(pathsToRoot);
+        return prefix.getNodes().get(prefix.size() - 1);
+    }
+
     public static List<Node> findSubtrees(List<Node> nodes) {
         List<Path> paths = new LinkedList<>();
         for (Node n : nodes) {
@@ -133,14 +145,77 @@ public abstract class Node {
 
         return subPathHeads;
     }
-    
+
     public static List<Node> findSubtrees(Node node, Node... nodes) {
         List<Node> nodeList = new LinkedList<>();
         nodeList.add(node);
-        for(Node n :nodes) {
+        for (Node n : nodes) {
             nodeList.add(n);
         }
         return findSubtrees(nodeList);
+    }
+
+    public static List<Node> findCompletelyCoveredSubtrees(List<Node> nodes) {
+        LinkedHashSet<Node> subtreeRoots = new LinkedHashSet<>();
+
+        // add passed nodes as subtree roots candidates
+        subtreeRoots.addAll(nodes);
+
+        while (true) {
+            LinkedHashSet<Node> subtreeRootsNext = new LinkedHashSet<Node>();
+            for (Node sr : subtreeRoots) {
+                if (sr.getParent() == null) {
+                    subtreeRootsNext.add(sr);
+                    continue;
+                }
+                NestableNode parent = sr.getParent();
+                List<Node> siblings = new ArrayList<>(parent.getChildren());
+                siblings.remove(sr); // remove self
+                if (sr.getParent() instanceof ParallelNode) {
+                    subtreeRootsNext.add(parent);
+                } else if (sr.getParent() instanceof SeriesNode) {
+                    if (subtreeRoots.containsAll(siblings)) {
+                        if (!subtreeRootsNext.contains(parent)) {
+                            subtreeRootsNext.add(parent);
+                        }
+                    } else {
+                        subtreeRootsNext.add(sr);
+                    }
+                } else if (sr.getParent() instanceof RootNode) {
+                    subtreeRootsNext.add(sr);
+                } else {
+                    throw new RuntimeException("Unexpected node type: " + sr.getParent().getClass());
+                }
+            }
+            // remove all direct or indirect P-node children
+            List<Node> toBeRemoved = new LinkedList<>();
+            for (Node sr : subtreeRootsNext) {
+                if (sr instanceof ParallelNode) {
+                    AllChildrenVisitor visitor = new AllChildrenVisitor();
+                    sr.accept(visitor, null);
+                    List<Node> remove = visitor.getResult();
+                    remove.remove(sr); // don't remove P-node itself
+                    toBeRemoved.addAll(remove);
+                }
+            }
+            subtreeRootsNext.removeAll(toBeRemoved);
+
+            if (subtreeRootsNext.equals(subtreeRoots)) {
+                break;
+            }
+            subtreeRoots = subtreeRootsNext;
+        }
+
+        return new LinkedList<>(subtreeRoots);
+    }
+
+    public static List<Node> findCompletelyCoveredSubtrees(Node node, Node... nodes) {
+        List<Node> nodeList = new LinkedList<>();
+        nodeList.add(node);
+        for (Node n : nodes) {
+            nodeList.add(n);
+        }
+        return findCompletelyCoveredSubtrees(nodeList);
     }
 
     public Object getAttribute(Object key) {
@@ -187,6 +262,12 @@ public abstract class Node {
         } else if (!parent.equals(other.parent))
             return false;
         return true;
+    }
+
+    public static List<Node> asList(Node node) {
+        List<Node> list = new LinkedList<>();
+        list.add(node);
+        return list;
     }
 
 }

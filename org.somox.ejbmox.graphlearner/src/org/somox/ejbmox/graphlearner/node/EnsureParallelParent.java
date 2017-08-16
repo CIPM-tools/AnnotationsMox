@@ -29,7 +29,14 @@ public class EnsureParallelParent implements ReturnOrientedVisitor<ParallelNode>
 
     @Override
     public ParallelNode visit(RootNode currentParent) {
-        throw new RuntimeException("Cannot transform root node");
+        ParallelNode newParent = new ParallelNode();
+
+        // TODO copying attributes may not be appropriate in any case
+        newParent.copyAttributesFrom(node);
+
+        currentParent.replaceChild(node, newParent);
+        node.setParent(newParent);
+        return newParent;
     }
 
     @Override
