@@ -8,6 +8,8 @@ public interface DiffListener {
 
     void delete(Path deletePath);
 
-    void insert(Path insertPath, Node nodeBeforeInsert);
+    void insertAfter(Node reference, Path insertPath);
+    
+    void insertBefore(Node reference, Path insertPath);
 
 }

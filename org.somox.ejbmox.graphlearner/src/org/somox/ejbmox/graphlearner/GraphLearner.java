@@ -162,13 +162,13 @@ public class GraphLearner {
                  * and insert to the left of the reference node.
                  */
                 if (delta.getOriginal().getPosition() == 0) {
-                    diffListeners.forEach(l -> l.insert(revisedPath, graph.getSource()));
+                    diffListeners.forEach(l -> l.insertBefore(graph.getSource(), revisedPath));
                     Node reference = graph.getSource();
                     insertToTheLeft(reference, revisedPath.getNodes());
                 } else { // regular case
                     Node reference = closestPath.excludeEpsilon().excludeNonLeaves().getNodes()
                             .get(delta.getOriginal().getPosition() - 1);
-                    diffListeners.forEach(l -> l.insert(revisedPath, reference));
+                    diffListeners.forEach(l -> l.insertAfter(reference, revisedPath));
                     insertToTheRight(reference, revisedPath.getNodes());
                 }
                 break;
@@ -196,15 +196,25 @@ public class GraphLearner {
 
     private void delete(List<Node> nodes) {
         for (List<Node> nodeGroup : groupBySiblings(nodes)) {
-            makeParallel(nodeGroup, Node.asList(new EpsilonLeafNode()));
+            makeParallel(nodeGroup, Node.asList(createEpsilonNode()));
         }
+    }
+
+    private EpsilonLeafNode createEpsilonNode() {
+        return new EpsilonLeafNode();
+    }
+
+    private EpsilonLeafNode createEpsilonNodeFor(Node node) {
+        EpsilonLeafNode epsilonNode = new EpsilonLeafNode();
+        epsilonNode.copyAttributesFrom(node);
+        return epsilonNode;
     }
 
     private void insertToTheLeft(Node referenceNode, List<Node> revisedNodes) {
         Node firstInsertNode = revisedNodes.get(0);
-        SPGraph.insertSeriesPredecessor(graph.getSource(), firstInsertNode);
-        reorganizationListeners.forEach(l -> l.insertSeriesPredecessor(graph.getSource(), firstInsertNode));
-        Node epsilon = new EpsilonLeafNode();
+        SPGraph.insertSeriesPredecessor(referenceNode, firstInsertNode);
+        reorganizationListeners.forEach(l -> l.insertSeriesPredecessor(referenceNode, firstInsertNode));
+        Node epsilon = createEpsilonNodeFor(referenceNode);
         SPGraph.insertParallel(firstInsertNode, epsilon);
         reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
 
@@ -216,7 +226,7 @@ public class GraphLearner {
         Node firstInsertNode = nodes.get(0);
         SPGraph.insertSeriesSuccessor(nodeBeforeInsert, firstInsertNode);
         reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(nodeBeforeInsert, firstInsertNode));
-        Node epsilon = new EpsilonLeafNode();
+        Node epsilon = createEpsilonNodeFor(nodeBeforeInsert);
         SPGraph.insertParallel(firstInsertNode, epsilon);
         reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
 

@@ -90,9 +90,16 @@ public class TikzTracer {
     private class DiffTracer implements DiffListener {
 
         @Override
-        public void insert(Path insertPath, Node nodeBeforeInsert) {
+        public void insertBefore(Node reference, Path insertPath) {
             printNumbering();
-            String explanation = "Insert " + printPath(insertPath) + " after " + printNode(nodeBeforeInsert);
+            String explanation = "Insert " + printPath(insertPath) + " before " + printNode(reference);
+            builder.append(explanation + "\n");
+        }
+
+        @Override
+        public void insertAfter(Node reference, Path insertPath) {
+            printNumbering();
+            String explanation = "Insert " + printPath(insertPath) + " after " + printNode(reference);
             builder.append(explanation + "\n");
         }
 
