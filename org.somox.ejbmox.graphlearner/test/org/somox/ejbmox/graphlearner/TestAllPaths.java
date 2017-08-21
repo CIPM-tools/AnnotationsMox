@@ -12,7 +12,7 @@ import org.somox.ejbmox.graphlearner.util.PathBuilder;
 
 public class TestAllPaths {
 
-    private GraphLearner learner;
+    private GraphLearner<String> learner;
 
     @BeforeClass
     public static void setup() {
@@ -22,13 +22,13 @@ public class TestAllPaths {
 
     @Before
     public void beforeTest() {
-        learner = new GraphLearner();
+        learner = new GraphLearner<>();
     }
 
     @Test
     public void testA() {
-        learner.integratePath(PathBuilder.path("A", "B", "C"));
-        learner.integratePath(PathBuilder.path("A", "C"));
+        learner.integrateSequence("A", "B", "C");
+        learner.integrateSequence("A", "C");
 
         List<Path> expected = new ArrayList<>();
         expected.add(PathBuilder.path("A", "B", "C"));
@@ -41,8 +41,8 @@ public class TestAllPaths {
 
     @Test
     public void testB() {
-        learner.integratePath(PathBuilder.path("A", "B"));
-        learner.integratePath(PathBuilder.path("A"));
+        learner.integrateSequence("A", "B");
+        learner.integrateSequence("A");
 
         List<Path> expected = new ArrayList<>();
         expected.add(PathBuilder.path("A", "B"));
@@ -55,9 +55,9 @@ public class TestAllPaths {
 
     @Test
     public void testC() {
-        learner.integratePath(PathBuilder.path("A", "B", "C"));
-        learner.integratePath(PathBuilder.path("A", "C"));
-        learner.integratePath(PathBuilder.path("C"));
+        learner.integrateSequence("A", "B", "C");
+        learner.integrateSequence("A", "C");
+        learner.integrateSequence("C");
 
         List<Path> expected = new ArrayList<>();
         expected.add(PathBuilder.path("A", "B", "C"));

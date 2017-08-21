@@ -5,11 +5,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.somox.ejbmox.graphlearner.util.PathBuilder;
 
 public class TestExamples {
-    
-    private GraphLearner learner;
+
+    private GraphLearner<String> learner;
 
     @BeforeClass
     public static void setup() {
@@ -19,14 +18,14 @@ public class TestExamples {
 
     @Before
     public void beforeTest() {
-        learner = new GraphLearner();
+        learner = new GraphLearner<>();
     }
-    
+
     @Test
     public void testExample1() {
-        learner.integratePath(PathBuilder.path("A", "B", "C", "G"));
-        learner.integratePath(PathBuilder.path("A", "B"));
-        learner.integratePath(PathBuilder.path("A", "F", "G"));
+        learner.integrateSequence("A", "B", "C", "G");
+        learner.integrateSequence("A", "B");
+        learner.integrateSequence("A", "F", "G");
         Assert.assertEquals("A[B|F][[C|]G|]", learner.getGraph().toString());
     }
 

@@ -5,11 +5,12 @@ import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.PathIntegrationListener;
 import org.somox.ejbmox.graphlearner.ReorganizationListener;
 import org.somox.ejbmox.graphlearner.SPGraph;
+import org.somox.ejbmox.graphlearner.Sequence;
 import org.somox.ejbmox.graphlearner.node.NestableNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.ParallelNode;
 
-public class InvocationGraphLearner extends GraphLearner {
+public class InvocationGraphLearner<T> extends GraphLearner<T> {
 
     public InvocationGraphLearner() {
         MaintainInvocationCountNodeAttribute m = new MaintainInvocationCountNodeAttribute();
@@ -20,7 +21,7 @@ public class InvocationGraphLearner extends GraphLearner {
     private class MaintainInvocationCountNodeAttribute implements PathIntegrationListener, ReorganizationListener {
 
         @Override
-        public void notifyIntegration(Path originalPath, Path addPath, Path combinedPath) {
+        public void notifyIntegration(Path originalPath, Sequence<?> addPath, Path combinedPath) {
             incrementCounterAlongPath(combinedPath);
         }
 

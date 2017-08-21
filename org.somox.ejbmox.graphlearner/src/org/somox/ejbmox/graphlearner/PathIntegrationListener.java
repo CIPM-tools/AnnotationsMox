@@ -12,7 +12,7 @@ public interface PathIntegrationListener {
      *            the path resulting from integrating {@code addPath} into {@code originalPath}
      * 
      */
-    void notifyIntegration(Path originalPath, Path addPath, Path combinedPath);
+    void notifyIntegration(Path originalPath, Sequence<?> addPath, Path combinedPath);
 
     default void notifyClosestPath(Path path) {};
     

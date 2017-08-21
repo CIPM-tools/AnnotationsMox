@@ -8,12 +8,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.somox.ejbmox.graphlearner.node.Node;
-import org.somox.ejbmox.graphlearner.util.PathBuilder;
 import org.somox.ejbmox.graphlearner.visitor.AllLeavesVisitor;
 
 public class TestSubtrees {
 
-    private GraphLearner learner1;
+    private GraphLearner<String> learner1;
 
     private Node aNode;
     private Node bNode;
@@ -28,10 +27,10 @@ public class TestSubtrees {
 
     @Before
     public void beforeTest() {
-        learner1 = new GraphLearner();
+        learner1 = new GraphLearner<>();
 
-        learner1.integratePath(PathBuilder.path("A", "B", "C"));
-        learner1.integratePath(PathBuilder.path("A", "D"));
+        learner1.integrateSequence("A", "B", "C");
+        learner1.integrateSequence("A", "D");
 
         // find leaf nodes
         AllLeavesVisitor visitor = new AllLeavesVisitor();
@@ -74,7 +73,7 @@ public class TestSubtrees {
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(cNode, found.get(0));
     }
-    
+
     @Test
     public void testD() {
         List<Node> found = Node.findSubtrees(dNode);
@@ -105,7 +104,7 @@ public class TestSubtrees {
         Assert.assertEquals(aNode, found.get(0));
         Assert.assertEquals(cNode.getParent().getParent(), found.get(1));
     }
-    
+
     @Test
     public void testAD() {
         List<Node> found = Node.findSubtrees(aNode, dNode);

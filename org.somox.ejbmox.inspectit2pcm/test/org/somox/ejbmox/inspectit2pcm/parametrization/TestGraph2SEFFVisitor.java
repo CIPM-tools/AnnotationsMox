@@ -13,7 +13,6 @@ import org.palladiosimulator.pcm.seff.SeffPackage;
 import org.palladiosimulator.pcm.seff.StartAction;
 import org.palladiosimulator.pcm.seff.StopAction;
 import org.somox.ejbmox.graphlearner.SPGraph;
-import org.somox.ejbmox.graphlearner.util.PathBuilder;
 import org.somox.ejbmox.inspectit2pcm.aggregation.MeanAggregationStrategy;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.Graph2SEFFVisitor;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
@@ -22,7 +21,7 @@ import org.somox.ejbmox.inspectit2pcm.util.PCMHelper;
 
 public class TestGraph2SEFFVisitor {
 
-    private InvocationGraphLearner learner;
+    private InvocationGraphLearner<String> learner;
 
     @BeforeClass
     public static void setup() {
@@ -32,12 +31,12 @@ public class TestGraph2SEFFVisitor {
 
     @Before
     public void beforeTest() {
-        learner = new InvocationGraphLearner();
+        learner = new InvocationGraphLearner<>();
     }
 
     @Test
     public void testSingleNode() {
-        learner.integratePath(PathBuilder.path("A"));
+        learner.integrateSequence("A");
 
         SPGraph learnedGraph = learner.getGraph();
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
@@ -54,7 +53,7 @@ public class TestGraph2SEFFVisitor {
 
     @Test
     public void testTwoNodes() {
-        learner.integratePath(PathBuilder.path("A", "B"));
+        learner.integrateSequence("A", "B");
 
         SPGraph learnedGraph = learner.getGraph();
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();
@@ -72,8 +71,8 @@ public class TestGraph2SEFFVisitor {
 
     @Test
     public void testTwoNodes_oneParallel() {
-        learner.integratePath(PathBuilder.path("A", "B"));
-        learner.integratePath(PathBuilder.path("A", "C"));
+        learner.integrateSequence("A", "B");
+        learner.integrateSequence("A", "C");
 
         SPGraph learnedGraph = learner.getGraph();
         ResourceDemandingBehaviour behaviour = SeffFactory.eINSTANCE.createResourceDemandingBehaviour();

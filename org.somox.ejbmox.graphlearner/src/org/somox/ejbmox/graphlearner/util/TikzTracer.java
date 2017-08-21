@@ -9,6 +9,7 @@ import org.somox.ejbmox.graphlearner.GraphLearner;
 import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.PathIntegrationListener;
 import org.somox.ejbmox.graphlearner.ReorganizationListener;
+import org.somox.ejbmox.graphlearner.Sequence;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.visitor.TikZTreeVisitor;
 
@@ -19,9 +20,9 @@ import org.somox.ejbmox.graphlearner.visitor.TikZTreeVisitor;
  * @author Philipp Merkle
  *
  */
-public class TikzTracer {
+public class TikzTracer<T> {
 
-    private GraphLearner learner;
+    private GraphLearner<T> learner;
 
     private DiffTracer diffTracer = new DiffTracer();
 
@@ -35,7 +36,7 @@ public class TikzTracer {
 
     private TikzTreeVisitorFactory visitorFactory;
 
-    private TikzTracer(GraphLearner learner, TikzTreeVisitorFactory visitorFactory) {
+    private TikzTracer(GraphLearner<T> learner, TikzTreeVisitorFactory visitorFactory) {
         this.learner = learner;
         this.visitorFactory = visitorFactory;
     }
@@ -52,9 +53,9 @@ public class TikzTracer {
         return integrationTracer;
     }
 
-    public void announceIntegration(Path p) {
+    public void announceIntegration(Sequence<T> s) {
         printNumbering();
-        builder.append("Integrate " + printPath(p) + "\\\\\n");
+        builder.append("Integrate " + printSequence(s) + "\\\\\n");
     }
 
     private void printNumbering() {
@@ -75,8 +76,8 @@ public class TikzTracer {
         generateTikZ(Collections.emptyList());
     }
 
-    public static TikzTracer trace(GraphLearner learner, TikzTreeVisitorFactory visitorFactory) {
-        TikzTracer tracer = new TikzTracer(learner, visitorFactory);
+    public static <T> TikzTracer<T> trace(GraphLearner<T> learner, TikzTreeVisitorFactory visitorFactory) {
+        TikzTracer<T> tracer = new TikzTracer<>(learner, visitorFactory);
         learner.addDiffListener(tracer.getDiffTracer());
         learner.addReorganizationListener(tracer.getReorganizationTracer());
         learner.addIntegrationListener(tracer.getIntegrationTracer());
@@ -179,7 +180,7 @@ public class TikzTracer {
     private class IntegationTracer implements PathIntegrationListener {
 
         @Override
-        public void notifyIntegration(Path originalPath, Path addPath, Path combinedPath) {
+        public void notifyIntegration(Path originalPath, Sequence<?> addPath, Path combinedPath) {
             // do nothing
         }
 
@@ -197,6 +198,10 @@ public class TikzTracer {
 
         builder.append(visitor.asString());
         builder.append("\n");
+    }
+
+    private String printSequence(Sequence<T> sequence) {
+        return "\\texttt{" + sequence.toString().replaceAll(" ", "") + "}";
     }
 
     private String printPath(Path path) {

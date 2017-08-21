@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.ReturnOrientedVisitor;
+import org.somox.ejbmox.graphlearner.Sequence;
 import org.somox.ejbmox.graphlearner.Visitor;
 import org.somox.ejbmox.graphlearner.visitor.AllChildrenVisitor;
 
@@ -155,7 +156,8 @@ public abstract class Node {
         return findSubtrees(nodeList);
     }
 
-    public static List<Node> findCompletelyCoveredSubtrees(List<Node> nodes) {
+    public static List<Node> findCompletelyCoveredSubtrees(Path path) {
+        List<Node> nodes = path.getNodes();
         LinkedHashSet<Node> subtreeRoots = new LinkedHashSet<>();
 
         // add passed nodes as subtree roots candidates
@@ -209,14 +211,14 @@ public abstract class Node {
         return new LinkedList<>(subtreeRoots);
     }
 
-    public static List<Node> findCompletelyCoveredSubtrees(Node node, Node... nodes) {
-        List<Node> nodeList = new LinkedList<>();
-        nodeList.add(node);
-        for (Node n : nodes) {
-            nodeList.add(n);
-        }
-        return findCompletelyCoveredSubtrees(nodeList);
-    }
+    // public static List<Node> findCompletelyCoveredSubtrees(Node node, Node... nodes) {
+    // List<Node> nodeList = new LinkedList<>();
+    // nodeList.add(node);
+    // for (Node n : nodes) {
+    // nodeList.add(n);
+    // }
+    // return findCompletelyCoveredSubtrees(nodeList);
+    // }
 
     public Object getAttribute(Object key) {
         return attributes.get(key);
@@ -268,6 +270,14 @@ public abstract class Node {
         List<Node> list = new LinkedList<>();
         list.add(node);
         return list;
+    }
+
+    public static <T> List<Node> from(Sequence<T> sequence) {
+        List<Node> nodes = new LinkedList<>();
+        for (T e : sequence) {
+            nodes.add(new LeafNode(e));
+        }
+        return nodes;
     }
 
 }

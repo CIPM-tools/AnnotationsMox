@@ -3,6 +3,7 @@ package org.somox.ejbmox.graphlearner;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 import org.somox.ejbmox.graphlearner.node.RootNode;
 import org.somox.ejbmox.graphlearner.visitor.AllPathsVisitor;
@@ -26,13 +27,14 @@ public class SPGraph {
         this.root = new RootNode();
     }
 
-    public static SPGraph fromPath(Path path) {
-        if (path.isEmpty()) {
-            throw new RuntimeException("Path may not be empty");
+    public static <T> SPGraph fromSequence(Sequence<T> sequence) {
+        if (sequence.isEmpty()) {
+            throw new RuntimeException("Sequence may not be empty");
         }
         SPGraph graph = new SPGraph();
         Node lastNode = graph.root;
-        for (Node node : path.getNodes()) {
+        for (T e : sequence) {
+            Node node = new LeafNode(e);
             lastNode.insertSeriesSuccessor(node);
             lastNode = node;
         }

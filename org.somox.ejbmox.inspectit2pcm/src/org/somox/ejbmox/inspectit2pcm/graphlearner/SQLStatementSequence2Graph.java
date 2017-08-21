@@ -1,14 +1,9 @@
 package org.somox.ejbmox.inspectit2pcm.graphlearner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.somox.ejbmox.graphlearner.GraphLearner;
-import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.SPGraph;
-import org.somox.ejbmox.graphlearner.node.LeafNode;
-import org.somox.ejbmox.graphlearner.node.Node;
+import org.somox.ejbmox.graphlearner.Sequence;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatement;
 import org.somox.ejbmox.inspectit2pcm.model.SQLStatementSequence;
 
@@ -22,13 +17,13 @@ public class SQLStatementSequence2Graph {
 
     private static final Logger LOG = Logger.getLogger(SQLStatementSequence2Graph.class);
 
-    private GraphLearner learner = new SQLInvocationGraphLearner();
+    private GraphLearner<SQLStatement> learner = new SQLInvocationGraphLearner();
 
-    public void addStatementSequence(SQLStatementSequence sequence) {
-        SQLStatementSequence filteredSequence = filter(sequence);
-        Path path = convertToPath(filteredSequence);
-        LOG.debug("Adding " + path);
-        learner.integratePath(path);
+    public void addStatementSequence(SQLStatementSequence s) {
+        SQLStatementSequence filteredSequence = filter(s);
+        Sequence<SQLStatement> sequence = convertToSequence(filteredSequence);
+        LOG.debug("Adding " + sequence);
+        learner.integrateSequence(sequence);
     }
 
     public SPGraph getLearnedGraph() {
@@ -48,12 +43,13 @@ public class SQLStatementSequence2Graph {
         return filtered;
     }
 
-    private static Path convertToPath(SQLStatementSequence sequence) {
-        List<Node> nodeList = new ArrayList<>();
-        for (SQLStatement stmt : sequence.getSequence()) {
-            nodeList.add(new LeafNode(stmt));
+    // TODO get rid of SQLStatementSequence
+    private static Sequence<SQLStatement> convertToSequence(SQLStatementSequence s) {
+        Sequence<SQLStatement> sequence = new Sequence<>();
+        for (SQLStatement stmt : s.getSequence()) {
+            sequence.add(stmt);
         }
-        return Path.fromNodes(nodeList);
+        return sequence;
     }
 
 }

@@ -14,7 +14,7 @@ public class TestInvocationProbabilityVisitor {
 
     private static final double DELTA = 1.0 / 1_000_000;
 
-    private GraphLearner learner;
+    private GraphLearner<String> learner;
 
     @BeforeClass
     public static void setup() {
@@ -24,17 +24,17 @@ public class TestInvocationProbabilityVisitor {
 
     @Before
     public void beforeTest() {
-        learner = new InvocationGraphLearner();
+        learner = new InvocationGraphLearner<>();
     }
 
     @Test
     public void testComplex() {
-        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-        learner.integratePath(PathBuilder.path("A", "B", "C", "D"));
-        learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
-        learner.integratePath(PathBuilder.path("A", "B", "X", "Y"));
-        learner.integratePath(PathBuilder.path("A", "B", "X", "Z"));
+        learner.integrateSequence("A", "B", "C", "D");
+        learner.integrateSequence("A", "B", "C", "D");
+        learner.integrateSequence("A", "B", "C", "D");
+        learner.integrateSequence("A", "B", "X", "Y");
+        learner.integrateSequence("A", "B", "X", "Y");
+        learner.integrateSequence("A", "B", "X", "Z");
 
         Assert.assertEquals("AB[CD|X[Y|Z]]", learner.getGraph().toString());
 

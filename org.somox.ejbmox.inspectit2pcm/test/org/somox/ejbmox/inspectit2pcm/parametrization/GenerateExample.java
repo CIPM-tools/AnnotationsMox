@@ -1,13 +1,11 @@
 package org.somox.ejbmox.inspectit2pcm.parametrization;
 
 import org.apache.log4j.BasicConfigurator;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.somox.ejbmox.graphlearner.GraphLearner;
-import org.somox.ejbmox.graphlearner.Path;
-import org.somox.ejbmox.graphlearner.util.PathBuilder;
+import org.somox.ejbmox.graphlearner.Sequence;
 import org.somox.ejbmox.graphlearner.util.TikzTracer;
 import org.somox.ejbmox.graphlearner.util.TikzTreeVisitorFactory;
 import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
@@ -19,7 +17,7 @@ import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationProbabilityVisitor;
  */
 public class GenerateExample {
 
-    private GraphLearner learner;
+    private GraphLearner<String> learner;
 
     private TikzTreeVisitorFactory visitorFactory;
 
@@ -31,86 +29,86 @@ public class GenerateExample {
 
     @Before
     public void beforeTest() {
-        learner = new InvocationGraphLearner();
+        learner = new InvocationGraphLearner<>();
         visitorFactory = InvocationGraphTikzTreeVisitor.getFactory();
     }
 
     @Test
     public void generateExampleA() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("A", "X", "Y", "Z", "B");
+        Sequence<String> p1 = Sequence.from("A", "X", "Y", "Z", "B");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "X", "B");
+        Sequence<String> p2 = Sequence.from("A", "X", "B");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
 
-        Path p3 = PathBuilder.path("A", "Z", "B");
+        Sequence<String> p3 = Sequence.from("A", "Z", "B");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
 
         System.out.println(tracer.getResult());
     }
 
     @Test
     public void generateExampleB() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("X", "Y", "Z", "U");
+        Sequence<String> p1 = Sequence.from("X", "Y", "Z", "U");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "D", "Z", "U");
+        Sequence<String> p2 = Sequence.from("A", "D", "Z", "U");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
 
-        Path p3 = PathBuilder.path("U");
+        Sequence<String> p3 = Sequence.from("U");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
 
         System.out.println(tracer.getResult());
     }
 
     @Test
     public void generateExampleC() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("C", "D", "E", "F", "G");
+        Sequence<String> p1 = Sequence.from("C", "D", "E", "F", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "B", "C", "F", "G");
+        Sequence<String> p2 = Sequence.from("A", "B", "C", "F", "G");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
 
-        Path p3 = PathBuilder.path("A", "B", "G");
+        Sequence<String> p3 = Sequence.from("A", "B", "G");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
 
         System.out.println(tracer.getResult());
     }
 
     @Test
     public void generateExampleD() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("A", "B", "C", "G");
+        Sequence<String> p1 = Sequence.from("A", "B", "C", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("F", "G");
+        Sequence<String> p2 = Sequence.from("F", "G");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
 
-        Path p3 = PathBuilder.path("A", "F", "G");
+        Sequence<String> p3 = Sequence.from("A", "F", "G");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
 
         System.out.println(tracer.getResult());
 
@@ -118,94 +116,92 @@ public class GenerateExample {
 
     @Test
     public void generateExampleE() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("A", "B", "C");
+        Sequence<String> p1 = Sequence.from("A", "B", "C");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "C");
+        Sequence<String> p2 = Sequence.from("A", "C");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
-        Path p3 = PathBuilder.path("C");
+        Sequence<String> p3 = Sequence.from("C");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
 
         System.out.println(tracer.getResult());
     }
-    
+
     @Test
     public void generateExampleF() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        Path p1 = PathBuilder.path("A", "B", "C", "G");
+        Sequence<String> p1 = Sequence.from("A", "B", "C", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "B");
+        Sequence<String> p2 = Sequence.from("A", "B");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
-        Path p3 = PathBuilder.path("A", "F", "G");
+        Sequence<String> p3 = Sequence.from("A", "F", "G");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
 
         System.out.println(tracer.getResult());
     }
-    
+
     @Test
     public void generateExampleG() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        
-        Path p1 = PathBuilder.path("A", "B", "C", "G");
+        Sequence<String> p1 = Sequence.from("A", "B", "C", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("B", "C", "D", "E", "F", "G");
+        Sequence<String> p2 = Sequence.from("B", "C", "D", "E", "F", "G");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
-        Path p3 = PathBuilder.path("A", "B", "E", "F", "G");
+        Sequence<String> p3 = Sequence.from("A", "B", "E", "F", "G");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
 
         System.out.println(tracer.getResult());
     }
-    
+
     @Test
     public void generateExampleH() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
 
-        
-        Path p1 = PathBuilder.path("A", "B", "C");
+        Sequence<String> p1 = Sequence.from("A", "B", "C");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "X", "Y");
+        Sequence<String> p2 = Sequence.from("A", "X", "Y");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
@@ -215,52 +211,52 @@ public class GenerateExample {
 
     @Test
     public void generateExampleI() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
-        
-        Path p1 = PathBuilder.path("B", "C", "D", "E", "F", "G");
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
+
+        Sequence<String> p1 = Sequence.from("B", "C", "D", "E", "F", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("F", "G");
+        Sequence<String> p2 = Sequence.from("F", "G");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
-        
-        Path p3 = PathBuilder.path("A", "F", "G");
+
+        Sequence<String> p3 = Sequence.from("A", "F", "G");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
 
         System.out.println(tracer.getResult());
-    }    
-    
+    }
+
     @Test
     public void generateExampleJ() {
-        TikzTracer tracer = TikzTracer.trace(learner, visitorFactory);
-        
-        Path p1 = PathBuilder.path("C", "D", "E", "F", "G");
+        TikzTracer<String> tracer = TikzTracer.trace(learner, visitorFactory);
+
+        Sequence<String> p1 = Sequence.from("C", "D", "E", "F", "G");
         tracer.announceIntegration(p1);
-        learner.integratePath(p1);
+        learner.integrateSequence(p1);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
         tracer.forcePlot();
 
-        Path p2 = PathBuilder.path("A", "B", "C", "D", "G");
+        Sequence<String> p2 = Sequence.from("A", "B", "C", "D", "G");
         tracer.announceIntegration(p2);
-        learner.integratePath(p2);
+        learner.integrateSequence(p2);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
-        
-        Path p3 = PathBuilder.path("A", "B");
+
+        Sequence<String> p3 = Sequence.from("A", "B");
         tracer.announceIntegration(p3);
-        learner.integratePath(p3);
+        learner.integrateSequence(p3);
         learner.getGraph().traverse(new InvocationProbabilityVisitor());
 
         tracer.forcePlot();
 
         System.out.println(tracer.getResult());
-    }  
-    
+    }
+
 }

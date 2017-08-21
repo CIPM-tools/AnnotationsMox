@@ -11,7 +11,7 @@ import org.somox.ejbmox.inspectit2pcm.graphlearner.InvocationGraphLearner;
 
 public class TestCounter {
 
-    private GraphLearner learner;
+    private GraphLearner<String> learner;
 
     @BeforeClass
     public static void setup() {
@@ -21,28 +21,28 @@ public class TestCounter {
 
     @Before
     public void beforeTest() {
-        learner = new InvocationGraphLearner();
+        learner = new InvocationGraphLearner<String>();
     }
 
     @Test
     public void testOneNode() {
-        learner.integratePath(PathBuilder.path("A"));
-        learner.integratePath(PathBuilder.path("A"));
+        learner.integrateSequence("A");
+        learner.integrateSequence("A");
         Assert.assertArrayEquals(new int[] { 2 }, PathUtils.pathCountLeaves(PathBuilder.path("A").toString(), learner));
     }
 
     @Test
     public void testTwoNodesSerial() {
-        learner.integratePath(PathBuilder.path("A", "B"));
-        learner.integratePath(PathBuilder.path("A", "B"));
+        learner.integrateSequence("A", "B");
+        learner.integrateSequence("A", "B");
         Assert.assertArrayEquals(new int[] { 2, 2 },
                 PathUtils.pathCountLeaves(PathBuilder.path("A", "B").toString(), learner));
     }
 
     @Test
     public void testTwoNodesParallel() {
-        learner.integratePath(PathBuilder.path("A"));
-        learner.integratePath(PathBuilder.path("A", "B"));
+        learner.integrateSequence("A");
+        learner.integrateSequence("A", "B");
         Assert.assertArrayEquals(new int[] { 2, 1 },
                 PathUtils.pathCountLeaves(PathBuilder.path("A", "B").toString(), learner));
         Assert.assertArrayEquals(new int[] { 2 }, PathUtils.pathCountLeaves(PathBuilder.path("A").toString(), learner));
@@ -50,10 +50,10 @@ public class TestCounter {
 
     @Test
     public void testComplex() {
-        learner.integratePath(PathBuilder.path("A", "B"));
-        learner.integratePath(PathBuilder.path("A", "B", "C"));
-        learner.integratePath(PathBuilder.path("A", "X", "C"));
-        learner.integratePath(PathBuilder.path("A", "X", "C", "A"));
+        learner.integrateSequence("A", "B");
+        learner.integrateSequence("A", "B", "C");
+        learner.integrateSequence("A", "X", "C");
+        learner.integrateSequence("A", "X", "C", "A");
 
         Assert.assertArrayEquals(new int[] { 4, 2 },
                 PathUtils.pathCountLeaves(PathBuilder.path("A", "B").toString(), learner));

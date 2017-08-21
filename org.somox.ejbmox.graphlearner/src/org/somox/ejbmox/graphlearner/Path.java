@@ -2,9 +2,11 @@ package org.somox.ejbmox.graphlearner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
+import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.NestableNode;
 import org.somox.ejbmox.graphlearner.node.Node;
 
@@ -73,6 +75,14 @@ public class Path implements Cloneable {
 
     public static Path fromNodes(Node... nodes) {
         return fromNodes(Arrays.asList(nodes));
+    }
+
+    public static <T> Path fromSequence(Sequence<T> sequence) {
+        List<Node> nodes = new LinkedList<>();
+        for (T e : sequence) {
+            nodes.add(new LeafNode(e));
+        }
+        return fromNodes(nodes);
     }
 
     public static Path fromNodes(List<Node> nodes) {
@@ -179,7 +189,5 @@ public class Path implements Cloneable {
             return false;
         return true;
     }
-    
-
 
 }
