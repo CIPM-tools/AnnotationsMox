@@ -155,11 +155,11 @@ public class GraphLearner<T> {
             switch (delta.getType()) {
             case CHANGE:
                 diffListeners.forEach(l -> l.change(original, revised));
-                change(original, revised);
+                addAlternative(original, revised);
                 break;
             case DELETE: {
                 diffListeners.forEach(l -> l.delete(original));
-                delete(original);
+                makeOptional(original);
                 break;
             }
             case INSERT:
@@ -187,29 +187,26 @@ public class GraphLearner<T> {
     }
 
     /**
-     * 
-     * @param original
-     *            the nodes to be changed into {@code revised}; may also be the root node of a
-     *            subtree
-     * @param revised
-     *            may also be the root node of a subtree
+     * Introduces an {@code alternative} path to the given {@code original} path.
      */
-    private void change(Path original, List<Node> revised) {
+    private void addAlternative(Path original, List<Node> alternative) {
         List<Node> originalSubtrees = Node.findCompletelyCoveredSubtrees(original.getNodes());
-        List<Node> revisedSubtrees = Node.findCompletelyCoveredSubtrees(revised);
+        List<Node> alternativeSubtrees = Node.findCompletelyCoveredSubtrees(alternative);
 
         List<Path> groups = groupBySiblings(originalSubtrees);
-        arrangeParallel(groups.get(0), revisedSubtrees);
+        arrangeParallel(groups.get(0), alternativeSubtrees);
         for (int i = 1; i < groups.size(); i++) {
-            delete(groups.get(i));
+            makeOptional(groups.get(i));
         }
     }
 
     /**
+     * 
+     * 
      * @param path
      *            the path to be deleted
      */
-    private void delete(Path path) {
+    private void makeOptional(Path path) {
         List<Node> subtrees = Node.findCompletelyCoveredSubtrees(path.getNodes());
         for (Path nodeGroup : groupBySiblings(subtrees)) {
             arrangeParallel(nodeGroup, Node.asList(createEpsilonNode()));
