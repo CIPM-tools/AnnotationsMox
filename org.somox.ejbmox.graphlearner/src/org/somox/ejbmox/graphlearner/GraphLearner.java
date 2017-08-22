@@ -212,12 +212,10 @@ public class GraphLearner<T> {
         Node firstInsertNode = insert.get(0);
         SPGraph.insertSeriesPredecessor(reference, firstInsertNode);
         reorganizationListeners.forEach(l -> l.insertSeriesPredecessor(reference, firstInsertNode));
-        Node epsilon = createEpsilonNodeFor(reference);
-        SPGraph.insertParallel(firstInsertNode, epsilon);
-        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
-
         arrangeSeries(insert);
 
+        Node epsilon = createEpsilonNodeFor(reference);
+        addAlternative(Path.fromNodes(insert), Node.asList(epsilon));
     }
 
     /**
@@ -232,11 +230,10 @@ public class GraphLearner<T> {
         Node firstInsertNode = insert.get(0);
         SPGraph.insertSeriesSuccessor(reference, firstInsertNode);
         reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(reference, firstInsertNode));
-        Node epsilon = createEpsilonNodeFor(reference);
-        SPGraph.insertParallel(firstInsertNode, epsilon);
-        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
-
         arrangeSeries(insert);
+
+        Node epsilon = createEpsilonNodeFor(reference);
+        addAlternative(Path.fromNodes(insert), Node.asList(epsilon));
     }
 
     /**
