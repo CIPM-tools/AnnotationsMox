@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.somox.ejbmox.graphlearner.node.LeafNode;
+import org.somox.ejbmox.graphlearner.node.Node;
+
 public class Sequence<T> implements Cloneable, Iterable<T> {
 
     private List<T> nodes = new ArrayList<>();
@@ -67,6 +70,14 @@ public class Sequence<T> implements Cloneable, Iterable<T> {
         Sequence<T> sequence = new Sequence<>();
         for (T e : elements) {
             sequence.add(e);
+        }
+        return sequence;
+    }
+
+    public static <T> Sequence<T> from(List<Node> nodes) {
+        Sequence<T> sequence = new Sequence<>();
+        for (Node n : nodes) {
+            sequence.add((T) ((LeafNode) n).getContent()); // TODO
         }
         return sequence;
     }

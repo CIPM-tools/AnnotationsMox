@@ -91,16 +91,16 @@ public class TikzTracer<T> {
     private class DiffTracer implements DiffListener {
 
         @Override
-        public void insertBefore(Node reference, Path insertPath) {
+        public void insertBefore(Node reference, List<Node> insertNodes) {
             printNumbering();
-            String explanation = "Insert " + printPath(insertPath) + " before " + printNode(reference);
+            String explanation = "Insert " + printNodes(insertNodes) + " before " + printNode(reference);
             builder.append(explanation + "\n");
         }
 
         @Override
-        public void insertAfter(Node reference, Path insertPath) {
+        public void insertAfter(Node reference, List<Node> insertNodes) {
             printNumbering();
-            String explanation = "Insert " + printPath(insertPath) + " after " + printNode(reference);
+            String explanation = "Insert " + printNodes(insertNodes) + " after " + printNode(reference);
             builder.append(explanation + "\n");
         }
 
@@ -112,9 +112,9 @@ public class TikzTracer<T> {
         }
 
         @Override
-        public void change(Path originalPath, Path revisedPath) {
+        public void change(Path original, List<Node> revised) {
             printNumbering();
-            String explanation = "Change " + printPath(originalPath) + " to " + printPath(revisedPath);
+            String explanation = "Change " + printPath(original) + " to " + printNodes(revised);
             builder.append(explanation + "\n");
         }
 
@@ -202,6 +202,10 @@ public class TikzTracer<T> {
 
     private String printSequence(Sequence<T> sequence) {
         return "\\texttt{" + sequence.toString().replaceAll(" ", "") + "}";
+    }
+
+    private String printNodes(List<Node> nodes) {
+        return "\\texttt{" + nodes.toString().replaceAll(" ", "") + "}";
     }
 
     private String printPath(Path path) {

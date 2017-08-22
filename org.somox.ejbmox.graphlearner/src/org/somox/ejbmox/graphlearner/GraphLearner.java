@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 import org.somox.ejbmox.graphlearner.node.EpsilonLeafNode;
 import org.somox.ejbmox.graphlearner.node.LeafNode;
 import org.somox.ejbmox.graphlearner.node.Node;
+import org.somox.ejbmox.graphlearner.node.ParallelNode;
+import org.somox.ejbmox.graphlearner.node.SeriesNode;
 
 import difflib.Delta;
 import difflib.DiffUtils;
@@ -36,11 +38,7 @@ public class GraphLearner<T> {
     private List<ReorganizationListener> reorganizationListeners = new CopyOnWriteArrayList<>();
 
     public void integrateSequence(T... elements) {
-        Sequence<T> sequence = new Sequence<>();
-        for (T e : elements) {
-            sequence.add(e);
-        }
-        integrateSequence(sequence);
+        integrateSequence(Sequence.from(elements));
     }
 
     public void integrateSequence(Sequence<T> sequence) {
@@ -112,8 +110,8 @@ public class GraphLearner<T> {
         int minCost = Integer.MAX_VALUE;
         Path minPath = null;
         for (Path p : paths) {
-            Patch<Node> patch = DiffUtils.diff(p.excludeNonLeaves().excludeEpsilon().getNodes(),
-                    nodes, new NodeEqualiser());
+            Patch<Node> patch = DiffUtils.diff(p.excludeNonLeaves().excludeEpsilon().getNodes(), nodes,
+                    new NodeEqualiser());
             int cost = cost(patch);
             if (cost < minCost) {
                 minCost = cost;
@@ -147,13 +145,13 @@ public class GraphLearner<T> {
             LOG.debug("Integrating sequence " + sequence + " into path " + closestPath);
         }
 
-        Patch<Node> patch = differences(closestPath, Path.fromSequence(sequence));
+        Patch<Node> patch = differences(closestPath, sequence);
         for (Delta<Node> delta : patch.getDeltas()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Delta: " + delta);
             }
             Path original = Path.fromNodes(delta.getOriginal().getLines());
-            Path revised = Path.fromNodes(delta.getRevised().getLines());
+            List<Node> revised = delta.getRevised().getLines();
             switch (delta.getType()) {
             case CHANGE:
                 diffListeners.forEach(l -> l.change(original, revised));
@@ -173,12 +171,12 @@ public class GraphLearner<T> {
                 if (delta.getOriginal().getPosition() == 0) {
                     diffListeners.forEach(l -> l.insertBefore(graph.getSource(), revised));
                     Node reference = graph.getSource();
-                    insertToTheLeft(reference, revised.getNodes());
+                    insertLeft(reference, revised);
                 } else { // regular case
                     Node reference = closestPath.excludeEpsilon().excludeNonLeaves().getNodes()
                             .get(delta.getOriginal().getPosition() - 1);
                     diffListeners.forEach(l -> l.insertAfter(reference, revised));
-                    insertToTheRight(reference, revised.getNodes());
+                    insertRight(reference, revised);
                 }
                 break;
             }
@@ -196,12 +194,12 @@ public class GraphLearner<T> {
      * @param revised
      *            may also be the root node of a subtree
      */
-    private void change(Path original, Path revised) {
-        List<Node> originalSubtrees = Node.findCompletelyCoveredSubtrees(original);
+    private void change(Path original, List<Node> revised) {
+        List<Node> originalSubtrees = Node.findCompletelyCoveredSubtrees(original.getNodes());
         List<Node> revisedSubtrees = Node.findCompletelyCoveredSubtrees(revised);
 
         List<Path> groups = groupBySiblings(originalSubtrees);
-        arrangePathsParallel(groups.get(0), revisedSubtrees);
+        arrangeParallel(groups.get(0), revisedSubtrees);
         for (int i = 1; i < groups.size(); i++) {
             delete(groups.get(i));
         }
@@ -212,9 +210,81 @@ public class GraphLearner<T> {
      *            the path to be deleted
      */
     private void delete(Path path) {
-        List<Node> subtrees = Node.findCompletelyCoveredSubtrees(path);
+        List<Node> subtrees = Node.findCompletelyCoveredSubtrees(path.getNodes());
         for (Path nodeGroup : groupBySiblings(subtrees)) {
-            arrangePathsParallel(nodeGroup, Node.asList(createEpsilonNode()));
+            arrangeParallel(nodeGroup, Node.asList(createEpsilonNode()));
+        }
+    }
+
+    /**
+     * Inserts {@code nodes} to the left of the given {@code reference} node.
+     * 
+     * @param reference
+     *            the reference node
+     * @param insert
+     *            the nodes to be inserted
+     */
+    private void insertLeft(Node reference, List<Node> insert) {
+        Node firstInsertNode = insert.get(0);
+        SPGraph.insertSeriesPredecessor(reference, firstInsertNode);
+        reorganizationListeners.forEach(l -> l.insertSeriesPredecessor(reference, firstInsertNode));
+        Node epsilon = createEpsilonNodeFor(reference);
+        SPGraph.insertParallel(firstInsertNode, epsilon);
+        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
+
+        arrangeSeries(insert);
+
+    }
+
+    /**
+     * Inserts {@code nodes} to the right of the given {@code reference} node.
+     * 
+     * @param reference
+     *            the reference node
+     * @param insert
+     *            the nodes to be inserted
+     */
+    private void insertRight(Node reference, List<Node> insert) {
+        Node firstInsertNode = insert.get(0);
+        SPGraph.insertSeriesSuccessor(reference, firstInsertNode);
+        reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(reference, firstInsertNode));
+        Node epsilon = createEpsilonNodeFor(reference);
+        SPGraph.insertParallel(firstInsertNode, epsilon);
+        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
+
+        arrangeSeries(insert);
+    }
+
+    /**
+     * Arranges path and nodes parallel to each other so that 1) {@code path} and {@code nodes} both
+     * are arranged as a series, and 2) the resulting two {@link SeriesNode} parents are arrange as
+     * children of a {@link ParallelNode}.
+     * 
+     * @param path
+     *            the path to be arranged as series under a parallel node
+     * @param nodes
+     *            the nodes to be arranged as another series under the same parallel node
+     */
+    private void arrangeParallel(Path path, List<Node> nodes) {
+        SPGraph.insertParallel(path.getNodes().get(0), nodes.get(0));
+        reorganizationListeners.forEach(l -> l.insertParallel(path.getNodes().get(0), nodes.get(0)));
+        arrangeSeries(path.getNodes());
+        arrangeSeries(nodes);
+    }
+
+    /**
+     * Arranges {@code nodes} as children of a common {@link SeriesNode} parent. If necessary, that
+     * series node will be created.
+     * 
+     * @param nodes
+     *            the nodes to be arrange as siblings under a series node
+     */
+    private void arrangeSeries(List<Node> nodes) {
+        for (int i = 1; i < nodes.size(); i++) {
+            Node reference = nodes.get(i - 1);
+            Node successor = nodes.get(i);
+            SPGraph.insertSeriesSuccessor(reference, successor);
+            reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(reference, successor));
         }
     }
 
@@ -226,29 +296,6 @@ public class GraphLearner<T> {
         EpsilonLeafNode epsilonNode = new EpsilonLeafNode();
         epsilonNode.copyAttributesFrom(node);
         return epsilonNode;
-    }
-
-    private void insertToTheLeft(Node reference, List<Node> insert) {
-        Node firstInsertNode = insert.get(0);
-        SPGraph.insertSeriesPredecessor(reference, firstInsertNode);
-        reorganizationListeners.forEach(l -> l.insertSeriesPredecessor(reference, firstInsertNode));
-        Node epsilon = createEpsilonNodeFor(reference);
-        SPGraph.insertParallel(firstInsertNode, epsilon);
-        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
-
-        arrangeNodesSeries(insert);
-
-    }
-
-    private void insertToTheRight(Node reference, List<Node> insert) {
-        Node firstInsertNode = insert.get(0);
-        SPGraph.insertSeriesSuccessor(reference, firstInsertNode);
-        reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(reference, firstInsertNode));
-        Node epsilon = createEpsilonNodeFor(reference);
-        SPGraph.insertParallel(firstInsertNode, epsilon);
-        reorganizationListeners.forEach(l -> l.insertParallel(firstInsertNode, epsilon));
-
-        arrangeNodesSeries(insert);
     }
 
     /**
@@ -294,20 +341,11 @@ public class GraphLearner<T> {
         return patch;
     }
 
-    private void arrangePathsParallel(Path leftSubtrees, List<Node> rightSubtrees) {
-        SPGraph.insertParallel(leftSubtrees.getNodes().get(0), rightSubtrees.get(0));
-        reorganizationListeners.forEach(l -> l.insertParallel(leftSubtrees.getNodes().get(0), rightSubtrees.get(0)));
-        arrangeNodesSeries(leftSubtrees.getNodes());
-        arrangeNodesSeries(rightSubtrees);
-    }
-
-    private void arrangeNodesSeries(List<Node> nodes) {
-        for (int i = 1; i < nodes.size(); i++) {
-            Node reference = nodes.get(i - 1);
-            Node successor = nodes.get(i);
-            SPGraph.insertSeriesSuccessor(reference, successor);
-            reorganizationListeners.forEach(l -> l.insertSeriesSuccessor(reference, successor));
-        }
+    private Patch<Node> differences(Path left, Sequence<T> right) {
+        List<Node> leftNodes = left.excludeEpsilon().excludeNonLeaves().getNodes();
+        List<Node> rightNodes = Node.from(right);
+        Patch<Node> patch = DiffUtils.diff(leftNodes, rightNodes, new NodeEqualiser());
+        return patch;
     }
 
     private static class NodeEqualiser implements Equalizer<Node> {

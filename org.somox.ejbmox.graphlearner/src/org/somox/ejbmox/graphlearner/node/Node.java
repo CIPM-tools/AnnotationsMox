@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.somox.ejbmox.graphlearner.Path;
 import org.somox.ejbmox.graphlearner.ReturnOrientedVisitor;
@@ -156,8 +157,15 @@ public abstract class Node {
         return findSubtrees(nodeList);
     }
 
-    public static List<Node> findCompletelyCoveredSubtrees(Path path) {
-        List<Node> nodes = path.getNodes();
+    public static List<Node> findCompletelyCoveredSubtrees(Node... nodes) {
+        List<Node> nodeList = new LinkedList<>();
+        for (Node n : nodes) {
+            nodeList.add(n);
+        }
+        return findCompletelyCoveredSubtrees(nodeList);
+    }
+
+    public static List<Node> findCompletelyCoveredSubtrees(List<Node> nodes) {
         LinkedHashSet<Node> subtreeRoots = new LinkedHashSet<>();
 
         // add passed nodes as subtree roots candidates

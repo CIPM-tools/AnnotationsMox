@@ -56,28 +56,28 @@ public class TestCompletelyCoveredSubtrees {
 
     @Test
     public void testA() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(aNode, found.get(0));
     }
 
     @Test
     public void testB() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(bNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(bNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(bNode, found.get(0));
     }
 
     @Test
     public void testC() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(cNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(cNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(cNode, found.get(0));
     }
 
     @Test
     public void testD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertTrue(dNode.getParent() instanceof ParallelNode);
         Assert.assertEquals(dNode.getParent(), found.get(0));
@@ -85,7 +85,7 @@ public class TestCompletelyCoveredSubtrees {
 
     @Test
     public void testAB() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, bNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, bNode);
         Assert.assertEquals(2, found.size());
         Assert.assertEquals(aNode, found.get(0));
         Assert.assertEquals(bNode, found.get(1));
@@ -93,7 +93,7 @@ public class TestCompletelyCoveredSubtrees {
 
     @Test
     public void testAC() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, cNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, cNode);
         Assert.assertEquals(2, found.size());
         Assert.assertEquals(aNode, found.get(0));
         Assert.assertEquals(cNode, found.get(1));
@@ -101,56 +101,56 @@ public class TestCompletelyCoveredSubtrees {
 
     @Test
     public void testAD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(aNode.getParent(), found.get(0));
     }
 
     @Test
     public void testBC() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(bNode, cNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(bNode, cNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(bNode.getParent().getParent(), found.get(0));
     }
 
     @Test
     public void testBD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(bNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(bNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(dNode.getParent(), found.get(0));
     }
 
     @Test
     public void testCD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(cNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(cNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(dNode.getParent(), found.get(0));
     }
 
     @Test
     public void testABC() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, bNode, cNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, bNode, cNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(aNode.getParent(), found.get(0));
     }
 
     @Test
     public void testABD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, bNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, bNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(aNode.getParent(), found.get(0));
     }
 
     @Test
     public void testBCD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(bNode, cNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(bNode, cNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(dNode.getParent(), found.get(0));
     }
 
     @Test
     public void testACD() {
-        List<Node> found = Node.findCompletelyCoveredSubtrees(Path.fromNodes(aNode, cNode, dNode));
+        List<Node> found = Node.findCompletelyCoveredSubtrees(aNode, cNode, dNode);
         Assert.assertEquals(1, found.size());
         Assert.assertEquals(aNode.getParent(), found.get(0));
     }
