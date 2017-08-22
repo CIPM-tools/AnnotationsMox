@@ -159,7 +159,7 @@ public class GraphLearner<T> {
                 break;
             case DELETE: {
                 diffListeners.forEach(l -> l.delete(original));
-                makeOptional(original);
+                addAlternative(original, Node.asList(createEpsilonNode()));
                 break;
             }
             case INSERT:
@@ -196,20 +196,7 @@ public class GraphLearner<T> {
         List<Path> groups = groupBySiblings(originalSubtrees);
         arrangeParallel(groups.get(0), alternativeSubtrees);
         for (int i = 1; i < groups.size(); i++) {
-            makeOptional(groups.get(i));
-        }
-    }
-
-    /**
-     * 
-     * 
-     * @param path
-     *            the path to be deleted
-     */
-    private void makeOptional(Path path) {
-        List<Node> subtrees = Node.findCompletelyCoveredSubtrees(path.getNodes());
-        for (Path nodeGroup : groupBySiblings(subtrees)) {
-            arrangeParallel(nodeGroup, Node.asList(createEpsilonNode()));
+            arrangeParallel(groups.get(i), Node.asList(createEpsilonNode()));
         }
     }
 
