@@ -32,12 +32,20 @@ public final class EJBAnnotationHelper {
 	private static final String INJECT_ANNOTATION_NAME = "Inject";
 	private static final String JAVAX_ENTERPRISE_EVENT_CLASS_FQN = "javax.enterprise.event.Event";
 	private static final String OBSERVES_ANNOTATION_NAME = "Observes";
+	
+	private static final String PATH_ANNOTATION_NAME = "Path";
+	private static final String WEB_LISTENER_ANNOTATION_NAME = "WebListener";
+	private static final String WEB_SERVLET_ANNOTATION_NAME = "WebServlet";
 
 	static final Set<String> EJB_COMPONENT_ANNOTATION_NAMES = new HashSet<String>(
 			Arrays.asList(EJBAnnotationHelper.STATELESS_ANNOTATION_NAME, EJBAnnotationHelper.STATEFUL_ANNOTATION_NAME,
-					EJBAnnotationHelper.MESSAGE_DRIVEN_ANNOTATION_NAME, EJBAnnotationHelper.DEPENDENT_ANNOTATION_NAME));
+					EJBAnnotationHelper.MESSAGE_DRIVEN_ANNOTATION_NAME, EJBAnnotationHelper.DEPENDENT_ANNOTATION_NAME,
+					EJBAnnotationHelper.PATH_ANNOTATION_NAME, EJBAnnotationHelper.WEB_SERVLET_ANNOTATION_NAME,
+					EJBAnnotationHelper.WEB_LISTENER_ANNOTATION_NAME));
 	static final Set<String> EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES = new HashSet<String>(
-			Arrays.asList(EJBAnnotationHelper.LOCAL_ANNOTATION_NAME, EJBAnnotationHelper.REMOTE_ANNOTATION_NAME));
+			Arrays.asList(EJBAnnotationHelper.LOCAL_ANNOTATION_NAME, EJBAnnotationHelper.REMOTE_ANNOTATION_NAME,
+					EJBAnnotationHelper.PATH_ANNOTATION_NAME, EJBAnnotationHelper.WEB_LISTENER_ANNOTATION_NAME,
+					EJBAnnotationHelper.WEB_SERVLET_ANNOTATION_NAME));
 
 	private EJBAnnotationHelper() {
 	}
