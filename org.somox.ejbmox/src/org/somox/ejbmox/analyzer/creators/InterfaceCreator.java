@@ -69,7 +69,7 @@ public class InterfaceCreator {
 			// are business
 			// interfaces
 			directImplementedInterfaces.stream().filter(
-					implemententedInterface -> EJBAnnotationHelper.isEJBBuisnessInterface(implemententedInterface))
+					implemententedInterface -> EJBAnnotationHelper.isComponentInterface(implemententedInterface))
 					.forEach(buisnessInterface -> this.createArchitecturalInterfaceForEJBInterface(buisnessInterface,
 							pcmInterfaces, null));
 			break;

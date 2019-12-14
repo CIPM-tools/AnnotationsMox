@@ -22,16 +22,16 @@ public final class EJBAnnotationHelper {
 
 	private static final Logger logger = Logger.getLogger(EJBAnnotationHelper.class.getSimpleName());
 
-	private static final String STATELESS_ANNOTATION_NAME = "Stateless";
-	private static final String STATEFUL_ANNOTATION_NAME = "Stateful";
-	private static final String MESSAGE_DRIVEN_ANNOTATION_NAME = "MessageDriven";
-	private static final String LOCAL_ANNOTATION_NAME = "Local";
-	private static final String REMOTE_ANNOTATION_NAME = "Remote";
-	private static final String EJB_ANNOTATION_NAME = "EJB";
-	private static final String DEPENDENT_ANNOTATION_NAME = "Dependent";
-	private static final String INJECT_ANNOTATION_NAME = "Inject";
+	private static final String EJB_STATELESS_ANNOTATION_NAME = "Stateless";
+	private static final String EJB_STATEFUL_ANNOTATION_NAME = "Stateful";
+	private static final String EJB_MESSAGE_DRIVEN_ANNOTATION_NAME = "MessageDriven";
+	private static final String EJB_LOCAL_ANNOTATION_NAME = "Local";
+	private static final String EJB_REMOTE_ANNOTATION_NAME = "Remote";
+	private static final String EJB_EJB_ANNOTATION_NAME = "EJB";
+	private static final String EJB_DEPENDENT_ANNOTATION_NAME = "Dependent";
+	private static final String EJB_INJECT_ANNOTATION_NAME = "Inject";
 	private static final String JAVAX_ENTERPRISE_EVENT_CLASS_FQN = "javax.enterprise.event.Event";
-	private static final String OBSERVES_ANNOTATION_NAME = "Observes";
+	private static final String EJB_OBSERVES_ANNOTATION_NAME = "Observes";
 	
 	private static final String JAX_RS_APPLICATION_PATH_ANNOTATION_NAME = "ApplicationPath";
 	private static final String JAX_RS_CONSTRAINED_TO_ANNOTATION_NAME = "ConstrainedTo";
@@ -40,6 +40,7 @@ public final class EJBAnnotationHelper {
 	private static final String JAX_RS_PRE_MATCHING_ANNOTATION_NAME = "PreMatching";
 	private static final String JAX_RS_PRODUCES_ANNOTATION_NAME = "Produces";
 	private static final String JAX_RS_PROVIDER_ANNOTATION_NAME = "Provider";
+	
 	private static final String SERVLET_HANDLES_TYPES_ANNOTATION_NAME = "HandlesTypes";
 	private static final String SERVLET_MULTIPART_CONFIG_ANNOTATION_NAME = "MultipartConfig";
 	private static final String SERVLET_SERVLET_SECURITY_ANNOTATION_NAME = "ServletSecurity";
@@ -48,9 +49,12 @@ public final class EJBAnnotationHelper {
 	private static final String SERVLET_WEB_LISTENER_ANNOTATION_NAME = "WebListener";
 	private static final String SERVLET_WEB_SERVLET_ANNOTATION_NAME = "WebServlet";
 
-	static final Set<String> EJB_COMPONENT_ANNOTATION_NAMES = new HashSet<String>(
-			Arrays.asList(EJBAnnotationHelper.STATELESS_ANNOTATION_NAME, EJBAnnotationHelper.STATEFUL_ANNOTATION_NAME,
-					EJBAnnotationHelper.MESSAGE_DRIVEN_ANNOTATION_NAME, EJBAnnotationHelper.DEPENDENT_ANNOTATION_NAME,
+	static final Set<String> COMPONENT_ANNOTATION_NAMES = new HashSet<String>(
+			Arrays.asList(
+					EJBAnnotationHelper.EJB_STATELESS_ANNOTATION_NAME,
+					EJBAnnotationHelper.EJB_STATEFUL_ANNOTATION_NAME,
+					EJBAnnotationHelper.EJB_MESSAGE_DRIVEN_ANNOTATION_NAME,
+					EJBAnnotationHelper.EJB_DEPENDENT_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_APPLICATION_PATH_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_CONSTRAINED_TO_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_CONSUMES_ANNOTATION_NAME,
@@ -65,8 +69,10 @@ public final class EJBAnnotationHelper {
 					EJBAnnotationHelper.SERVLET_WEB_INIT_PARAM_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_WEB_LISTENER_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_WEB_SERVLET_ANNOTATION_NAME));
-	static final Set<String> EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES = new HashSet<String>(
-			Arrays.asList(EJBAnnotationHelper.LOCAL_ANNOTATION_NAME, EJBAnnotationHelper.REMOTE_ANNOTATION_NAME,
+	static final Set<String> COMPONENT_INTERFACE_ANNOTATION_NAMES = new HashSet<String>(
+			Arrays.asList(
+					EJBAnnotationHelper.EJB_LOCAL_ANNOTATION_NAME,
+					EJBAnnotationHelper.EJB_REMOTE_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_APPLICATION_PATH_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_CONSTRAINED_TO_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_CONSUMES_ANNOTATION_NAME,
@@ -85,11 +91,10 @@ public final class EJBAnnotationHelper {
 	private EJBAnnotationHelper() {
 	}
 
-	public static boolean isEJBClass(final Class jamoppClass) {
-		final boolean found = EJBAnnotationHelper.hasAnnoations(jamoppClass,
-				EJBAnnotationHelper.EJB_COMPONENT_ANNOTATION_NAMES);
+	public static boolean isComponentClass(final Class jamoppClass) {
+		final boolean found = EJBAnnotationHelper.hasAnnoations(jamoppClass, EJBAnnotationHelper.COMPONENT_ANNOTATION_NAMES);
 		if (found) {
-			logger.info("Found EJB class: " + jamoppClass.getQualifiedName());
+			logger.info("Found component class: " + jamoppClass.getQualifiedName());
 		}
 		return found;
 	}
@@ -128,18 +133,18 @@ public final class EJBAnnotationHelper {
 				.collect(Collectors.toList());
 	}
 
-	public static boolean isEJBBuisnessInterface(final Interface implemententedInterface) {
+	public static boolean isComponentInterface(final Interface implemententedInterface) {
 		final boolean found = EJBAnnotationHelper.hasAnnoations(implemententedInterface,
-				EJBAnnotationHelper.EJB_BUISNESS_INTERFACE_ANNOTATION_NAMES);
+				EJBAnnotationHelper.COMPONENT_INTERFACE_ANNOTATION_NAMES);
 		if (found) {
-			logger.info("Found EJB buisness interface " + implemententedInterface.getQualifiedName());
+			logger.info("Found component interface " + implemententedInterface.getQualifiedName());
 		}
 		return found;
 	}
 
 	public static boolean hasEJBAnnotation(final Field field) {
 		final boolean found = EJBAnnotationHelper.hasAnnoations(field, new HashSet<String>(
-				Arrays.asList(EJBAnnotationHelper.EJB_ANNOTATION_NAME, EJBAnnotationHelper.INJECT_ANNOTATION_NAME)));
+				Arrays.asList(EJBAnnotationHelper.EJB_EJB_ANNOTATION_NAME, EJBAnnotationHelper.EJB_INJECT_ANNOTATION_NAME)));
 		if (found) {
 			logger.info("Found field with EJB annotation: " + field.getName() + " in class: "
 					+ field.getContainingConcreteClassifier().getQualifiedName());
@@ -166,7 +171,7 @@ public final class EJBAnnotationHelper {
 
 	public static boolean isEventParameter(Parameter param) {
 		return EJBAnnotationHelper.hasAnnoations(param,
-				new HashSet<String>(Arrays.asList(EJBAnnotationHelper.OBSERVES_ANNOTATION_NAME)));
+				new HashSet<String>(Arrays.asList(EJBAnnotationHelper.EJB_OBSERVES_ANNOTATION_NAME)));
 	}
 
 }

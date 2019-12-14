@@ -66,7 +66,7 @@ public class EJBmoxPCMRepositoryModelCreator {
 	public Repository createStaticArchitectureModel() {
 		this.compilationUnits.forEach(compilationUnit -> compilationUnit.getClassifiers().stream()
 				.filter(classifier -> classifier instanceof Class).map(classifier -> (Class) classifier)
-				.filter(jamoppClass -> EJBAnnotationHelper.isEJBClass(jamoppClass))
+				.filter(jamoppClass -> EJBAnnotationHelper.isComponentClass(jamoppClass))
 				.forEach(ejbClass -> this.createBasicComponentAndProvidedOperationInterfacesForEJBClass(ejbClass)));
 		Map<BasicComponent, Class> basicComponent2EJBClassMap = this.basicComponentCreator
 				.getBasicComponent2EJBClassMap();
