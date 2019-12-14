@@ -48,6 +48,21 @@ public final class EJBAnnotationHelper {
 	private static final String SERVLET_WEB_INIT_PARAM_ANNOTATION_NAME = "WebInitParam";
 	private static final String SERVLET_WEB_LISTENER_ANNOTATION_NAME = "WebListener";
 	private static final String SERVLET_WEB_SERVLET_ANNOTATION_NAME = "WebServlet";
+	
+	private static final String SPRING_BOOT_SPRING_BOOT_APPLICATION_ANNOTATION_NAME = "SpringBootApplication";
+	private static final String SPRING_BOOT_JSON_COMPONENT_ANNOTATION_NAME = "JsonComponent";
+	private static final String SPRING_BOOT_ENDPOINT_ANNOTATION_NAME = "Endpoint";
+	private static final String SPRING_BOOT_ENDPOINT_EXTENSION_ANNOTATION_NAME = "EndpointExtension";
+	private static final String SPRING_BOOT_FILTERED_ENDPOINT_ANNOTATION_NAME = "FilteredEndpoint";
+	private static final String SPRING_BOOT_ENDPOINT_CLOUD_FOUNDRY_EXTENSION_ANNOTATION_NAME = "EndpointCloudFoundryExtension";
+	private static final String SPRING_BOOT_JMX_ENDPOINT_ANNOTATION_NAME = "JmxEndpoint";
+	private static final String SPRING_BOOT_ENDPOINT_JMX_EXTENSION_ANNOTATION_NAME = "EndpointJmxExtension";
+	private static final String SPRING_BOOT_CONTROLLER_ENDPOINT_ANNOTATION_NAME = "ControllerEndpoint";
+	private static final String SPRING_BOOT_REST_CONTROLLER_ENDPOINT_ANNOTATION_NAME = "RestControllerEndpoint";
+	private static final String SPRING_BOOT_WEB_ENDPOINT_ANNOTATION_NAME = "WebEndpoint";
+	private static final String SPRING_BOOT_ENDPOINT_WEB_EXTENSION_ANNOTATION_NAME = "EndpointWebExtension";
+	private static final String SPRING_BOOT_SERVLET_ENDPOINT_ANNOTATION_NAME = "ServletEndpoint";
+	
 
 	static final Set<String> COMPONENT_ANNOTATION_NAMES = new HashSet<String>(
 			Arrays.asList(
@@ -68,7 +83,9 @@ public final class EJBAnnotationHelper {
 					EJBAnnotationHelper.SERVLET_WEB_FILTER_ANNOTATION_NME,
 					EJBAnnotationHelper.SERVLET_WEB_INIT_PARAM_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_WEB_LISTENER_ANNOTATION_NAME,
-					EJBAnnotationHelper.SERVLET_WEB_SERVLET_ANNOTATION_NAME));
+					EJBAnnotationHelper.SERVLET_WEB_SERVLET_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_SPRING_BOOT_APPLICATION_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_JSON_COMPONENT_ANNOTATION_NAME));
 	static final Set<String> COMPONENT_INTERFACE_ANNOTATION_NAMES = new HashSet<String>(
 			Arrays.asList(
 					EJBAnnotationHelper.EJB_LOCAL_ANNOTATION_NAME,
@@ -86,7 +103,18 @@ public final class EJBAnnotationHelper {
 					EJBAnnotationHelper.SERVLET_WEB_FILTER_ANNOTATION_NME,
 					EJBAnnotationHelper.SERVLET_WEB_INIT_PARAM_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_WEB_LISTENER_ANNOTATION_NAME,
-					EJBAnnotationHelper.SERVLET_WEB_SERVLET_ANNOTATION_NAME));
+					EJBAnnotationHelper.SERVLET_WEB_SERVLET_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_CONTROLLER_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_ENDPOINT_CLOUD_FOUNDRY_EXTENSION_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_ENDPOINT_EXTENSION_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_ENDPOINT_JMX_EXTENSION_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_ENDPOINT_WEB_EXTENSION_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_FILTERED_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_JMX_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_REST_CONTROLLER_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_SERVLET_ENDPOINT_ANNOTATION_NAME,
+					EJBAnnotationHelper.SPRING_BOOT_WEB_ENDPOINT_ANNOTATION_NAME));
 
 	private EJBAnnotationHelper() {
 	}
