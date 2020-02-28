@@ -40,6 +40,7 @@ public final class EJBAnnotationHelper {
 	private static final String JAX_RS_PRE_MATCHING_ANNOTATION_NAME = "PreMatching";
 	private static final String JAX_RS_PRODUCES_ANNOTATION_NAME = "Produces";
 	private static final String JAX_RS_PROVIDER_ANNOTATION_NAME = "Provider";
+	private static final String JAX_RS_ENCODED_ANNOTATION_NAME = "Encoded";
 	
 	private static final String SERVLET_HANDLES_TYPES_ANNOTATION_NAME = "HandlesTypes";
 	private static final String SERVLET_MULTIPART_CONFIG_ANNOTATION_NAME = "MultipartConfig";
@@ -77,6 +78,7 @@ public final class EJBAnnotationHelper {
 					EJBAnnotationHelper.JAX_RS_PRE_MATCHING_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_PRODUCES_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_PROVIDER_ANNOTATION_NAME,
+					EJBAnnotationHelper.JAX_RS_ENCODED_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_HANDLES_TYPES_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_MULTIPART_CONFIG_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_SERVLET_SECURITY_ANNOTATION_NAME,
@@ -97,6 +99,7 @@ public final class EJBAnnotationHelper {
 					EJBAnnotationHelper.JAX_RS_PRE_MATCHING_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_PRODUCES_ANNOTATION_NAME,
 					EJBAnnotationHelper.JAX_RS_PROVIDER_ANNOTATION_NAME,
+					EJBAnnotationHelper.JAX_RS_ENCODED_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_HANDLES_TYPES_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_MULTIPART_CONFIG_ANNOTATION_NAME,
 					EJBAnnotationHelper.SERVLET_SERVLET_SECURITY_ANNOTATION_NAME,
