@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="de.uka.ipd.sdq.workflow.job">
+      <workflow_job
+            extension_configurationbuilder="org.annotationsmox.inspectit2pcm.launch.II2PCMConfigurationBuilder"
+            extension_job="org.annotationsmox.inspectit2pcm.workflow.II2PCMJob"
+            priority="10"
+            workflow_id="post_save_models">
+      </workflow_job>
+   </extension>
+   <extension
+         name="name"
+         point="de.uka.ipd.sdq.workflow.tab.extension">
+      <workflow_extension
+            name="org.annotationsmox.inspectit2pcm.workflow_extension1"
+            runconfig_tab="org.annotationsmox.inspectit2pcm.launch.InspectIT2PCMTab"
+            workflow_id="post_save_models">
+      </workflow_extension>
+   </extension>
+
+</plugin>
