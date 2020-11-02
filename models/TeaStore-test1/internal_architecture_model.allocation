@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="ASCII"?>
+<allocation:Allocation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:allocation="http://palladiosimulator.org/PalladioComponentModel/Allocation/5.2" id="_4c1foBqeEeuyLOjPwRkmuQ" entityName="SoMoX Reverse Engineered Allocation Model">
+  <targetResourceEnvironment_Allocation href="internal_architecture_model.resourceenvironment#/"/>
+  <system_Allocation href="internal_architecture_model.system#_4cycUBqeEeuyLOjPwRkmuQ"/>
+  <allocationContexts_Allocation id="_A-sL8RqfEeuyLOjPwRkmuQ" entityName="AboutUsServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-sL8BqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-taEhqfEeuyLOjPwRkmuQ" entityName="WebuiStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-taERqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-taFhqfEeuyLOjPwRkmuQ" entityName="OrderItemEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-taFRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBIhqfEeuyLOjPwRkmuQ" entityName="OrderServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBIRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBJhqfEeuyLOjPwRkmuQ" entityName="LoginActionServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBJRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBKhqfEeuyLOjPwRkmuQ" entityName="DatabaseGenerationEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBKRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBLhqfEeuyLOjPwRkmuQ" entityName="ProductEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBLRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBMhqfEeuyLOjPwRkmuQ" entityName="OrderEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBMRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBNhqfEeuyLOjPwRkmuQ" entityName="ReadyRest">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBNRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBOhqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBORqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBPhqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBPRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBQhqfEeuyLOjPwRkmuQ" entityName="RecommenderStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBQRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBRhqfEeuyLOjPwRkmuQ" entityName="ProductServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBRRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBShqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBSRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBThqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBTRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uBUhqfEeuyLOjPwRkmuQ" entityName="AuthUserActionsRest">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBURqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoMBqfEeuyLOjPwRkmuQ" entityName="DataBaseServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uBVRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoNBqfEeuyLOjPwRkmuQ" entityName="InitialDataGenerationDaemon">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoMxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoOBqfEeuyLOjPwRkmuQ" entityName="RecommendSingleEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoNxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoPBqfEeuyLOjPwRkmuQ" entityName="CartServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoOxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoQBqfEeuyLOjPwRkmuQ" entityName="AuthCartRest">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoPxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoRBqfEeuyLOjPwRkmuQ" entityName="ReadyRest">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoQxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoSBqfEeuyLOjPwRkmuQ" entityName="CategoryServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoRxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoTBqfEeuyLOjPwRkmuQ" entityName="ImageProviderEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoSxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoUBqfEeuyLOjPwRkmuQ" entityName="UserEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoTxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoVBqfEeuyLOjPwRkmuQ" entityName="StatusServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoUxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoWBqfEeuyLOjPwRkmuQ" entityName="CartActionServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoVxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoXBqfEeuyLOjPwRkmuQ" entityName="ErrorServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoWxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoYBqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoXxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoZBqfEeuyLOjPwRkmuQ" entityName="RecommendEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoYxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uoaBqfEeuyLOjPwRkmuQ" entityName="ImageProviderStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoZxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uobBqfEeuyLOjPwRkmuQ" entityName="ProfileServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uoaxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-uocBqfEeuyLOjPwRkmuQ" entityName="CategoryEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-uobxqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPQhqfEeuyLOjPwRkmuQ" entityName="AbstractCRUDEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPQRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPRhqfEeuyLOjPwRkmuQ" entityName="AuthStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPRRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPShqfEeuyLOjPwRkmuQ" entityName="RegistryStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPSRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPThqfEeuyLOjPwRkmuQ" entityName="DataBaseActionServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPTRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPUhqfEeuyLOjPwRkmuQ" entityName="RegistryREST">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPURqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPVhqfEeuyLOjPwRkmuQ" entityName="Reset">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPVRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPWhqfEeuyLOjPwRkmuQ" entityName="LogReaderStartup">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPWRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPXhqfEeuyLOjPwRkmuQ" entityName="DisplayLogs">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPXRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPYhqfEeuyLOjPwRkmuQ" entityName="CacheManagerEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPYRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPZhqfEeuyLOjPwRkmuQ" entityName="TrainEndpoint">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPZRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+  <allocationContexts_Allocation id="_A-vPahqfEeuyLOjPwRkmuQ" entityName="LoginServlet">
+    <resourceContainer_AllocationContext href="internal_architecture_model.resourceenvironment#_A-leQBqfEeuyLOjPwRkmuQ"/>
+    <assemblyContext_AllocationContext href="internal_architecture_model.system#_A-vPaRqfEeuyLOjPwRkmuQ"/>
+  </allocationContexts_Allocation>
+</allocation:Allocation>

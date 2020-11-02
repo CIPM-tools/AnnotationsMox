@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="ASCII"?>
+<system:System xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:composition="http://palladiosimulator.org/PalladioComponentModel/Core/Composition/5.2" xmlns:repository="http://palladiosimulator.org/PalladioComponentModel/Repository/5.2" xmlns:system="http://palladiosimulator.org/PalladioComponentModel/System/5.2" id="_4cycUBqeEeuyLOjPwRkmuQ" entityName="SoMoX Reverse Engineered System">
+  <assemblyContexts__ComposedStructure id="_A-sL8BqfEeuyLOjPwRkmuQ" entityName="AboutUsServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A3ohsBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-taERqfEeuyLOjPwRkmuQ" entityName="WebuiStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A5SukBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-taFRqfEeuyLOjPwRkmuQ" entityName="OrderItemEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7P2YRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBIRqfEeuyLOjPwRkmuQ" entityName="OrderServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7REghqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBJRqfEeuyLOjPwRkmuQ" entityName="LoginActionServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7REhRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBKRqfEeuyLOjPwRkmuQ" entityName="DatabaseGenerationEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7REiBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBLRqfEeuyLOjPwRkmuQ" entityName="ProductEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7ef4hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBMRqfEeuyLOjPwRkmuQ" entityName="OrderEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7fG8hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBNRqfEeuyLOjPwRkmuQ" entityName="ReadyRest">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7fG9hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBORqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7fuAxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBPRqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7gVEBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBQRqfEeuyLOjPwRkmuQ" entityName="RecommenderStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7gVExqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBRRqfEeuyLOjPwRkmuQ" entityName="ProductServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7hjMBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBSRqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7iKQBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBTRqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7iKQxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBURqfEeuyLOjPwRkmuQ" entityName="AuthUserActionsRest">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7ixUBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uBVRqfEeuyLOjPwRkmuQ" entityName="DataBaseServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7nCwxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoMxqfEeuyLOjPwRkmuQ" entityName="InitialDataGenerationDaemon">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7np0BqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoNxqfEeuyLOjPwRkmuQ" entityName="RecommendSingleEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7np0hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoOxqfEeuyLOjPwRkmuQ" entityName="CartServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7np1hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoPxqfEeuyLOjPwRkmuQ" entityName="AuthCartRest">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7np2RqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoQxqfEeuyLOjPwRkmuQ" entityName="ReadyRest">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7oQ4hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoRxqfEeuyLOjPwRkmuQ" entityName="CategoryServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7oQ5hqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoSxqfEeuyLOjPwRkmuQ" entityName="ImageProviderEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A7oQ6RqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoTxqfEeuyLOjPwRkmuQ" entityName="UserEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8jd8RqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoUxqfEeuyLOjPwRkmuQ" entityName="StatusServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8jd9RqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoVxqfEeuyLOjPwRkmuQ" entityName="CartActionServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8jd-BqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoWxqfEeuyLOjPwRkmuQ" entityName="ErrorServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8kFABqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoXxqfEeuyLOjPwRkmuQ" entityName="IndexServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8kFAxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoYxqfEeuyLOjPwRkmuQ" entityName="RecommendEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8kFBhqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoZxqfEeuyLOjPwRkmuQ" entityName="ImageProviderStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8ksEBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uoaxqfEeuyLOjPwRkmuQ" entityName="ProfileServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8ksEhqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-uobxqfEeuyLOjPwRkmuQ" entityName="CategoryEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8ksFRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPQRqfEeuyLOjPwRkmuQ" entityName="AbstractCRUDEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8ksGBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPRRqfEeuyLOjPwRkmuQ" entityName="AuthStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8mhQxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPSRqfEeuyLOjPwRkmuQ" entityName="RegistryStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8mhRRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPTRqfEeuyLOjPwRkmuQ" entityName="DataBaseActionServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8mhRxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPURqfEeuyLOjPwRkmuQ" entityName="RegistryREST">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8mhShqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPVRqfEeuyLOjPwRkmuQ" entityName="Reset">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nIUxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPWRqfEeuyLOjPwRkmuQ" entityName="LogReaderStartup">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nIVhqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPXRqfEeuyLOjPwRkmuQ" entityName="DisplayLogs">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nIWBqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPYRqfEeuyLOjPwRkmuQ" entityName="CacheManagerEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nIWxqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPZRqfEeuyLOjPwRkmuQ" entityName="TrainEndpoint">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nIYRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <assemblyContexts__ComposedStructure id="_A-vPaRqfEeuyLOjPwRkmuQ" entityName="LoginServlet">
+    <encapsulatedComponent__AssemblyContext xsi:type="repository:BasicComponent" href="internal_architecture_model.repository#_A8nvZRqfEeuyLOjPwRkmuQ"/>
+  </assemblyContexts__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-taEBqfEeuyLOjPwRkmuQ" entityName="AboutUsServlet" outerProvidedRole_ProvidedDelegationConnector="_A-szABqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-sL8BqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A5RgcBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-taFBqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-taExqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-taERqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7P2YBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBIBqfEeuyLOjPwRkmuQ" entityName="OrderItemEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-taFxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-taFRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7REgRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBJBqfEeuyLOjPwRkmuQ" entityName="OrderServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBIxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBIRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7REhBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBKBqfEeuyLOjPwRkmuQ" entityName="LoginActionServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBJxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBJRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7REhxqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBLBqfEeuyLOjPwRkmuQ" entityName="DatabaseGenerationEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uBKxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBKRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7ef4RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBMBqfEeuyLOjPwRkmuQ" entityName="ProductEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uBLxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBLRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7fG8RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBNBqfEeuyLOjPwRkmuQ" entityName="OrderEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uBMxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBMRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7fG9RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBOBqfEeuyLOjPwRkmuQ" entityName="ReadyRest" outerProvidedRole_ProvidedDelegationConnector="_A-uBNxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBNRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7fuAhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBPBqfEeuyLOjPwRkmuQ" entityName="IndexServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBOxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBORqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7fuBRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBQBqfEeuyLOjPwRkmuQ" entityName="IndexServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBPxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBPRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7gVEhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBRBqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-uBQxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBQRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7g8IBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBSBqfEeuyLOjPwRkmuQ" entityName="ProductServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBRxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBRRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7hjMhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBTBqfEeuyLOjPwRkmuQ" entityName="IndexServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBSxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBSRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7iKQhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBUBqfEeuyLOjPwRkmuQ" entityName="IndexServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uBTxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBTRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7iKRRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uBVBqfEeuyLOjPwRkmuQ" entityName="AuthUserActionsRest" outerProvidedRole_ProvidedDelegationConnector="_A-uBUxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBURqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7nCwhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoMhqfEeuyLOjPwRkmuQ" entityName="DataBaseServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoMRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uBVRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7nCxRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoNhqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-uoNRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoMxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7np0RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoOhqfEeuyLOjPwRkmuQ" entityName="RecommendSingleEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uoORqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoNxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7np1RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoPhqfEeuyLOjPwRkmuQ" entityName="CartServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoPRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoOxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7np2BqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoQhqfEeuyLOjPwRkmuQ" entityName="AuthCartRest" outerProvidedRole_ProvidedDelegationConnector="_A-uoQRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoPxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7oQ4RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoRhqfEeuyLOjPwRkmuQ" entityName="ReadyRest" outerProvidedRole_ProvidedDelegationConnector="_A-uoRRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoQxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7oQ5RqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoShqfEeuyLOjPwRkmuQ" entityName="CategoryServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoSRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoRxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A7oQ6BqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoThqfEeuyLOjPwRkmuQ" entityName="ImageProviderEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uoTRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoSxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8jd8BqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoUhqfEeuyLOjPwRkmuQ" entityName="UserEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uoURqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoTxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8jd9BqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoVhqfEeuyLOjPwRkmuQ" entityName="StatusServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoVRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoUxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8jd9xqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoWhqfEeuyLOjPwRkmuQ" entityName="CartActionServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoWRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoVxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8jd-hqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoXhqfEeuyLOjPwRkmuQ" entityName="ErrorServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoXRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoWxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8kFAhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoYhqfEeuyLOjPwRkmuQ" entityName="IndexServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uoYRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoXxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8kFBRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoZhqfEeuyLOjPwRkmuQ" entityName="RecommendEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uoZRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoYxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8kFCRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uoahqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-uoaRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoZxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8ksERqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-uobhqfEeuyLOjPwRkmuQ" entityName="ProfileServlet" outerProvidedRole_ProvidedDelegationConnector="_A-uobRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uoaxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8ksFBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPQBqfEeuyLOjPwRkmuQ" entityName="CategoryEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-uocRqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-uobxqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8ksFxqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPRBqfEeuyLOjPwRkmuQ" entityName="AbstractCRUDEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-vPQxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPQRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8mhQhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPSBqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-vPRxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPRRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8mhRBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPTBqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-vPSxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPSRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8mhRhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPUBqfEeuyLOjPwRkmuQ" entityName="DataBaseActionServlet" outerProvidedRole_ProvidedDelegationConnector="_A-vPTxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPTRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8mhSRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPVBqfEeuyLOjPwRkmuQ" entityName="RegistryREST" outerProvidedRole_ProvidedDelegationConnector="_A-vPUxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPURqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nIUhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPWBqfEeuyLOjPwRkmuQ" entityName="Reset" outerProvidedRole_ProvidedDelegationConnector="_A-vPVxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPVRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nIVRqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPXBqfEeuyLOjPwRkmuQ" entityName="ServletContextListener" outerProvidedRole_ProvidedDelegationConnector="_A-vPWxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPWRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nIVxqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPYBqfEeuyLOjPwRkmuQ" entityName="DisplayLogs" outerProvidedRole_ProvidedDelegationConnector="_A-vPXxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPXRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nIWhqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPZBqfEeuyLOjPwRkmuQ" entityName="CacheManagerEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-vPYxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPYRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nIYBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPaBqfEeuyLOjPwRkmuQ" entityName="TrainEndpoint" outerProvidedRole_ProvidedDelegationConnector="_A-vPZxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPZRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nvZBqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <connectors__ComposedStructure xsi:type="composition:ProvidedDelegationConnector" id="_A-vPbBqfEeuyLOjPwRkmuQ" entityName="LoginServlet" outerProvidedRole_ProvidedDelegationConnector="_A-vPaxqfEeuyLOjPwRkmuQ" assemblyContext_ProvidedDelegationConnector="_A-vPaRqfEeuyLOjPwRkmuQ">
+    <innerProvidedRole_ProvidedDelegationConnector href="internal_architecture_model.repository#_A8nvZxqfEeuyLOjPwRkmuQ"/>
+  </connectors__ComposedStructure>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-szABqfEeuyLOjPwRkmuQ" entityName="AboutUsServlet 0 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A3taMBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-taExqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 1 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-taFxqfEeuyLOjPwRkmuQ" entityName="OrderItemEndpoint 2 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7P2YhqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBIxqfEeuyLOjPwRkmuQ" entityName="OrderServlet 3 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7REgxqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBJxqfEeuyLOjPwRkmuQ" entityName="LoginActionServlet 4 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7REhhqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBKxqfEeuyLOjPwRkmuQ" entityName="DatabaseGenerationEndpoint 5 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7REiRqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBLxqfEeuyLOjPwRkmuQ" entityName="ProductEndpoint 6 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7ef4xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBMxqfEeuyLOjPwRkmuQ" entityName="OrderEndpoint 7 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7fG8xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBNxqfEeuyLOjPwRkmuQ" entityName="ReadyRest 8 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7fuABqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBOxqfEeuyLOjPwRkmuQ" entityName="IndexServlet 9 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7fuBBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBPxqfEeuyLOjPwRkmuQ" entityName="IndexServlet 10 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7gVERqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBQxqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 11 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBRxqfEeuyLOjPwRkmuQ" entityName="ProductServlet 12 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7hjMRqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBSxqfEeuyLOjPwRkmuQ" entityName="IndexServlet 13 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7iKQRqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBTxqfEeuyLOjPwRkmuQ" entityName="IndexServlet 14 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7iKRBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uBUxqfEeuyLOjPwRkmuQ" entityName="AuthUserActionsRest 15 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7ixURqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoMRqfEeuyLOjPwRkmuQ" entityName="DataBaseServlet 16 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7nCxBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoNRqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 17 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoORqfEeuyLOjPwRkmuQ" entityName="RecommendSingleEndpoint 18 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7np0xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoPRqfEeuyLOjPwRkmuQ" entityName="CartServlet 19 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7np1xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoQRqfEeuyLOjPwRkmuQ" entityName="AuthCartRest 20 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7np2hqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoRRqfEeuyLOjPwRkmuQ" entityName="ReadyRest 21 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7oQ4xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoSRqfEeuyLOjPwRkmuQ" entityName="CategoryServlet 22 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7oQ5xqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoTRqfEeuyLOjPwRkmuQ" entityName="ImageProviderEndpoint 23 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A7o38BqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoURqfEeuyLOjPwRkmuQ" entityName="UserEndpoint 24 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8jd8hqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoVRqfEeuyLOjPwRkmuQ" entityName="StatusServlet 25 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8jd9hqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoWRqfEeuyLOjPwRkmuQ" entityName="CartActionServlet 26 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8jd-RqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoXRqfEeuyLOjPwRkmuQ" entityName="ErrorServlet 27 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8kFARqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoYRqfEeuyLOjPwRkmuQ" entityName="IndexServlet 28 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8kFBBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoZRqfEeuyLOjPwRkmuQ" entityName="RecommendEndpoint 29 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8kFBxqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uoaRqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 30 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uobRqfEeuyLOjPwRkmuQ" entityName="ProfileServlet 31 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8ksExqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-uocRqfEeuyLOjPwRkmuQ" entityName="CategoryEndpoint 32 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8ksFhqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPQxqfEeuyLOjPwRkmuQ" entityName="AbstractCRUDEndpoint 33 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8ksGRqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPRxqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 34 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPSxqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 35 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPTxqfEeuyLOjPwRkmuQ" entityName="DataBaseActionServlet 36 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8mhSBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPUxqfEeuyLOjPwRkmuQ" entityName="RegistryREST 37 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8mhSxqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPVxqfEeuyLOjPwRkmuQ" entityName="Reset 38 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8nIVBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPWxqfEeuyLOjPwRkmuQ" entityName="ServletContextListener 39 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A5T8sBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPXxqfEeuyLOjPwRkmuQ" entityName="DisplayLogs 40 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8nIWRqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPYxqfEeuyLOjPwRkmuQ" entityName="CacheManagerEndpoint 41 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8nIXBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPZxqfEeuyLOjPwRkmuQ" entityName="TrainEndpoint 42 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8nvYBqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+  <providedRoles_InterfaceProvidingEntity xsi:type="repository:OperationProvidedRole" id="_A-vPaxqfEeuyLOjPwRkmuQ" entityName="LoginServlet 43 (prov)(sys)">
+    <providedInterface__OperationProvidedRole href="internal_architecture_model.repository#_A8nvZhqfEeuyLOjPwRkmuQ"/>
+  </providedRoles_InterfaceProvidingEntity>
+</system:System>
